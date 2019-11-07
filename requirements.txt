@@ -9,3 +9,4 @@ black
 tox
 mypy
 pandas
+codecov
