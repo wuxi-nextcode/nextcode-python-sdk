@@ -1,0 +1,53 @@
+{
+    "args": null,
+    "available": false,
+    "complete_date": null,
+    "date_submitted": "2019-11-05T12:03:17.391266",
+    "details": {
+        "file_path": null,
+        "job_type": "default",
+        "persist": null,
+        "results": null,
+        "routing_key": "default.wxnc.internal_hg19",
+        "wait": null
+    },
+    "error": null,
+    "id": 666,
+    "links": {
+        "perspectives": [
+            {
+                "name": "Default",
+                "ref": "https://test.wuxinextcodedev.com/api/query/query/666/result?perspective=Default"
+            },
+            {
+                "name": "SampleContext",
+                "ref": "https://test.wuxinextcodedev.com/api/query/query/666/result?perspective=SampleContext"
+            },
+            {
+                "name": "VariantContext",
+                "ref": "https://test.wuxinextcodedev.com/api/query/query/666/result?perspective=VariantContext"
+            }
+        ],
+        "result": "https://test.wuxinextcodedev.com/api/query/query/666/result",
+        "self": "https://test.wuxinextcodedev.com/api/query/query/666"
+    },
+    "progress": null,
+    "project_name": "internal_hg19",
+    "query": "create ##dummy## = gor #genes# | top 1; \n \n\n\ndef ##var_chrom## = REQUIRED(var_chrom);\ndef ##var_pos## = REQUIRED(var_pos);\ndef ##var_reference## = 'REQUIRED(var_reference)';\ndef ##var_call## = 'REQUIRED(var_call)';\ndef ##var_gene_symbol## = 'REQUIRED(var_gene_symbol)';\ndef ##var_transcript## = '';\ndef ##index_case## = 'NONE';\ndef ##vcf_wgs_anno## = ;\n\n  def ##vep_single## = source/anno/vep_v85/vepref_single_wgs.gord;\ndef ##ref## = ref;\ndef ##gnomad_freq## = ##ref##/variants/gnomad_freq.gorz;\n  def ##freq_max_file## = ##ref##/variants/freq_max.gorz;\ndef ##gmap## = ##ref##/ensgenes/ensgenes.map;\n\n\ndef ##genepanelinfo## = ;\n\n\n\n  gorrow ##var_chrom##,##var_pos##,##var_pos##\n  | calc Reference ##var_reference##\n  | calc Call ##var_call##\n  | calc gene_symbol ##var_gene_symbol##\n  | hide #3\n  | rename #2 Pos\n  | varjoin -l -r -e '0.0' <(gor ##freq_max_file##\n    | select 1-4,max_af\n    | rename max_af ref_af\n    | replace ref_af form(ref_af,5,5)\n    | distinct)\n  | varjoin -l -r -xr gene_symbol -xl gene_symbol -e 'NaN' <(gor ##vep_single## | select 1-4,gene_symbol,max_impact,max_consequence)\n  | hide gene_symbolx",
+    "query_id": 666,
+    "relations": [],
+    "results": null,
+    "start_date": null,
+    "stats": {
+        "column_count": null,
+        "end_timestamp": null,
+        "line_count": null,
+        "size_bytes": null,
+        "start_timestamp": null,
+        "submit_timestamp": null
+    },
+    "status": "DONE",
+    "submit_date": "2019-11-05T12:03:17.391266",
+    "template_name": "wxnc/system/test_template/1.0.0",
+    "user_name": "jonb@wuxinextcode.com"
+}

@@ -1,0 +1,1529 @@
+{
+    "basePath": "",
+    "consumes": [
+        "application/json"
+    ],
+    "definitions": {
+        "Event": {
+            "properties": {
+                "event": {
+                    "description": "Event name",
+                    "enum": [
+                        "started",
+                        "process_submitted",
+                        "process_started",
+                        "process_completed",
+                        "error",
+                        "completed"
+                    ],
+                    "example": "started",
+                    "type": "string"
+                },
+                "event_date": {
+                    "description": "Timestamp when this event was created",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "event_id": {
+                    "description": "Internal unique ID of this process",
+                    "type": "integer"
+                },
+                "job_id": {
+                    "description": "Internal unique ID of this job",
+                    "type": "integer"
+                },
+                "last_event_date": {
+                    "description": "Timestamp the last time this event was received",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/EventLinks"
+                },
+                "num_events": {
+                    "description": "Number of this event received",
+                    "type": "integer"
+                },
+                "process_id": {
+                    "description": "Internal unique ID of this process (only if the event is a trace)",
+                    "type": "integer"
+                },
+                "run_status": {
+                    "description": "Same as event (deprecated)",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status of the process (only if the event is a trace)",
+                    "type": "string"
+                },
+                "task_id": {
+                    "description": "Internal Nextflow task ID of the process (only if the event is a trace)",
+                    "type": "integer"
+                },
+                "trace": {
+                    "description": "Trace dump (only if the event is a process event)",
+                    "type": "object"
+                },
+                "workflow": {
+                    "description": "Workflow dump (only if the event is a not a process event)",
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "EventLinks": {
+            "properties": {
+                "self": {
+                    "description": "The Event Resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Job": {
+            "properties": {
+                "cmd": {
+                    "description": "Full Commandline string which executed Nextflow",
+                    "type": "string"
+                },
+                "complete_date": {
+                    "description": "ISO8601 formatted complete date",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "details": {
+                    "description": "Various details about the job",
+                    "type": "object"
+                },
+                "job_id": {
+                    "description": "Internal unique ID of this run",
+                    "type": "integer"
+                },
+                "links": {
+                    "$ref": "#/definitions/JobLinks"
+                },
+                "name": {
+                    "description": "Nextflow name of the job",
+                    "type": "string"
+                },
+                "parameters": {
+                    "description": "List of parameters for the job in the form [{'name': 'val'}, ]",
+                    "type": "object"
+                },
+                "pipeline_name": {
+                    "description": "Name of the pipeline that this job is running or null if using a custom pipeline",
+                    "type": "string"
+                },
+                "project_id": {
+                    "description": "Project that this job was run in",
+                    "type": "integer"
+                },
+                "project_name": {
+                    "description": "Project that this job was run in",
+                    "type": "string"
+                },
+                "revision": {
+                    "description": "Git tag or revision of the script git repository",
+                    "type": "string"
+                },
+                "run_id": {
+                    "description": "Nextflow runId string",
+                    "type": "string"
+                },
+                "script_name": {
+                    "description": "Url of the bitbucket repository which contains the nextflow script",
+                    "type": "string"
+                },
+                "start_date": {
+                    "description": "ISO8601 formatted start date",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Job Status",
+                    "enum": [
+                        "PENDING",
+                        "STARTED",
+                        "ERROR",
+                        "COMPLETED",
+                        "CANCELLED"
+                    ],
+                    "example": "PENDING",
+                    "type": "string"
+                },
+                "status_date": {
+                    "description": "Timestamp when status last changed",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "status_message": {
+                    "description": "Textual information regarding the current status, typically an error message",
+                    "type": "string"
+                },
+                "submit_date": {
+                    "description": "ISO8601 formatted create date",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "User which created this job",
+                    "type": "integer"
+                },
+                "user_name": {
+                    "description": "User which created this job",
+                    "type": "string"
+                },
+                "work_dir": {
+                    "description": "Work folder for the nextflow run",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "JobLinks": {
+            "properties": {
+                "events": {
+                    "description": "Event log for this run",
+                    "type": "string"
+                },
+                "inspect": {
+                    "description": "Investigate status of job",
+                    "type": "string"
+                },
+                "logs": {
+                    "description": "Raw container logs",
+                    "type": "string"
+                },
+                "processes": {
+                    "description": "Processes that have been started in this run",
+                    "type": "string"
+                },
+                "project": {
+                    "description": "Project that this job ran in",
+                    "type": "string"
+                },
+                "self": {
+                    "description": "The Job Resource",
+                    "type": "string"
+                },
+                "weblog": {
+                    "description": "Weblog POST endpoint for nextflow",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Pipeline": {
+            "properties": {
+                "description": {
+                    "description": "Textual description for humans",
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/PipelineLinks"
+                },
+                "name": {
+                    "description": "Unique name of the pipeline",
+                    "type": "string"
+                },
+                "parameters": {
+                    "description": "Parameters that this pipeline supports",
+                    "items": {
+                        "$ref": "#/definitions/PipelineParameter"
+                    },
+                    "type": "array"
+                },
+                "revision": {
+                    "description": "Git hash or tag, if the pipeline is pinned to a specific revision",
+                    "type": "string"
+                },
+                "script": {
+                    "description": "Bitbucket URL of the pipeline repository",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PipelineLinks": {
+            "properties": {
+                "self": {
+                    "description": "The Pipeline Resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PipelineParameter": {
+            "properties": {
+                "default": {
+                    "description": "Default value for this parameter if it is not specified",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Textual, human readable description of the parameter",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name of the parameter as it will be passed into the Nextflow script",
+                    "type": "string"
+                },
+                "required": {
+                    "description": "Is it necessary for the caller to specify this parameter",
+                    "type": "boolean"
+                },
+                "type": {
+                    "description": "Parameter type (str, int)",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Process": {
+            "properties": {
+                "complete_date": {
+                    "description": "Timestamp when this process completed",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "container": {
+                    "description": "Docker image which this process ran in",
+                    "type": "string"
+                },
+                "details": {
+                    "description": "Pod and Node information from Kubernetes",
+                    "type": "object"
+                },
+                "duration": {
+                    "description": "Duration of process in milliseconds",
+                    "type": "integer"
+                },
+                "exit_code": {
+                    "description": "Container exit code",
+                    "type": "integer"
+                },
+                "job_id": {
+                    "description": "Internal unique ID of this job",
+                    "type": "integer"
+                },
+                "links": {
+                    "$ref": "#/definitions/ProcessLinks"
+                },
+                "name": {
+                    "description": "Full name of the nextflow process (process name + tag)",
+                    "type": "string"
+                },
+                "native_id": {
+                    "description": "Kubernetes POD name",
+                    "type": "string"
+                },
+                "process": {
+                    "description": "Name of the process",
+                    "type": "string"
+                },
+                "process_hash": {
+                    "description": "Nextflow process unique hash slug",
+                    "type": "string"
+                },
+                "process_id": {
+                    "description": "Internal unique ID of this process",
+                    "type": "integer"
+                },
+                "script": {
+                    "description": "The contents of the script for this process",
+                    "type": "string"
+                },
+                "start_date": {
+                    "description": "Timestamp when this process started running",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Nextflow status of process (e.g. SUBMITTED, COMPLETED)",
+                    "type": "string"
+                },
+                "status_date": {
+                    "description": "Timestamp when status last changed",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "submit_date": {
+                    "description": "Timestamp when this process was queued up by nextflow",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "tag": {
+                    "description": "Nextflow tag field for this process",
+                    "type": "string"
+                },
+                "task_id": {
+                    "description": "Task which owns this process",
+                    "type": "integer"
+                },
+                "work_dir": {
+                    "description": "Folder on NFS where nextflow keeps the work files",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ProcessLinks": {
+            "properties": {
+                "events": {
+                    "description": "Events for this process",
+                    "type": "string"
+                },
+                "logs": {
+                    "description": "Pod log for this process if pod is available",
+                    "type": "string"
+                },
+                "self": {
+                    "description": "The Process Resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Project": {
+            "properties": {
+                "create_date": {
+                    "description": "ISO8601 formatted create date",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "csa_file_path": {
+                    "description": "NFS File path of the projects' files",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Human readable description of the project",
+                    "type": "string"
+                },
+                "internal_name": {
+                    "description": "Unique name of the project",
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/ProjectLinks"
+                },
+                "name": {
+                    "description": "Human readable name of the project",
+                    "type": "string"
+                },
+                "project_id": {
+                    "description": "Internal ID of the project",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "ProjectLinks": {
+            "properties": {
+                "self": {
+                    "description": "Fully qualified url of the project resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "User": {
+            "properties": {
+                "create_date": {
+                    "description": "ISO8601 formatted create date",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/UserLinks"
+                },
+                "status": {
+                    "description": "Status of the user",
+                    "enum": [
+                        "active",
+                        "disabled"
+                    ],
+                    "example": "active",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "Internal ID of the user",
+                    "type": "integer"
+                },
+                "user_name": {
+                    "description": "Unique Username of the user",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "UserLinks": {
+            "properties": {
+                "self": {
+                    "description": "Fully qualified url of the user resource",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "info": {
+        "title": "API",
+        "version": "1.15.0"
+    },
+    "paths": {
+        "/workflow/": {
+            "get": {
+                "operationId": "get_root",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get information about the service and currently authenticated user, if available",
+                "tags": [
+                    "root"
+                ]
+            }
+        },
+        "/workflow/health/": {
+            "get": {
+                "operationId": "get_health",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Check external dependencies and config",
+                "tags": [
+                    "root"
+                ]
+            }
+        },
+        "/workflow/health/smoketest": {
+            "post": {
+                "operationId": "post_smoke_test",
+                "parameters": [
+                    {
+                        "collectionFormat": "multi",
+                        "default": "nextflowinfo",
+                        "description": "Name of the smoketest to run",
+                        "enum": [
+                            "viewscm",
+                            "nextflowinfo",
+                            "listwork",
+                            "nextflowrun"
+                        ],
+                        "in": "query",
+                        "name": "test",
+                        "type": "string"
+                    },
+                    {
+                        "default": 30,
+                        "description": "Number of seconds that the smoketest is allowed to run before failure.",
+                        "in": "query",
+                        "name": "timeout",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Run a nextflow pod to see if it is successful",
+                "tags": [
+                    "root"
+                ]
+            }
+        },
+        "/workflow/jobs/": {
+            "get": {
+                "operationId": "get_jobs",
+                "parameters": [
+                    {
+                        "description": "Internal user ID of the submitter",
+                        "in": "query",
+                        "name": "user_id",
+                        "type": "integer"
+                    },
+                    {
+                        "description": "User name of the submitted",
+                        "in": "query",
+                        "name": "user_name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Project which the job belongs to",
+                        "in": "query",
+                        "name": "project_id",
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Status of the job",
+                        "in": "query",
+                        "name": "status",
+                        "type": "string"
+                    },
+                    {
+                        "description": "A specific job to query for",
+                        "in": "query",
+                        "name": "job_id",
+                        "type": "integer"
+                    },
+                    {
+                        "default": 50,
+                        "description": "Number of results to return",
+                        "in": "query",
+                        "name": "limit",
+                        "type": "integer"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Job"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get list of jobs that have been submitted",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "post": {
+                "description": "Requires at least a project and pipeline name",
+                "operationId": "post_jobs",
+                "parameters": [
+                    {
+                        "description": "Named pipeline to run",
+                        "in": "query",
+                        "name": "pipeline_name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Unique internal project name",
+                        "in": "query",
+                        "name": "project_name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Parameters for the nextflow script",
+                        "in": "query",
+                        "name": "parameters",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Bitbucket repo to execute, e.g. https://bitbucket.org/nextcode-health/nextflow-test.git. Only available in debug mode.",
+                        "in": "query",
+                        "name": "script",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Nextflow run arguments. Only available in debug mode.",
+                        "in": "query",
+                        "name": "runargs",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Environment variables to apply to the nextflow executor pod, for debugging purposes.",
+                        "in": "query",
+                        "name": "env",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Bitbucket revision (optional). Only available in debug mode.",
+                        "in": "query",
+                        "name": "revision",
+                        "type": "string"
+                    },
+                    {
+                        "collectionFormat": "multi",
+                        "default": "builtin",
+                        "description": "Source type of the nextflow build to use with this pipeline run.",
+                        "enum": [
+                            "builtin",
+                            "git",
+                            "url"
+                        ],
+                        "in": "query",
+                        "name": "build_source",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Context for build_source, depends on the type.",
+                        "in": "query",
+                        "name": "build_context",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Activate a nextflow configuration profile",
+                        "in": "query",
+                        "name": "profile",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Argument unique signature which overrides the built-in signature checking",
+                        "in": "query",
+                        "name": "signature",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    }
+                },
+                "summary": "Launch a new nextflow run",
+                "tags": [
+                    "jobs"
+                ]
+            }
+        },
+        "/workflow/jobs/{job_id}": {
+            "delete": {
+                "operationId": "delete_job",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    }
+                },
+                "summary": "Cancel a job that is currently in progress",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "get": {
+                "operationId": "get_job",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    }
+                },
+                "summary": "Get information about a single job",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "put": {
+                "operationId": "put_job",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    }
+                },
+                "summary": "Retry a failed or cancelled job from where it left off",
+                "tags": [
+                    "jobs"
+                ]
+            }
+        },
+        "/workflow/jobs/{job_id}/events": {
+            "get": {
+                "operationId": "get_job_events",
+                "parameters": [
+                    {
+                        "default": 50,
+                        "description": "Maximum number of results to return",
+                        "in": "query",
+                        "name": "limit",
+                        "type": "integer"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Event"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get a list of all events received from nextflow for the specified job, ordered by event date",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/events/{event_id}": {
+            "get": {
+                "operationId": "get_job_event",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Event"
+                        }
+                    }
+                },
+                "summary": "Get information about a single event for a job",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "path",
+                    "name": "event_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/inspect": {
+            "get": {
+                "operationId": "get_job_inspect",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get information about the status of a running pod by introspecting kubernetes and processes",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/logs": {
+            "get": {
+                "operationId": "get_job_logs",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get list of available log groups",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/logs/{log_group}": {
+            "get": {
+                "operationId": "get_job_log_group",
+                "parameters": [
+                    {
+                        "description": "String to filter logs by",
+                        "in": "query",
+                        "name": "filter",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get raw logs from the nextflow executor Kubernetes Pod",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "path",
+                    "name": "log_group",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/processes": {
+            "get": {
+                "description": "Note that only processes that have actually been scheduled are returned.",
+                "operationId": "get_processes",
+                "parameters": [
+                    {
+                        "default": false,
+                        "description": "Include completed processes",
+                        "in": "query",
+                        "name": "all",
+                        "type": "boolean"
+                    },
+                    {
+                        "default": 50,
+                        "description": "Maximum number of results to return",
+                        "in": "query",
+                        "name": "limit",
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Filter by process status",
+                        "in": "query",
+                        "name": "status",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Process"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get all nextflow processes for the specified job, ordered by submit date",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/processes/{process_id}": {
+            "get": {
+                "operationId": "get_process",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Process"
+                        }
+                    }
+                },
+                "summary": "Get information about a single process for a job",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "path",
+                    "name": "process_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/processes/{process_id}/events": {
+            "get": {
+                "operationId": "get_process_events",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Event"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get events for a single process in a job",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "path",
+                    "name": "process_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/processes/{process_id}/logs": {
+            "get": {
+                "operationId": "get_process_logs",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get pod logs for a process (provided the pod is still alive)",
+                "tags": [
+                    "jobs"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "path",
+                    "name": "process_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/workflow/jobs/{job_id}/weblog/": {
+            "get": {
+                "operationId": "get_weblog",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get the fully qualified POST URL for Nextflow including token",
+                "tags": [
+                    "weblog"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "job_id",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "operationId": "post_weblog",
+                "parameters": [
+                    {
+                        "description": "Event Name",
+                        "in": "query",
+                        "name": "event",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Nextflow cute run name",
+                        "in": "query",
+                        "name": "runName",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Various Metadata",
+                        "in": "query",
+                        "name": "metadata",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Task information if this is a process message",
+                        "in": "query",
+                        "name": "trace",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Workflow information if this is a pipeline message",
+                        "in": "query",
+                        "name": "workflow",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Nextflow GUID run ID",
+                        "in": "query",
+                        "name": "runId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Timestamp when event was created",
+                        "in": "query",
+                        "name": "utcTime",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Endpoint for Nextflow to report status",
+                "tags": [
+                    "weblog"
+                ]
+            }
+        },
+        "/workflow/pipelines/": {
+            "get": {
+                "operationId": "get_pipelines",
+                "parameters": [
+                    {
+                        "description": "Filter by pipeline name",
+                        "in": "query",
+                        "name": "pipeline_name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Pipeline"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "tags": [
+                    "pipelines"
+                ]
+            }
+        },
+        "/workflow/pipelines/{pipeline_name}": {
+            "get": {
+                "description": "Information about a specific pipeline",
+                "operationId": "get_pipeline",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Pipeline"
+                        }
+                    }
+                },
+                "summary": "Find pipeline by Name",
+                "tags": [
+                    "pipelines"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "pipeline_name",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/workflow/projects/": {
+            "get": {
+                "description": "Information about projects that are registered in the system. Can be filtered by\ncase-insensitive projects name",
+                "operationId": "get_projects",
+                "parameters": [
+                    {
+                        "description": "Case insensitive project unique name",
+                        "in": "query",
+                        "name": "internal_name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "summary": "List all projects",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "description": "Must have a unique 'internal_name'",
+                "operationId": "post_projects",
+                "parameters": [
+                    {
+                        "description": "Unique name of the project",
+                        "in": "query",
+                        "name": "internal_name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Human-readable name of the project",
+                        "in": "query",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Human-readable description of the project",
+                        "in": "query",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "summary": "Create a new project",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/workflow/projects/{project_id}": {
+            "get": {
+                "description": "Information about a specific project",
+                "operationId": "get_project",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "summary": "Find project by ID",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "project_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "put": {
+                "description": "Allows you to change project settings\n\nNote that you cannot change the internal_name of the project.",
+                "operationId": "put_project",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "summary": "Edit a project",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/workflow/users/": {
+            "get": {
+                "description": "Information about users that are registered in the system. Can be filtered by\ncase-insensitive user name",
+                "operationId": "get_users",
+                "parameters": [
+                    {
+                        "description": "Case insensitive user name",
+                        "in": "query",
+                        "name": "user_name",
+                        "type": "string"
+                    },
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                },
+                "summary": "List all users",
+                "tags": [
+                    "users"
+                ]
+            }
+        },
+        "/workflow/users/{user_id}": {
+            "get": {
+                "description": "Information about a specific user",
+                "operationId": "get_user",
+                "parameters": [
+                    {
+                        "description": "An optional fields mask",
+                        "format": "mask",
+                        "in": "header",
+                        "name": "X-Fields",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                },
+                "summary": "Find user by ID",
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "user_id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        }
+    },
+    "produces": [
+        "application/json"
+    ],
+    "responses": {
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        },
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        }
+    },
+    "security": [
+        {
+            "jwt": []
+        }
+    ],
+    "securityDefinitions": {
+        "jwt": {
+            "in": "header",
+            "name": "Authorization",
+            "type": "apiKey"
+        }
+    },
+    "swagger": "2.0",
+    "tags": [
+        {
+            "description": "List of endpoints and service information",
+            "name": "root"
+        },
+        {
+            "description": "Create and manage nextflow jobs",
+            "name": "jobs"
+        },
+        {
+            "description": "List of supported pipelines",
+            "name": "pipelines"
+        },
+        {
+            "description": "Information about registered projects",
+            "name": "projects"
+        },
+        {
+            "description": "List of endpoints and service information",
+            "name": "root"
+        },
+        {
+            "description": "Information about registered users",
+            "name": "users"
+        },
+        {
+            "description": "Callback for nextflow executor",
+            "name": "weblog"
+        }
+    ]
+}

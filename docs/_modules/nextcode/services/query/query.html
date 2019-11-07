@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 0.2.10 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          nextcode-python-sdk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.11</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Contents <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../jupyter.html">Jupyter Notebooks Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebook.html">Example Jupyter Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../apidoc.html">Server API Documention</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for nextcode.services.query.query</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Query-API Query</span>
+<span class="sd">------------------</span>
+
+<span class="sd">The Query class represents a query model from the RESTFul Query API</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+    <span class="n">jupyter_available</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">jupyter_available</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">QueryError</span>
+
+<span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s2">&quot;/api/query&quot;</span>
+
+<span class="n">RUNNING_STATUSES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PENDING&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span> <span class="s2">&quot;CANCELLING&quot;</span><span class="p">)</span>
+<span class="n">RESULTS_PAGE_SIZE</span> <span class="o">=</span> <span class="mi">200000</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Query"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query">[docs]</a><span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A local proxy representing a serverside Gor Query.</span>
+<span class="sd">    This object is returned from query methods in the &#39;query&#39; service.</span>
+
+<span class="sd">    :param service: query service handle</span>
+<span class="sd">    :param resp: json response from query api endpoint</span>
+
+<span class="sd">    Example usage:</span>
+
+<span class="sd">    &gt;&gt;&gt; svc = nextcode.Client(profile_name=&#39;test&#39;).service(&#39;query&#39;, project=&#39;myproject&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; query = svc.get_queries(limit=1)[0]</span>
+<span class="sd">    &gt;&gt;&gt; query.status</span>
+<span class="sd">    &#39;DONE&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">query_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">resp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">session</span>
+        <span class="k">if</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_from_resp</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Query.init_from_resp"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.init_from_resp">[docs]</a>    <span class="k">def</span> <span class="nf">init_from_resp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resp</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the query object from a server json response.</span>
+<span class="sd">        If the response is a &#39;simple query&#39;, e.g. from the queries list</span>
+<span class="sd">        the object will only contain partial information.</span>
+<span class="sd">        If the caller requests a field that is not included in the local proxy object</span>
+<span class="sd">        the query will be refreshed from the server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># make sure the url is set</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">resp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_date</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;submit_date&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;stats&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_timestamp&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_timestamp&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;submit_timestamp&quot;</span>
+                <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;GorQuery {self.query_id or &#39;NEW&#39;} (</span><span class="si">{self.status}</span><span class="s2">)&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># if we cannot find the attribute we refresh the query from the server</span>
+        <span class="c1"># just in case we have a partial object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Query.running"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.running">[docs]</a>    <span class="k">def</span> <span class="nf">running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Is the query currently running</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span></div>
+
+<div class="viewcode-block" id="Query.wait"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wait for the query to complete</span>
+
+<span class="sd">        :param max_seconds: raise an exception if the query runs longer than this</span>
+
+<span class="sd">        :raises: QueryError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Waiting for query </span><span class="si">%s</span><span class="s2"> to complete...&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">():</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="k">if</span> <span class="n">max_seconds</span> <span class="ow">and</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="n">max_seconds</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s2">&quot;Query </span><span class="si">{self.query_id}</span><span class="s2"> has status </span><span class="si">{self.status}</span><span class="s2"> after </span><span class="si">{max_seconds}</span><span class="s2"> seconds&quot;</span>
+                <span class="p">)</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">period</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Query </span><span class="si">%s</span><span class="s2"> completed in </span><span class="si">%.2f</span><span class="s2"> sec and returned </span><span class="si">%s</span><span class="s2"> rows&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span>
+                <span class="n">duration</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Query </span><span class="si">%s</span><span class="s2"> has status </span><span class="si">%s</span><span class="s2"> after </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                <span class="n">duration</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Query.refresh"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refresh the local query object from the RESTful service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_from_resp</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Query.get_results"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">offset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns results from a completed query, optionally with limit and offset</span>
+
+<span class="sd">        :param limit: number of rows to return (default all)</span>
+<span class="sd">        :param offset: number of rows to skip</span>
+<span class="sd">        :param sort: gor sort string in format &#39;[column] [ASC|DESC]&#39;</span>
+<span class="sd">        :param is_json: return rows as a dictionary containing &#39;header&#39; and &#39;data&#39;</span>
+<span class="sd">        :returns: dictonary containing &#39;header&#39; and &#39;data&#39; lists or tsv</span>
+<span class="sd">        :raises: QueryError</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Query </span><span class="si">{self.query_id}</span><span class="s2"> is </span><span class="si">{self.status}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span>
+                <span class="s2">&quot;Query results for query </span><span class="si">{self.query_id}</span><span class="s2"> are not available&quot;</span>
+            <span class="p">)</span>
+        <span class="n">accept</span> <span class="o">=</span> <span class="s2">&quot;application/json+compact&quot;</span> <span class="k">if</span> <span class="n">is_json</span> <span class="k">else</span> <span class="s2">&quot;text/tab-separated-values&quot;</span>
+
+        <span class="n">responses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">num_rows_total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="n">num_rows_to_fetch</span> <span class="o">=</span> <span class="n">num_rows_total</span>
+        <span class="k">if</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="n">num_rows_to_fetch</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">num_rows_total</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">num_rows_received</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">skip_header</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">num_rows_to_fetch</span> <span class="o">&gt;</span> <span class="n">RESULTS_PAGE_SIZE</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Requesting </span><span class="si">%s</span><span class="s2"> rows in </span><span class="si">%s</span><span class="s2"> rows per page...&quot;</span><span class="p">,</span>
+                <span class="n">num_rows_to_fetch</span><span class="p">,</span>
+                <span class="nb">min</span><span class="p">(</span><span class="n">RESULTS_PAGE_SIZE</span><span class="p">,</span> <span class="n">num_rows_to_fetch</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">while</span> <span class="n">num_rows_received</span> <span class="o">&lt;</span> <span class="n">num_rows_to_fetch</span><span class="p">:</span>
+            <span class="n">num_rows_remaining</span> <span class="o">=</span> <span class="n">num_rows_to_fetch</span> <span class="o">-</span> <span class="n">num_rows_received</span>
+            <span class="n">num_rows_to_fetch_this_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">num_rows_remaining</span><span class="p">,</span> <span class="n">RESULTS_PAGE_SIZE</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">num_rows_to_fetch_this_time</span><span class="p">,</span>
+                <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="n">num_rows_received</span><span class="p">,</span>
+                <span class="s2">&quot;sort&quot;</span><span class="p">:</span> <span class="n">sort</span><span class="p">,</span>
+                <span class="s2">&quot;skipheader&quot;</span><span class="p">:</span> <span class="n">skip_header</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">skip_header</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="n">accept</span><span class="p">})</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
+            <span class="n">num_rows_received</span> <span class="o">+=</span> <span class="n">num_rows_to_fetch_this_time</span>
+            <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Fetched </span><span class="si">%s</span><span class="s2"> rows this time in </span><span class="si">%.1f</span><span class="s2">sec. Received </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2"> rows&quot;</span><span class="p">,</span>
+                <span class="n">num_rows_to_fetch_this_time</span><span class="p">,</span>
+                <span class="n">diff</span><span class="p">,</span>
+                <span class="n">num_rows_received</span><span class="p">,</span>
+                <span class="n">num_rows_to_fetch</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">ret</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">is_json</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+                <span class="n">contents</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ret</span><span class="p">:</span>
+                    <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">contents</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">]</span>
+                    <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">contents</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Retrieved </span><span class="si">%s</span><span class="s2"> rows from server in </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span>
+            <span class="n">num_rows_received</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="s2">&quot;Query is not running&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">jupyter_available</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="s2">&quot;Pandas library is not installed&quot;</span><span class="p">)</span>
+        <span class="n">tsv_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">is_json</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tsv_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">tsv_data</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Wuxi Nextcode.<br/>
+      Last updated on 2019-11-07.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

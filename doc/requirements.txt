@@ -1,0 +1,9 @@
+sphinx
+sphinx-autodoc-typehints
+sphinx-rtd-theme
+nbsphinx
+jupyter-sphinx-theme
+ipython
+pandoc
+sphinx_bootstrap_theme
+sphinxcontrib-osexample==0.1.1

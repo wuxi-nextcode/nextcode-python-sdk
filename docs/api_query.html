@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Query Service &#8212; nextcode-python-sdk 0.2.10 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Workflow Service" href="api_workflow.html" />
+    <link rel="prev" title="API Reference" href="api.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          nextcode-python-sdk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.11</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Contents <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="jupyter.html">Jupyter Notebooks Integration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Example Jupyter Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apidoc.html">Server API Documention</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Query Service</a><ul>
+<li><a class="reference internal" href="#query-api-service">Query-API Service</a></li>
+<li><a class="reference internal" href="#query-api-query">Query-API Query</a></li>
+<li><a class="reference internal" href="#id1">Query-API Service</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="api.html" title="Previous Chapter: API Reference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; API Reference</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_workflow.html" title="Next Chapter: Workflow Service"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Workflow Service &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="module-nextcode.services.query">
+<span id="query-service"></span><h1>Query Service<a class="headerlink" href="#module-nextcode.services.query" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="query-api-service">
+<h2>Query-API Service<a class="headerlink" href="#query-api-service" title="Permalink to this headline">¶</a></h2>
+<p>Service object for interfacing with the GOR Query API</p>
+</div>
+<span class="target" id="module-nextcode.services.query.query"></span><div class="section" id="query-api-query">
+<h2>Query-API Query<a class="headerlink" href="#query-api-query" title="Permalink to this headline">¶</a></h2>
+<p>The Query class represents a query model from the RESTFul Query API</p>
+<dl class="class">
+<dt id="nextcode.services.query.query.Query">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.query.</code><code class="sig-name descname">Query</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">resp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query" title="Permalink to this definition">¶</a></dt>
+<dd><p>A local proxy representing a serverside Gor Query.
+This object is returned from query methods in the ‘query’ service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>service</strong> – query service handle</p></li>
+<li><p><strong>resp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]) – json response from query api endpoint</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">svc</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;myproject&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">status</span>
+<span class="go">&#39;DONE&#39;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.get_results">
+<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">is_json=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns results from a completed query, optionally with limit and offset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – number of rows to return (default all)</p></li>
+<li><p><strong>offset</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – number of rows to skip</p></li>
+<li><p><strong>sort</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – gor sort string in format ‘[column] [ASC|DESC]’</p></li>
+<li><p><strong>is_json</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – return rows as a dictionary containing ‘header’ and ‘data’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dictonary containing ‘header’ and ‘data’ lists or tsv</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>QueryError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.init_from_resp">
+<code class="sig-name descname">init_from_resp</code><span class="sig-paren">(</span><em class="sig-param">resp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.init_from_resp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.init_from_resp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the query object from a server json response.
+If the response is a ‘simple query’, e.g. from the queries list
+the object will only contain partial information.
+If the caller requests a field that is not included in the local proxy object
+the query will be refreshed from the server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the local query object from the RESTful service</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.running">
+<code class="sig-name descname">running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the query currently running</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.wait">
+<code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param">max_seconds=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the query to complete</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_seconds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – raise an exception if the query runs longer than this</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>QueryError</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-nextcode.services.query.service"></span><div class="section" id="id1">
+<h2>Query-API Service<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Service object for interfacing with the GOR Query API</p>
+<dl class="class">
+<dt id="nextcode.services.query.service.Service">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">client</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service" title="Permalink to this definition">¶</a></dt>
+<dd><p>A connection to the query api</p>
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.current_user">
+<em class="property">property </em><code class="sig-name descname">current_user</code><a class="headerlink" href="#nextcode.services.query.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>User JWT decoded by the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.endpoints">
+<em class="property">property </em><code class="sig-name descname">endpoints</code><a class="headerlink" href="#nextcode.services.query.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.execute">
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">nowait=False</em>, <em class="sig-param">persist=None</em>, <em class="sig-param">relations=None</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a gor statement on the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – gor query string</p></li>
+<li><p><strong>nowait</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if True, return a Query object with PENDING status instead of waiting for query to finish</p></li>
+<li><p><strong>relations</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]]) – virtual relations to include with the query</p></li>
+<li><p><strong>persist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – File path in the project tree to persist the results to (must start with <cite>user_data/</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">ServerError</span></code>, <code class="xref py py-exc docutils literal notranslate"><span class="pre">MissingRelations</span></code></p>
+</dd>
+</dl>
+<p>Optional keyword arguments in the form <cite>name=data</cite> are converted into virtual relations if relations
+is not explicitly passed in.</p>
+<p>Whether nowait is set or not, the serverside method will wait for a maximum of 2 seconds for the query
+to transition to a completed status. Therefore, most small queries will return in DONE status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.query.query.Query" title="nextcode.services.query.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.execute_template">
+<code class="sig-name descname">execute_template</code><span class="sig-paren">(</span><em class="sig-param">template_name</em>, <em class="sig-param">nowait=False</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a gor template on the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full template name in the form [org]/[category]/[query]/[version]</p></li>
+<li><p><strong>nowait</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if True, return a Query object with PENDING status instead of waiting for query to finish</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">ServerError</span></code></p>
+</dd>
+</dl>
+<p>Optional keyword arguments are used for arguments into the template.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.query.query.Query" title="nextcode.services.query.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.get_queries">
+<code class="sig-name descname">get_queries</code><span class="sig-paren">(</span><em class="sig-param">status=None</em>, <em class="sig-param">limit=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_queries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all queries that have been run by the current user in the current project, optionally filtered by status.</p>
+<p>Results are returned in reverse chronological order so latest queries are first.</p>
+<p>Note that queries are returned in <cite>partial</cite> state which means they might not be up to date. <cite>query.refresh()</cite>
+can be called to force a refresh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status</strong> – Filter queries by status. e.g. <cite>DONE</cite> <cite>RUNNING</cite> <cite>FAILED</cite></p></li>
+<li><p><strong>limit</strong> – Limit the number of queries returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<a class="reference internal" href="#nextcode.services.query.query.Query" title="nextcode.services.query.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.get_query">
+<code class="sig-name descname">get_query</code><span class="sig-paren">(</span><em class="sig-param">query_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a query object for a query by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The ID of a query that has been previously executed</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>QueryError</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.query.query.Query" title="nextcode.services.query.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.healthy">
+<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the service healthy?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.list_templates">
+<code class="sig-name descname">list_templates</code><span class="sig-paren">(</span><em class="sig-param">organization=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.list_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.list_templates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all templates in the system or filtered.</p>
+<p>Returns a list of full template names in the format [organization]/[category]/[name]/[version]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>organization</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter results by organization</p></li>
+<li><p><strong>category</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter results by category</p></li>
+<li><p><strong>name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter results by template name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>ServerError</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.openapi_spec">
+<code class="sig-name descname">openapi_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raw openapi spec for the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.status">
+<code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service information from the root endpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-nextcode.services.query.utils"></span><dl class="function">
+<dt id="nextcode.services.query.utils.get_fingerprint">
+<code class="sig-prename descclassname">nextcode.services.query.utils.</code><code class="sig-name descname">get_fingerprint</code><span class="sig-paren">(</span><em class="sig-param">contents</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/utils.html#get_fingerprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.utils.get_fingerprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a fingerprint for the contents of a virtual relation.</p>
+<p>This fingerprint is used by the server for caching purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>contents</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The full contents of a tsv file</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>md5 sum representing the file contents</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/api_query.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Wuxi Nextcode.<br/>
+      Last updated on 2019-11-07.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

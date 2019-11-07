@@ -1,0 +1,44 @@
+{
+  "args": null,
+  "available": true,
+  "complete_date": "2019-11-01T10:46:58",
+  "date_submitted": "2019-11-01T10:46:58.654699",
+  "details": {
+    "file_path": null,
+    "job_type": "default",
+    "persist": null,
+    "results": null,
+    "routing_key": "default.wxnc.projectname",
+    "wait": 2.0
+  },
+  "error": null,
+  "id": 1371,
+  "links": {
+    "perspectives": [
+      
+    ],
+    "result": "https://test.wuxinextcode.com/api/query/query/1371/result",
+    "self": "https://test.wuxinextcode.com/api/query/query/1371"
+  },
+  "progress": null,
+  "project_name": "projectname",
+  "query": "\ngor -p chr1:69000-70000 #dbsnp# | TOP 72;\n",
+  "query_id": 1371,
+  "relations": [
+    
+  ],
+  "results": null,
+  "start_date": "2019-11-01T10:46:58",
+  "stats": {
+    "column_count": 5,
+    "end_timestamp": 1572605218882,
+    "line_count": 72,
+    "size_bytes": 798,
+    "start_timestamp": 1572605218830,
+    "submit_timestamp": 1572605218789
+  },
+  "status": "DONE",
+  "submit_date": "2019-11-01T10:46:58.654699",
+  "template_name": null,
+  "user_name": "dummy@wuxinextcode.com"
+}
