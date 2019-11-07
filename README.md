@@ -1,3 +1,9 @@
+[![Latest version on
+PyPi](https://badge.fury.io/py/nextcode-sdk.svg)](https://badge.fury.io/py/nextcode-sdk)
+[![Supported Python
+versions](https://img.shields.io/pypi/pyversions/nextcode-sdk.svg)](https://pypi.org/project/nextcode-sdk/)
+[![Code style:
+black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 # nextcode Python SDK
 
 Nextcode-sdk is a python package for interfacing with Wuxi Nextcode services.
