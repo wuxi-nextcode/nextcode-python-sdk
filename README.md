@@ -1,5 +1,6 @@
 [![Latest version on
 PyPi](https://badge.fury.io/py/nextcode-sdk.svg)](https://badge.fury.io/py/nextcode-sdk)
+[![Coverage Status](https://coveralls.io/repos/github/wuxi-nextcode/nextcode-python-sdk/badge.svg?branch=master)](https://coveralls.io/github/wuxi-nextcode/nextcode-python-sdk?branch=master)
 [![Supported Python
 versions](https://img.shields.io/pypi/pyversions/nextcode-sdk.svg)](https://pypi.org/project/nextcode-sdk/)
 [![Code style:
