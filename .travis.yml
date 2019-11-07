@@ -6,3 +6,5 @@ install:
   - pip install -r requirements.txt
 script:
   - pytest --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
+after_success:
+ - codecov
