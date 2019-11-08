@@ -306,8 +306,13 @@ class QueryBuilder:
         for k, v in self.creates.items():
             if not v.endswith(";"):
                 v += ";"
-            string += "create {} = {}\n".format(k, v)
+            string += "create [{}] = {}\n".format(k, v)
         string += "\n"
 
         string += stmt
         return string
+
+    def execute(self, stmt, **kw):
+        svc = nextcode.get_service("query")
+        query = self.render(stmt)
+        return svc.execute(query, **kw)
