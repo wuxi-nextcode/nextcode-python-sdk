@@ -9,6 +9,8 @@ import os
 import logging
 
 from .config import Config
+
+# we want these available from the top-level package
 from .client import Client, get_service
 
 log = logging.getLogger()
@@ -24,3 +26,6 @@ def read_version():
 
 
 __version__ = read_version()
+
+# loading this here allows easy extension setup in jupyterhub
+from .services.query.jupyter import load_ipython_extension

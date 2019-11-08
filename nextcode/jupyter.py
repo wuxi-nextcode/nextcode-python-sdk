@@ -1,1 +1,2 @@
-from .services.query.jupyter_magic import load_ipython_extension
+# loading this here allows easy importing in jupyterhub
+from .services.query.jupyter import *

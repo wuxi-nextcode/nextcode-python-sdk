@@ -11,12 +11,12 @@ Typically the client will perform a username/password authentication once and st
 
 Gor Query API
 --------------
-https://redocly.github.io/redoc/?url=https://nonnib.github.io/testrepo/openapi/gor-query-api.json
+https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/gor-query-api.json
 
 Workflow Service
 --------------
-https://redocly.github.io/redoc/?url=https://nonnib.github.io/testrepo/openapi/workflow-service.json
+https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/workflow-service.json
 
 Pipelines Service
 --------------
-https://redocly.github.io/redoc/?url=https://nonnib.github.io/testrepo/openapi/pipelines-service.json
+https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/pipelines-service.json

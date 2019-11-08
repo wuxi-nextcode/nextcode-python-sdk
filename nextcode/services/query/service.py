@@ -16,6 +16,7 @@ from ...client import Client
 from .exceptions import QueryError, MissingRelations
 from .query import Query
 from .utils import get_fingerprint
+import nextcode
 
 SERVICE_PATH = "/api/query"
 
@@ -152,6 +153,7 @@ class Service(BaseService):
             "relations": payload_relations,
             "persist": persist,
             "wait": QUERY_WAIT_SECONDS,
+            "metadata": [{"client": f"nextcode-python-sdk/{nextcode.__version__}"}],
         }
         try:
             resp = self.session.post(url, json=payload)

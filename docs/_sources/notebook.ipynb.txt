@@ -40,7 +40,7 @@
    ],
    "source": [
     "# load the magic extension and imports\n",
-    "%reload_ext nextcode.gor\n",
+    "%reload_ext nextcode\n",
     "import pandas as pd\n",
     "%env LOG_QUERY=1"
    ]

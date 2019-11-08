@@ -1,17 +1,13 @@
 import os
-from unittest import TestCase, mock
+from unittest import mock
 import responses
-from pathlib import Path
 from unittest.mock import patch, MagicMock
-import tempfile
-import shutil
 
-from nextcode import config, Client, jupyter, gor
+from nextcode import jupyter
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
-from nextcode.utils import decode_token
-from nextcode.services.query import jupyter_magic
+from nextcode.services.query import jupyter
 from nextcode.services.query.exceptions import MissingRelations, QueryError
-from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_RESP, AUTH_URL
+from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 from tests.test_query import QUERY_URL, ROOT_RESP
 import pandas as pd
 
@@ -26,23 +22,23 @@ class JupyterTest(BaseTestCase):
     def setUp(self):
         super(JupyterTest, self).setUp()
         setup_responses()
-        self.magics = jupyter_magic.GorMagics()
+        self.magics = jupyter.GorMagics()
         self.magics.shell = MagicMock()
 
     @responses.activate
     def test_basic_gor_magics(self):
         setup_responses()
 
-        m = jupyter_magic.GorMagics()
+        m = jupyter.GorMagics()
         m.handle_exception()
 
         os.environ["NEXTCODE_PROFILE"] = "notfound"
         with self.assertRaises(InvalidProfile):
-            jupyter_magic.get_service()
+            jupyter.get_service()
 
         del os.environ["NEXTCODE_PROFILE"]
         os.environ["GOR_API_KEY"] = REFRESH_TOKEN
-        jupyter_magic.get_service()
+        jupyter.get_service()
 
     @responses.activate
     def test_replace_vars(self):
@@ -71,25 +67,24 @@ class JupyterTest(BaseTestCase):
         _ = self.magics.load_relations(["var:found", "var:alsofound"])
 
     def test_print_error(self):
-        jupyter_magic.print_error("test")
+        jupyter.print_error("test")
 
     def test_load_extension(self):
         setup_responses()
         m = MagicMock()
-        with mock.patch("nextcode.services.query.jupyter_magic.get_service"):
-            jupyter_magic.load_ipython_extension(m)
+        with mock.patch("nextcode.services.query.jupyter.get_service"):
+            jupyter.load_ipython_extension(m)
 
         with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service",
-            side_effect=InvalidToken,
+            "nextcode.services.query.jupyter.get_service", side_effect=InvalidToken,
         ):
-            jupyter_magic.load_ipython_extension(m)
+            jupyter.load_ipython_extension(m)
 
         with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service",
+            "nextcode.services.query.jupyter.get_service",
             side_effect=ServerError("Error"),
         ):
-            jupyter_magic.load_ipython_extension(m)
+            jupyter.load_ipython_extension(m)
 
 
 class GorCommandTest(JupyterTest):
@@ -109,9 +104,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello")
             self.assertTrue(isinstance(df, pd.DataFrame))
 
@@ -132,9 +125,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello")
             self.assertTrue(df is None)
 
@@ -152,9 +143,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello", "World\nAnother world")
             self.assertTrue(isinstance(df, pd.DataFrame))
 
@@ -171,9 +160,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("myvar <<", "gor #dbsnp#\nAnother line")
             self.assertTrue(df is None)
             dt = self.magics.gor("user_data/file.gorz <<", "gor #dbsnp#")
@@ -183,9 +170,7 @@ class GorCommandTest(JupyterTest):
     def test_relations(self):
         setup_responses()
         m = MagicMock()
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello")
         self.assertTrue(df is None)
 
@@ -200,9 +185,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute.side_effect = MissingRelations(relations=["a", "b"])
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello")
             self.assertTrue(df is None)
 
@@ -224,7 +207,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with patch("nextcode.services.query.jupyter_magic.get_service", return_value=m):
+        with patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("Hello")
             self.assertTrue(df is None)
 
@@ -250,9 +233,7 @@ class GorCommandTest(JupyterTest):
 
         m = MagicMock()
         m.execute = mock_execute
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             _ = self.magics.gorls(". test")
 
     @responses.activate
@@ -278,13 +259,11 @@ class GorCommandTest(JupyterTest):
         m = MagicMock()
         m.execute = mock_execute
         m.project = "/project/"
-        with mock.patch(
-            "nextcode.services.query.jupyter_magic.get_service", return_value=m
-        ):
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             _ = self.magics.gorfind("test")
 
     def test_print(self):
-        jupyter_magic.print_details("dummy")
+        jupyter.print_details("dummy")
         os.environ["LOG_QUERY"] = "1"
-        jupyter_magic.print_details("dummy")
+        jupyter.print_details("dummy")
         os.environ["LOG_QUERY"] = ""

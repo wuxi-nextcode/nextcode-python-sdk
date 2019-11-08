@@ -1,5 +1,5 @@
 """
-Jupyter Magic
+Jupyter Extensions
 ------------------
 
 Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`
