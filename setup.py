@@ -21,7 +21,9 @@ version = get_version()
 
 setup(
     name="nextcode-sdk",
+    python_requires=">=3.6",
     version=version,
+    license="MIT",
     author="WUXI NextCODE",
     author_email="support@wuxinextcode.com",
     description="Python SDK for Wuxi Nextcode Services",
@@ -35,15 +37,12 @@ setup(
     include_package_data=True,
     entry_points={},
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
         "Framework :: Flask",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: POSIX",
-        "Programming Language :: Python",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
