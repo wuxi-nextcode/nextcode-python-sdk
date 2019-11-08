@@ -147,11 +147,11 @@ class GorMagics(Magics):
                     gor_string, relations=relations, nowait=True, persist=persist
                 )
             start_time = time.time()
-            while qry.running() is True:
+            while qry.running is True:
                 try:
                     qry.wait(max_seconds=10)
                 except QueryError as ex:
-                    if qry.running():
+                    if qry.running:
                         print_details(
                             f"Query {qry.query_id} has status {qry.status} after {(time.time()-start_time):.0f} seconds"
                         )

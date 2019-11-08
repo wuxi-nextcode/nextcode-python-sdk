@@ -148,6 +148,17 @@ This object is returned from query methods in the ‘query’ service.</p>
 </pre></div>
 </div>
 <dl class="method">
+<dt id="nextcode.services.query.query.Query.failed">
+<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#nextcode.services.query.query.Query.failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the query in a failed state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.query.Query.get_results">
 <code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">is_json=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns results from a completed query, optionally with limit and offset</p>
@@ -190,7 +201,7 @@ the query will be refreshed from the server.</p>
 
 <dl class="method">
 <dt id="nextcode.services.query.query.Query.running">
-<code class="sig-name descname">running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.running" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">running</code><a class="headerlink" href="#nextcode.services.query.query.Query.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query currently running</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>

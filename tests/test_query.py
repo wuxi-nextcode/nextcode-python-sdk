@@ -1,7 +1,7 @@
 from unittest import TestCase
 import responses
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 import tempfile
 import shutil
 import datetime
@@ -272,11 +272,13 @@ class QueryTest(BaseTestCase):
             else:
                 return 0
 
-        setattr(query, "running", mock_running)
         with patch("nextcode.services.query.query.time.sleep"), patch(
             "nextcode.services.query.query.time.time", mock_time
-        ):
+        ), patch(
+            "nextcode.services.query.query.Query.running", new_callable=PropertyMock
+        ) as mock_running:
             with self.assertRaises(QueryError):
+                mock_running.return_value = True
                 query.wait(max_seconds=1)
 
         time_count = 0
@@ -294,11 +296,13 @@ class QueryTest(BaseTestCase):
                 return False
             return True
 
-        setattr(query, "running", mock_running)
         with patch("nextcode.services.query.query.time.sleep"), patch(
             "nextcode.services.query.query.time.time", mock_time
+        ), patch(
+            "nextcode.services.query.query.Query.running", new_callable=mock_running
         ):
-            query.wait(max_seconds=1)
+            with self.assertRaises(QueryError):
+                query.wait(max_seconds=1)
 
         time_count = 0
         setattr(query, "status", "PENDING")

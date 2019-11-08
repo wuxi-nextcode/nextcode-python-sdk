@@ -25,6 +25,7 @@ from .exceptions import QueryError
 SERVICE_PATH = "/api/query"
 
 RUNNING_STATUSES = ("PENDING", "RUNNING", "CANCELLING")
+FAILED_STATUSES = ("CANCELLING", "CANCELLED", "FAILED")
 RESULTS_PAGE_SIZE = 200000
 
 log = logging.getLogger(__name__)
@@ -92,6 +93,7 @@ class Query:
         else:
             raise AttributeError()
 
+    @property
     def running(self) -> bool:
         """
         Is the query currently running
@@ -99,6 +101,15 @@ class Query:
         if self.status in RUNNING_STATUSES:
             self.refresh()
         return self.status in RUNNING_STATUSES
+
+    @property
+    def failed(self) -> bool:
+        """
+        Is the query in a failed state
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status in FAILED_STATUSES
 
     def wait(self, max_seconds: Optional[int] = None):
         """
@@ -108,18 +119,18 @@ class Query:
 
         :raises: QueryError
         """
-        if not self.running():
+        if not self.running:
             return self
         log.info("Waiting for query %s to complete...", self.query_id)
         start_time = time.time()
         duration = 0.0
         period = 0.5
-        while self.running():
+        while self.running:
             time.sleep(period)
             duration = time.time() - start_time
             if max_seconds and duration > max_seconds:
                 raise QueryError(
-                    f"Query {self.query_id} has status {self.status} after {max_seconds} seconds"
+                    f"Query {self.query_id} has running status {self.status} after {max_seconds} seconds"
                 )
             period = min(period + 0.5, 5.0)
         if self.status == "DONE":
