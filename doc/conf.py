@@ -63,10 +63,7 @@ pygments_style = "sphinx"
 html_theme = "bootstrap"
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
-html_theme_options = {
-    "navbar_site_name": "Contents",
-    "source_link_position": "footer",
-}
+html_theme_options = {"navbar_site_name": "Contents", "source_link_position": "footer"}
 
 # -- Options for HTML output -------------------------------------------------
 

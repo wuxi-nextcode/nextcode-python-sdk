@@ -76,7 +76,7 @@ class JupyterTest(BaseTestCase):
             jupyter.load_ipython_extension(m)
 
         with mock.patch(
-            "nextcode.services.query.jupyter.get_service", side_effect=InvalidToken,
+            "nextcode.services.query.jupyter.get_service", side_effect=InvalidToken
         ):
             jupyter.load_ipython_extension(m)
 

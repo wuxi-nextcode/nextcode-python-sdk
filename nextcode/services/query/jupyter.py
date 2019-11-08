@@ -161,7 +161,7 @@ class GorMagics(Magics):
                 try:
                     print_error(
                         "Query {} failed with error:\n{}".format(
-                            qry.query_id, qry.error["description"]
+                            qry.query_id, qry.status_message
                         )
                     )
                 except TypeError:

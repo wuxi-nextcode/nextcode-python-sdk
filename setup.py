@@ -18,9 +18,7 @@ def get_version():
 
 class BumpCommand(Command):
     description = "Version bump"
-    user_options = [
-        ("which=", None, "Specify which part of the version to bump"),
-    ]
+    user_options = [("which=", None, "Specify which part of the version to bump")]
 
     def initialize_options(self):
         self.which = None
@@ -93,5 +91,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     test_suite="tests",
-    cmdclass={"bump": BumpCommand,},
+    cmdclass={"bump": BumpCommand},
 )

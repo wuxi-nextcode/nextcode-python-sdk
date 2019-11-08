@@ -39,6 +39,7 @@ class Service(BaseService):
         if "localhost" in client.profile["root_url"]:
             path = "/"
         super(Service, self).__init__(client, path, *args, **kwargs)
+        self.metadata = {"client": f"nextcode-python-sdk/{nextcode.__version__}"}
         self.project = kwargs.get("project") or os.environ.get("GOR_API_PROJECT")
 
     def _check_project(self):
@@ -153,7 +154,7 @@ class Service(BaseService):
             "relations": payload_relations,
             "persist": persist,
             "wait": QUERY_WAIT_SECONDS,
-            "metadata": [{"client": f"nextcode-python-sdk/{nextcode.__version__}"}],
+            "metadata": self.metadata,
         }
         try:
             resp = self.session.post(url, json=payload)
@@ -199,7 +200,12 @@ class Service(BaseService):
         args = []
         for k, v in kw.items():
             args.append({k: v})
-        payload = {"project": self.project, "args": args}
+        payload = {
+            "project": self.project,
+            "args": args,
+            "wait": QUERY_WAIT_SECONDS,
+            "metadata": self.metadata,
+        }
         resp = self.session.post(execute_url, json=payload)
 
         gor_query = Query(self, resp.json())

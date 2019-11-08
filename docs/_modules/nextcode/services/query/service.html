@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.21</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.24</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -142,6 +142,7 @@
         <span class="k">if</span> <span class="s2">&quot;localhost&quot;</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;root_url&quot;</span><span class="p">]:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Service</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;nextcode-python-sdk/</span><span class="si">{nextcode.__version__}</span><span class="s2">&quot;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GOR_API_PROJECT&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -256,7 +257,7 @@
             <span class="s2">&quot;relations&quot;</span><span class="p">:</span> <span class="n">payload_relations</span><span class="p">,</span>
             <span class="s2">&quot;persist&quot;</span><span class="p">:</span> <span class="n">persist</span><span class="p">,</span>
             <span class="s2">&quot;wait&quot;</span><span class="p">:</span> <span class="n">QUERY_WAIT_SECONDS</span><span class="p">,</span>
-            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;nextcode-python-sdk/</span><span class="si">{nextcode.__version__}</span><span class="s2">&quot;</span><span class="p">}],</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -302,7 +303,12 @@
         <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">})</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">args</span><span class="p">}</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
+            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">args</span><span class="p">,</span>
+            <span class="s2">&quot;wait&quot;</span><span class="p">:</span> <span class="n">QUERY_WAIT_SECONDS</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">execute_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
 
         <span class="n">gor_query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
