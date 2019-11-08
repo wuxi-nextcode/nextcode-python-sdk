@@ -298,14 +298,15 @@ class QueryBuilder:
     def render(self, stmt):
         string = ""
         for k, v in self.defs.items():
+            v = str(v)
             if not v.endswith(";"):
                 v += ";"
-            string += "{} = {}\n".format(k, v)
+            string += "def {} = {}\n".format(k, v)
         string += "\n"
         for k, v in self.creates.items():
             if not v.endswith(";"):
                 v += ";"
-            string += "{} = {}\n".format(k, v)
+            string += "create {} = {}\n".format(k, v)
         string += "\n"
 
         string += stmt
