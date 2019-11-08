@@ -7,6 +7,7 @@ Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`
 
 from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
+from typing import Dict, List, Optional, Union
 import nextcode
 import hashlib
 import time
@@ -283,3 +284,28 @@ def load_ipython_extension(ipython):
     print(" * GOR Version: {}".format(status["build_info"]["gor_services_version"]))
     print(" * Root Endpoint: {}".format(status["root"]))
     print(" * Current User: {}".format(svc.current_user["email"]))
+
+
+class QueryBuilder:
+
+    defs: List[str] = []
+    creates: List[str] = []
+
+    def __init__(self):
+        pass
+
+    def render(self, stmt):
+        string = ""
+        for d in self.defs:
+            if not d.endswith(";"):
+                d += ";"
+            string += "{}\n".format(d)
+        string += "\n"
+        for d in self.creates:
+            if not d.endswith(";"):
+                d += ";"
+            string += "{}\n".format(d)
+        string += "\n"
+
+        string += stmt
+        return string

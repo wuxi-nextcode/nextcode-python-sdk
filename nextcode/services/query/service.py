@@ -148,7 +148,7 @@ class Service(BaseService):
                     "data": data,
                 }
             )
-        payload: Dict[str, Optional[Union[int, str, List]]] = {
+        payload: Dict[str, Optional[Union[int, str, List, Dict]]] = {
             "project": self.project,
             "query": query,
             "relations": payload_relations,
