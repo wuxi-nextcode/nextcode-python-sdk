@@ -288,23 +288,24 @@ def load_ipython_extension(ipython):
 
 class QueryBuilder:
 
-    defs: List[str] = []
-    creates: List[str] = []
+    defs: Dict[str, str] = {}
+    creates: Dict[str, str] = {}
 
     def __init__(self):
-        pass
+        self.defs = {}
+        self.creates = {}
 
     def render(self, stmt):
         string = ""
-        for d in self.defs:
-            if not d.endswith(";"):
-                d += ";"
-            string += "{}\n".format(d)
+        for k, v in self.defs.items():
+            if not v.endswith(";"):
+                v += ";"
+            string += "{} = {}\n".format(k, v)
         string += "\n"
-        for d in self.creates:
-            if not d.endswith(";"):
-                d += ";"
-            string += "{}\n".format(d)
+        for k, v in self.creates.items():
+            if not v.endswith(";"):
+                v += ";"
+            string += "{} = {}\n".format(k, v)
         string += "\n"
 
         string += stmt
