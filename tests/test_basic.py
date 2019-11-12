@@ -126,41 +126,31 @@ class ClientTest(BaseTestCase):
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             with self.assertRaises(ServerError):
-                session = ServiceSession(
-                    api_name="dummy", url_base=url_base, api_key=REFRESH_TOKEN
-                )
+                session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
 
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, json=AUTH_RESP)
-            session = ServiceSession(
-                api_name="dummy", url_base=url_base, api_key=REFRESH_TOKEN
-            )
+            session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
 
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, status=404)
             with self.assertRaises(ServerError):
-                _ = ServiceSession(
-                    api_name="dummy", url_base=url_base, api_key=REFRESH_TOKEN
-                )
+                _ = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
 
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, body="text body")
             with self.assertRaises(ServerError):
-                _ = ServiceSession(
-                    api_name="dummy", url_base=url_base, api_key=REFRESH_TOKEN
-                )
+                _ = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
 
     @responses.activate
     def test_url_from_endpoint(self):
         url_base = "https://test.wuxinextcode/api/query"
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, url_base, json={"endpoints": {"one": "endpoint"}})
-        session = ServiceSession(
-            api_name="dummy", url_base=url_base, api_key=REFRESH_TOKEN
-        )
+        session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
         with self.assertRaises(ServerError):
             session.url_from_endpoint("nonexistent")
         session.url_from_endpoint("one")

@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.25</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -112,7 +112,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span>
 
@@ -124,13 +124,28 @@
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">DEFAULT_PROFILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">CACHE_SECONDS</span> <span class="o">=</span> <span class="mi">600</span>
 
 
-<span class="k">def</span> <span class="nf">load_cache</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<div class="viewcode-block" id="load_cache"><a class="viewcode-back" href="../../api.html#nextcode.config.load_cache">[docs]</a><span class="k">def</span> <span class="nf">load_cache</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a dictionary from disk cache by name.</span>
+
+<span class="sd">    The file is found in ~/.nextcode/cache/[name].cache and is assumed to be a</span>
+<span class="sd">    dictionary in json format.</span>
+
+<span class="sd">    If NEXTCODE_DISABLE_CACHE environment variable is non-zero this method does nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEXTCODE_DISABLE_CACHE&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">cache_file</span> <span class="o">=</span> <span class="n">root_config_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.cache&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="n">file_age</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">cache_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_age</span> <span class="o">&gt;</span> <span class="n">CACHE_SECONDS</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cache is too old, removing it.&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cache_file</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span>
+
         <span class="n">contents</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cache_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">))</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded contents from cache </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cache_file</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">contents</span>
@@ -138,7 +153,7 @@
         <span class="k">pass</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Could not load from cache </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cache_file</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <span class="k">def</span> <span class="nf">save_cache</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -148,7 +163,7 @@
         <span class="n">cache_folder</span> <span class="o">=</span> <span class="n">root_config_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">cache_file</span> <span class="o">=</span> <span class="n">root_config_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.cache&quot;</span><span class="p">)</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">cache_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">))</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">cache_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Dumped contents into cache </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cache_file</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Could not save cache </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cache_file</span><span class="p">)</span>
@@ -252,6 +267,17 @@
     <span class="n">save_config</span><span class="p">()</span></div>
 
 
+<span class="k">def</span> <span class="nf">delete_profile</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="n">profiles</span> <span class="o">=</span> <span class="n">get_profiles</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span><span class="s2">&quot;Profile does not exist&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_profile&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s2">&quot;default_profile&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+    <span class="k">del</span> <span class="n">profiles</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">save_config</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="set_default_profile"><a class="viewcode-back" href="../../api.html#nextcode.config.set_default_profile">[docs]</a><span class="k">def</span> <span class="nf">set_default_profile</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set a named profile as the default one if no profile is specified or GOR_API_KEY is not set</span>
@@ -264,6 +290,26 @@
         <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span><span class="s2">&quot;Profile does not exist&quot;</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s2">&quot;default_profile&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">})</span>
     <span class="n">save_config</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_profiles</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_default_profile</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_profile&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">get_profile_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">data</span>
 
 
 <span class="n">_init_config</span><span class="p">()</span>
@@ -284,7 +330,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-08.<br/>
+      Last updated on 2019-11-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

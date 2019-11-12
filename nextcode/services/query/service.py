@@ -7,7 +7,7 @@ Service object for interfacing with the GOR Query API
 
 import logging
 import os
-from typing import Dict, Tuple, Sequence, List, Optional, Union
+from typing import Dict, Tuple, Sequence, List, Optional, Union, Any
 from requests import codes
 
 from ...services import BaseService
@@ -36,11 +36,15 @@ class Service(BaseService):
     def __init__(self, client: Client, *args, **kwargs) -> None:
         path = os.environ.get("NEXTCODE_SERVICE_PATH", SERVICE_PATH)
         # ! temporary hack
-        if "localhost" in client.profile["root_url"]:
+        if "localhost" in client.profile.root_url:
             path = "/"
         super(Service, self).__init__(client, path, *args, **kwargs)
         self.metadata = {"client": f"nextcode-python-sdk/{nextcode.__version__}"}
-        self.project = kwargs.get("project") or os.environ.get("GOR_API_PROJECT")
+        self.project = (
+            kwargs.get("project")
+            or os.environ.get("GOR_API_PROJECT")
+            or client.profile.project
+        )
 
     def _check_project(self):
         """
@@ -51,9 +55,13 @@ class Service(BaseService):
         if not self.project:
             raise QueryError("No project specified")
 
-    def list_templates(
+    def get_template(self, name: str) -> Dict:
+        url = self.session.endpoints["templates"] + name
+        return self.session.get(url).json()
+
+    def get_templates(
         self, organization: str = None, category: str = None, name: str = None
-    ) -> List[str]:
+    ) -> Dict[str, Dict]:
         """
         Return a list of all templates in the system or filtered.
 
@@ -88,7 +96,7 @@ class Service(BaseService):
                 for template in resp.json()["templates"]:
                     if not name or template["name"] == name:
                         ret[template["full_name"]] = template
-        return list(ret.keys())
+        return ret
 
     def execute(
         self,
@@ -96,6 +104,7 @@ class Service(BaseService):
         nowait: bool = False,
         persist: Optional[str] = None,
         relations: Optional[List[Dict]] = None,
+        job_type: Optional[str] = None,
         **kw,
     ) -> Query:
         """
@@ -105,6 +114,7 @@ class Service(BaseService):
         :param nowait: if True, return a Query object with PENDING status instead of waiting for query to finish
         :param relations: virtual relations to include with the query
         :param persist: File path in the project tree to persist the results to (must start with `user_data/`)
+        :param job_type: Optional job type for routing purposes
 
         :raises: :exc:`~exceptions.ServerError`, :exc:`~exceptions.MissingRelations`
 
@@ -148,13 +158,14 @@ class Service(BaseService):
                     "data": data,
                 }
             )
-        payload: Dict[str, Optional[Union[int, str, List]]] = {
+        payload: Dict[str, Optional[Union[int, str, List[Any], Dict]]] = {
             "project": self.project,
             "query": query,
             "relations": payload_relations,
             "persist": persist,
             "wait": QUERY_WAIT_SECONDS,
             "metadata": self.metadata,
+            "type": job_type,
         }
         try:
             resp = self.session.post(url, json=payload)

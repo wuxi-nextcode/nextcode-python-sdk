@@ -8,7 +8,7 @@ The Query class represents a query model from the RESTFul Query API
 
 import logging
 import time
-from typing import Dict, Tuple, Sequence, List, Optional, Union
+from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
 from dateutil.parser import parse
 
 try:
@@ -25,6 +25,7 @@ from .exceptions import QueryError
 SERVICE_PATH = "/api/query"
 
 RUNNING_STATUSES = ("PENDING", "RUNNING", "CANCELLING")
+FAILED_STATUSES = ("CANCELLING", "CANCELLED", "FAILED")
 RESULTS_PAGE_SIZE = 200000
 
 log = logging.getLogger(__name__)
@@ -92,6 +93,7 @@ class Query:
         else:
             raise AttributeError()
 
+    @property
     def running(self) -> bool:
         """
         Is the query currently running
@@ -99,6 +101,24 @@ class Query:
         if self.status in RUNNING_STATUSES:
             self.refresh()
         return self.status in RUNNING_STATUSES
+
+    @property
+    def failed(self) -> bool:
+        """
+        Is the query in a failed state
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status in FAILED_STATUSES
+
+    @property
+    def done(self) -> bool:
+        """
+        Is the query in the DONE state
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status == "DONE"
 
     def wait(self, max_seconds: Optional[int] = None):
         """
@@ -108,18 +128,18 @@ class Query:
 
         :raises: QueryError
         """
-        if not self.running():
+        if not self.running:
             return self
         log.info("Waiting for query %s to complete...", self.query_id)
         start_time = time.time()
         duration = 0.0
         period = 0.5
-        while self.running():
+        while self.running:
             time.sleep(period)
             duration = time.time() - start_time
             if max_seconds and duration > max_seconds:
                 raise QueryError(
-                    f"Query {self.query_id} has status {self.status} after {max_seconds} seconds"
+                    f"Query {self.query_id} has running status {self.status} after {max_seconds} seconds"
                 )
             period = min(period + 0.5, 5.0)
         if self.status == "DONE":
@@ -153,7 +173,9 @@ class Query:
         limit: Optional[int] = None,
         offset: Optional[int] = None,
         sort: Optional[str] = None,
+        filt: Optional[str] = None,
         is_json: bool = True,
+        callback: Optional[Callable] = None,
     ) -> Union[Dict, str]:
         """
         Returns results from a completed query, optionally with limit and offset
@@ -161,6 +183,7 @@ class Query:
         :param limit: number of rows to return (default all)
         :param offset: number of rows to skip
         :param sort: gor sort string in format '[column] [ASC|DESC]'
+        :param filt: filter to apply to the results serverside
         :param is_json: return rows as a dictionary containing 'header' and 'data'
         :returns: dictonary containing 'header' and 'data' lists or tsv
         :raises: QueryError
@@ -197,6 +220,7 @@ class Query:
                 "offset": num_rows_received,
                 "sort": sort,
                 "skipheader": skip_header,
+                "filt": filt,
             }
             skip_header = True
             st = time.time()
@@ -211,6 +235,8 @@ class Query:
                 num_rows_received,
                 num_rows_to_fetch,
             )
+            if callback:
+                callback(received=num_rows_received, total=num_rows_total)
         ret: Union[Dict, str]
         if is_json:
             ret = {}

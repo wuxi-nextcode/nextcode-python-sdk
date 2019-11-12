@@ -7,6 +7,7 @@ Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`
 
 from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
+from typing import Dict, List, Optional, Union
 import nextcode
 import hashlib
 import time
@@ -146,11 +147,11 @@ class GorMagics(Magics):
                     gor_string, relations=relations, nowait=True, persist=persist
                 )
             start_time = time.time()
-            while qry.running() is True:
+            while qry.running is True:
                 try:
                     qry.wait(max_seconds=10)
                 except QueryError as ex:
-                    if qry.running():
+                    if qry.running:
                         print_details(
                             f"Query {qry.query_id} has status {qry.status} after {(time.time()-start_time):.0f} seconds"
                         )
@@ -283,3 +284,35 @@ def load_ipython_extension(ipython):
     print(" * GOR Version: {}".format(status["build_info"]["gor_services_version"]))
     print(" * Root Endpoint: {}".format(status["root"]))
     print(" * Current User: {}".format(svc.current_user["email"]))
+
+
+class QueryBuilder:
+
+    defs: Dict[str, str] = {}
+    creates: Dict[str, str] = {}
+
+    def __init__(self):
+        self.defs = {}
+        self.creates = {}
+
+    def render(self, stmt):
+        string = ""
+        for k, v in self.defs.items():
+            v = str(v)
+            if not v.endswith(";"):
+                v += ";"
+            string += "def {} = {}\n".format(k, v)
+        string += "\n"
+        for k, v in self.creates.items():
+            if not v.endswith(";"):
+                v += ";"
+            string += "create [{}] = {}\n".format(k, v)
+        string += "\n"
+
+        string += stmt
+        return string
+
+    def execute(self, stmt, **kw):
+        svc = nextcode.get_service("query")
+        query = self.render(stmt)
+        return svc.execute(query, **kw)

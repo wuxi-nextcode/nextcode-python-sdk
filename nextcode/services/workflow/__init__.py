@@ -24,6 +24,6 @@ class Service(BaseService):
     def __init__(self, client: Client, *args, **kwargs) -> None:
         path = os.environ.get("NEXTCODE_SERVICE_PATH", SERVICE_PATH)
         # ! temporary hack
-        if "localhost" in client.profile["root_url"]:
+        if "localhost" in client.profile.root_url:
             path = "/"
         super(Service, self).__init__(client, path, *args, **kwargs)

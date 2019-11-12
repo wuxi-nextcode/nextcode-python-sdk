@@ -19,7 +19,7 @@ from hashlib import sha1
 from typing import Dict
 
 from . import __version__
-from .exceptions import ServerError
+from .exceptions import ServerError, ServiceNotFound
 from .utils import check_resp_error, get_access_token
 from .config import Config, load_cache, save_cache
 
@@ -34,7 +34,7 @@ class ServiceSession(requests.Session):
     from nextcode service api's
     """
 
-    def __init__(self, api_name, url_base, api_key, *args, **kwargs):
+    def __init__(self, url_base, api_key, *args, **kwargs):
         super(ServiceSession, self).__init__(*args, **kwargs)
         # retry idempotent methods up to 5 times
         if not environ.get("NEXTCODE_DISABLE_RETRY"):
@@ -55,7 +55,6 @@ class ServiceSession(requests.Session):
         self.root_info = {}
         self.endpoints = {}
         self.token = None
-        self.api_name = api_name
         self.url_base = url_base
         self.api_key = api_key
 
@@ -63,9 +62,7 @@ class ServiceSession(requests.Session):
             log.info("Overriding api key from environment")
             self.api_key = environ["GOR_API_KEY"]
 
-        self.cache_name = sha1(
-            (self.api_name + self.url_base + self.api_key).encode()
-        ).hexdigest()
+        self.cache_name = sha1((self.url_base).encode()).hexdigest()
         self.user_agent = "Nextcode-SDK/%s Python/%s %s/%s" % (
             __version__,
             platform.python_version(),
@@ -87,11 +84,24 @@ class ServiceSession(requests.Session):
     def _initialize(self) -> None:
         self.token = get_access_token(self.api_key)
         self.headers["Authorization"] = "Bearer {}".format(self.token)
-        self.root_info = self.fetch_root_info()
+        try:
+            self.root_info = self.fetch_root_info()
+        except ServerError as ex:
+            if ex.response and ex.response.get("status") == codes.not_found:
+                status = ex.response.get("status")
+                raise ServiceNotFound(
+                    f"Service does not exist on server ({status}): {self.url_base}"
+                )
+            raise
+        # persist the endpoints to disk to save on a roundtrip every call
         self._save()
 
     def _save(self) -> None:
-        contents = {"token": self.token, "root_info": self.root_info}
+        contents = {
+            "token": self.token,
+            "root_info": self.root_info,
+            "api_key": self.api_key,
+        }
         save_cache(self.cache_name, contents)
 
     def _load(self) -> bool:

@@ -1,7 +1,7 @@
 from unittest import TestCase
 import responses
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 import tempfile
 import shutil
 import datetime
@@ -71,7 +71,7 @@ class QueryTest(BaseTestCase):
             svc._check_project()
 
     @responses.activate
-    def test_list_templates(self):
+    def test_get_templates(self):
         responses.add(
             responses.GET,
             TEMPLATES_ORGANIZATIONS_URL,
@@ -83,19 +83,18 @@ class QueryTest(BaseTestCase):
         responses.add(
             responses.GET, TEMPLATES_TEMPLATES_URL, json=TEMPLATES_TEMPLATES_RESP
         )
-        templates = self.svc.list_templates()
+        templates = self.svc.get_templates()
         self.assertEqual(
-            [t["full_name"] for t in TEMPLATES_TEMPLATES_RESP["templates"]], templates
+            [t["full_name"] for t in TEMPLATES_TEMPLATES_RESP["templates"]],
+            list(templates.keys()),
         )
 
-        templates = self.svc.list_templates(organization="wxnc")
-        templates = self.svc.list_templates(organization="wxnc", category="system")
+        templates = self.svc.get_templates(organization="wxnc")
+        templates = self.svc.get_templates(organization="wxnc", category="system")
         responses.add(
             responses.GET, TEMPLATES_CATEGORIES_URL + "doesnotexist/", status=404
         )
-        templates = self.svc.list_templates(
-            organization="wxnc", category="doesnotexist"
-        )
+        templates = self.svc.get_templates(organization="wxnc", category="doesnotexist")
 
     @responses.activate
     def test_basic_execute(self):
@@ -272,11 +271,13 @@ class QueryTest(BaseTestCase):
             else:
                 return 0
 
-        setattr(query, "running", mock_running)
         with patch("nextcode.services.query.query.time.sleep"), patch(
             "nextcode.services.query.query.time.time", mock_time
-        ):
+        ), patch(
+            "nextcode.services.query.query.Query.running", new_callable=PropertyMock
+        ) as mock_running:
             with self.assertRaises(QueryError):
+                mock_running.return_value = True
                 query.wait(max_seconds=1)
 
         time_count = 0
@@ -294,11 +295,13 @@ class QueryTest(BaseTestCase):
                 return False
             return True
 
-        setattr(query, "running", mock_running)
         with patch("nextcode.services.query.query.time.sleep"), patch(
             "nextcode.services.query.query.time.time", mock_time
+        ), patch(
+            "nextcode.services.query.query.Query.running", new_callable=mock_running
         ):
-            query.wait(max_seconds=1)
+            with self.assertRaises(QueryError):
+                query.wait(max_seconds=1)
 
         time_count = 0
         setattr(query, "status", "PENDING")

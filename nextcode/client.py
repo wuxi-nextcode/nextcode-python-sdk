@@ -13,7 +13,7 @@ import logging
 from typing import Optional, Union, Dict, List
 
 from .exceptions import ServiceNotFound, InvalidProfile
-from .config import Config
+from .config import Config, save_config
 from .utils import root_url_from_api_key, get_access_token, decode_token
 
 SERVICES_PATH = Path(__file__).parent.joinpath("services")
@@ -41,6 +41,35 @@ def get_service(
     return client.service(service_name, **kw)
 
 
+class Profile:
+
+    profile_name = None
+    content = None
+
+    def __init__(
+        self, profile_name: Optional[str] = None, content: Optional[Dict] = None
+    ) -> None:
+        if profile_name:
+            self.profile_name = profile_name
+            self.content = cfg.get("profiles")[self.profile_name]
+        else:
+            self.profile_name = None
+            self.content = content
+
+    def __getattr__(self, name):
+        if name in self.content:
+            return self.content[name]
+        return None
+
+    def __setattr__(self, name, value):
+        if name in ("profile_name", "content"):
+            super(Profile, self).__setattr__(name, value)
+        else:
+            self.content[name] = value
+            if self.profile_name:
+                save_config()
+
+
 class Client:
     """A base client object from which to access various services
 
@@ -60,18 +89,21 @@ class Client:
         api_key: Optional[str] = None,
         profile: Optional[str] = None,
         root_url: Optional[str] = None,
-    ):
+    ) -> None:
         # if no named profile or api key is passed in
         if not profile and not api_key:
             # find the default profile, if any
             if os.environ.get("NEXTCODE_PROFILE"):
                 profile = os.environ["NEXTCODE_PROFILE"]
+                log.info("Using profile '%s' from environment", profile)
             else:
                 profile = cfg.get("default_profile")
+                if profile:
+                    log.info("Using default profile '%s' from config", profile)
 
         self.profile_name = profile
 
-        # if there is no profile we need to have configuration information in env
+        # if we have a profile we will load it from the config
         if self.profile_name:
             log.info(
                 "Initializing client with profile '%s'. Available profiles: %s",
@@ -82,8 +114,11 @@ class Client:
                 raise InvalidProfile(
                     "The config profile (%s) could not be found" % profile
                 )
-            self.profile = cfg.get("profiles")[self.profile_name]
+            self.profile = Profile(self.profile_name)
         else:
+            # if there is no profile there needs to be configuration set in the
+            # environment, in which case we create an ephemeral profile, not
+            # backed up by disk.
             api_key = api_key or os.environ.get("GOR_API_KEY")
             if not api_key:
                 raise InvalidProfile(
@@ -92,7 +127,7 @@ class Client:
             root_url = root_url or os.environ.get("NEXTCODE_ROOT_URL")
             if not root_url:
                 root_url = root_url_from_api_key(api_key)
-            self.profile = {"api_key": api_key, "root_url": root_url}
+            self.profile = Profile(content={"api_key": api_key, "root_url": root_url})
 
     def service(self, service_name: str, **kw):
         """
@@ -127,7 +162,7 @@ class Client:
         {"jti": "...", ...}
 
         """
-        token = get_access_token(self.profile["api_key"])
+        token = get_access_token(self.profile.api_key)
         if decode:
             return decode_token(token)
         else:
@@ -150,4 +185,4 @@ class Client:
         return list(cfg.get("profiles"))
 
     def __repr__(self) -> str:
-        return "<Client {} | {}>".format(self.profile_name, self.profile["root_url"])
+        return "<Client {} | {}>".format(self.profile_name, self.profile.root_url)

@@ -29,3 +29,4 @@ __version__ = read_version()
 
 # loading this here allows easy extension setup in jupyterhub
 from .services.query.jupyter import load_ipython_extension
+from .services.query import jupyter
