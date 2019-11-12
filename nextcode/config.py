@@ -206,7 +206,7 @@ def get_config() -> Dict:
 
 def get_profile_config() -> Dict:
     config = Config()
-    return config.data
+    return config.data["profiles"][get_default_profile()]
 
 
 _init_config()

@@ -168,9 +168,21 @@ class ServiceSession(requests.Session):
         )
 
         try:
-            r = self.get(self.url_base)
+            r = requests.get(self.url_base, timeout=2.0)
         except requests.exceptions.ConnectionError:
             raise ServerError("Could not reach server %s" % self.url_base) from None
+
+        if r.status_code == codes.not_found:
+            # ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/
+            #   and https://[xxx]-cluster.wuxinextcode.com/
+            lst = self.url_base.split(".", 1)
+            old_url_base = self.url_base
+            if "-cluster" in self.url_base:
+                self.url_base = self.url_base.replace("-cluster", "")
+            else:
+                self.url_base = "{}-cluster.{}".format(lst[0], lst[1])
+            log.info("Service not found on server %s. Trying alternative URL %s", old_url_base, self.url_base)
+            r = requests.get(self.url_base, timeout=2.0)
 
         if r.headers["Content-Type"] != "application/json":
             raise ServerError(

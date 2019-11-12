@@ -4,7 +4,7 @@ Base Service
 Common service functionality
 
 """
-
+import os
 from urllib.parse import urljoin
 from typing import Optional, Dict
 import logging
@@ -21,6 +21,12 @@ class BaseService:
 
     def __init__(self, client, service_path, *args, **kwargs):
         self.client = client
+
+        service_path = os.environ.get("NEXTCODE_SERVICE_PATH", service_path)
+        # ! temporary hack
+        if "localhost" in client.profile.root_url:
+            service_path = "/"
+
         self.service_path = service_path
         root_url = client.profile.root_url
         if not root_url:
@@ -67,6 +73,10 @@ class BaseService:
     @property
     def build_info(self) -> str:
         return self.session.root_info["build_info"]
+
+    @property
+    def app_info(self) -> str:
+        return self.session.root_info.get("app_info")
 
     @property
     def current_user(self) -> Dict:

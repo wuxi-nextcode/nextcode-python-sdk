@@ -34,11 +34,7 @@ class Service(BaseService):
     """
 
     def __init__(self, client: Client, *args, **kwargs) -> None:
-        path = os.environ.get("NEXTCODE_SERVICE_PATH", SERVICE_PATH)
-        # ! temporary hack
-        if "localhost" in client.profile.root_url:
-            path = "/"
-        super(Service, self).__init__(client, path, *args, **kwargs)
+        super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
         self.metadata = {"client": f"nextcode-python-sdk/{nextcode.__version__}"}
         self.project = (
             kwargs.get("project")
@@ -165,7 +161,7 @@ class Service(BaseService):
             "persist": persist,
             "wait": QUERY_WAIT_SECONDS,
             "metadata": self.metadata,
-            "type": job_type,
+            "type": job_type or "default",
         }
         try:
             resp = self.session.post(url, json=payload)

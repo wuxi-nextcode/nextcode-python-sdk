@@ -49,3 +49,19 @@ class ServiceNotFound(Exception):
     """
 
     pass
+
+
+class UploadError(Exception):
+    """
+    The requested server is not available on the server.
+    """
+
+    pass
+
+
+class NotFound(Exception):
+    """
+    The requested resource was not found
+    """
+
+    pass
