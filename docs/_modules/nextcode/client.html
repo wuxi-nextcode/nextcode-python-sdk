@@ -116,7 +116,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ServiceNotFound</span><span class="p">,</span> <span class="n">InvalidProfile</span>
-<span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">save_config</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">root_url_from_api_key</span><span class="p">,</span> <span class="n">get_access_token</span><span class="p">,</span> <span class="n">decode_token</span>
 
 <span class="n">SERVICES_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;services&quot;</span><span class="p">)</span>
@@ -144,6 +144,35 @@
     <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
+<span class="k">class</span> <span class="nc">Profile</span><span class="p">:</span>
+
+    <span class="n">profile_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">profile_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span> <span class="o">=</span> <span class="n">profile_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;profile_name&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">:</span>
+                <span class="n">save_config</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../api.html#nextcode.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A base client object from which to access various services</span>
 
@@ -163,18 +192,21 @@
         <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">profile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">root_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># if no named profile or api key is passed in</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">profile</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
             <span class="c1"># find the default profile, if any</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEXTCODE_PROFILE&quot;</span><span class="p">):</span>
                 <span class="n">profile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;NEXTCODE_PROFILE&quot;</span><span class="p">]</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using profile &#39;</span><span class="si">%s</span><span class="s2">&#39; from environment&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">profile</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_profile&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">profile</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using default profile &#39;</span><span class="si">%s</span><span class="s2">&#39; from config&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span> <span class="o">=</span> <span class="n">profile</span>
 
-        <span class="c1"># if there is no profile we need to have configuration information in env</span>
+        <span class="c1"># if we have a profile we will load it from the config</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;Initializing client with profile &#39;</span><span class="si">%s</span><span class="s2">&#39;. Available profiles: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -185,8 +217,11 @@
                 <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span>
                     <span class="s2">&quot;The config profile (</span><span class="si">%s</span><span class="s2">) could not be found&quot;</span> <span class="o">%</span> <span class="n">profile</span>
                 <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if there is no profile there needs to be configuration set in the</span>
+            <span class="c1"># environment, in which case we create an ephemeral profile, not</span>
+            <span class="c1"># backed up by disk.</span>
             <span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GOR_API_KEY&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span>
@@ -195,7 +230,7 @@
             <span class="n">root_url</span> <span class="o">=</span> <span class="n">root_url</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEXTCODE_ROOT_URL&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">root_url</span><span class="p">:</span>
                 <span class="n">root_url</span> <span class="o">=</span> <span class="n">root_url_from_api_key</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">,</span> <span class="s2">&quot;root_url&quot;</span><span class="p">:</span> <span class="n">root_url</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">,</span> <span class="s2">&quot;root_url&quot;</span><span class="p">:</span> <span class="n">root_url</span><span class="p">})</span>
 
 <div class="viewcode-block" id="Client.service"><a class="viewcode-back" href="../../api.html#nextcode.client.Client.service">[docs]</a>    <span class="k">def</span> <span class="nf">service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -230,7 +265,7 @@
 <span class="sd">        {&quot;jti&quot;: &quot;...&quot;, ...}</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;api_key&quot;</span><span class="p">])</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">api_key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">decode</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -253,7 +288,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;Client </span><span class="si">{}</span><span class="s2"> | </span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;root_url&quot;</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;Client </span><span class="si">{}</span><span class="s2"> | </span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">root_url</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -271,7 +306,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-08.<br/>
+      Last updated on 2019-11-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

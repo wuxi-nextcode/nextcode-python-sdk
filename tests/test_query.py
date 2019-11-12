@@ -71,7 +71,7 @@ class QueryTest(BaseTestCase):
             svc._check_project()
 
     @responses.activate
-    def test_list_templates(self):
+    def test_get_templates(self):
         responses.add(
             responses.GET,
             TEMPLATES_ORGANIZATIONS_URL,
@@ -83,19 +83,18 @@ class QueryTest(BaseTestCase):
         responses.add(
             responses.GET, TEMPLATES_TEMPLATES_URL, json=TEMPLATES_TEMPLATES_RESP
         )
-        templates = self.svc.list_templates()
+        templates = self.svc.get_templates()
         self.assertEqual(
-            [t["full_name"] for t in TEMPLATES_TEMPLATES_RESP["templates"]], templates
+            [t["full_name"] for t in TEMPLATES_TEMPLATES_RESP["templates"]],
+            list(templates.keys()),
         )
 
-        templates = self.svc.list_templates(organization="wxnc")
-        templates = self.svc.list_templates(organization="wxnc", category="system")
+        templates = self.svc.get_templates(organization="wxnc")
+        templates = self.svc.get_templates(organization="wxnc", category="system")
         responses.add(
             responses.GET, TEMPLATES_CATEGORIES_URL + "doesnotexist/", status=404
         )
-        templates = self.svc.list_templates(
-            organization="wxnc", category="doesnotexist"
-        )
+        templates = self.svc.get_templates(organization="wxnc", category="doesnotexist")
 
     @responses.activate
     def test_basic_execute(self):

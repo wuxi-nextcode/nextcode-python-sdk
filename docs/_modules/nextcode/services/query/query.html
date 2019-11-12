@@ -111,7 +111,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -214,6 +214,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">FAILED_STATUSES</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Is the query in the DONE state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;DONE&quot;</span>
+
 <div class="viewcode-block" id="Query.wait"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wait for the query to complete</span>
@@ -267,7 +276,9 @@
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">offset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">sort</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">is_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">callback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns results from a completed query, optionally with limit and offset</span>
@@ -275,6 +286,7 @@
 <span class="sd">        :param limit: number of rows to return (default all)</span>
 <span class="sd">        :param offset: number of rows to skip</span>
 <span class="sd">        :param sort: gor sort string in format &#39;[column] [ASC|DESC]&#39;</span>
+<span class="sd">        :param filt: filter to apply to the results serverside</span>
 <span class="sd">        :param is_json: return rows as a dictionary containing &#39;header&#39; and &#39;data&#39;</span>
 <span class="sd">        :returns: dictonary containing &#39;header&#39; and &#39;data&#39; lists or tsv</span>
 <span class="sd">        :raises: QueryError</span>
@@ -311,6 +323,7 @@
                 <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="n">num_rows_received</span><span class="p">,</span>
                 <span class="s2">&quot;sort&quot;</span><span class="p">:</span> <span class="n">sort</span><span class="p">,</span>
                 <span class="s2">&quot;skipheader&quot;</span><span class="p">:</span> <span class="n">skip_header</span><span class="p">,</span>
+                <span class="s2">&quot;filt&quot;</span><span class="p">:</span> <span class="n">filt</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="n">skip_header</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -325,6 +338,8 @@
                 <span class="n">num_rows_received</span><span class="p">,</span>
                 <span class="n">num_rows_to_fetch</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">received</span><span class="o">=</span><span class="n">num_rows_received</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">num_rows_total</span><span class="p">)</span>
         <span class="n">ret</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">is_json</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
@@ -375,7 +390,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-08.<br/>
+      Last updated on 2019-11-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

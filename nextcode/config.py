@@ -9,7 +9,7 @@ import os
 import logging
 import yaml
 import json
-import copy
+import time
 from pathlib import Path
 from typing import Dict, Tuple, Sequence, Optional
 
@@ -21,13 +21,28 @@ root_config_folder = Path(os.path.expanduser("~/.nextcode"))
 log = logging.getLogger(__name__)
 
 DEFAULT_PROFILE_NAME = "default"
+CACHE_SECONDS = 600
 
 
 def load_cache(name: str) -> Optional[Dict]:
+    """
+    Load a dictionary from disk cache by name.
+
+    The file is found in ~/.nextcode/cache/[name].cache and is assumed to be a
+    dictionary in json format.
+
+    If NEXTCODE_DISABLE_CACHE environment variable is non-zero this method does nothing
+    """
     if os.environ.get("NEXTCODE_DISABLE_CACHE"):
         return None
     cache_file = root_config_folder.joinpath("cache", name + ".cache")
     try:
+        file_age = time.time() - os.path.getmtime(cache_file)
+        if file_age > CACHE_SECONDS:
+            log.info("Cache is too old, removing it.")
+            os.remove(cache_file)
+            raise FileNotFoundError
+
         contents = json.load(cache_file.open("r"))
         log.info("Loaded contents from cache %s", cache_file)
         return contents
@@ -45,7 +60,7 @@ def save_cache(name: str, contents: Dict) -> None:
         cache_folder = root_config_folder.joinpath("cache")
         os.makedirs(cache_folder, exist_ok=True)
         cache_file = root_config_folder.joinpath(cache_folder, name + ".cache")
-        json.dump(contents, cache_file.open("w"))
+        json.dump(contents, cache_file.open("w"), default=str)
         log.info("Dumped contents into cache %s", cache_file)
     except Exception:
         log.exception("Could not save cache %s" % cache_file)
@@ -149,6 +164,17 @@ def create_profile(name: str, api_key: str, root_url: Optional[str] = None) -> N
     save_config()
 
 
+def delete_profile(name: str) -> None:
+    config = Config()
+    profiles = get_profiles()
+    if name not in profiles:
+        raise InvalidProfile("Profile does not exist")
+    if config.get("default_profile") == name:
+        config.set({"default_profile": None})
+    del profiles[name]
+    save_config()
+
+
 def set_default_profile(name: str) -> None:
     """
     Set a named profile as the default one if no profile is specified or GOR_API_KEY is not set
@@ -161,6 +187,26 @@ def set_default_profile(name: str) -> None:
         raise InvalidProfile("Profile does not exist")
     config.set({"default_profile": name})
     save_config()
+
+
+def get_profiles() -> Dict:
+    config = Config()
+    return config.get("profiles")
+
+
+def get_default_profile() -> Optional[str]:
+    config = Config()
+    return config.get("default_profile")
+
+
+def get_config() -> Dict:
+    config = Config()
+    return config.data
+
+
+def get_profile_config() -> Dict:
+    config = Config()
+    return config.data
 
 
 _init_config()

@@ -8,7 +8,7 @@ The Query class represents a query model from the RESTFul Query API
 
 import logging
 import time
-from typing import Dict, Tuple, Sequence, List, Optional, Union
+from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
 from dateutil.parser import parse
 
 try:
@@ -111,6 +111,15 @@ class Query:
             self.refresh()
         return self.status in FAILED_STATUSES
 
+    @property
+    def done(self) -> bool:
+        """
+        Is the query in the DONE state
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status == "DONE"
+
     def wait(self, max_seconds: Optional[int] = None):
         """
         Wait for the query to complete
@@ -164,7 +173,9 @@ class Query:
         limit: Optional[int] = None,
         offset: Optional[int] = None,
         sort: Optional[str] = None,
+        filt: Optional[str] = None,
         is_json: bool = True,
+        callback: Optional[Callable] = None,
     ) -> Union[Dict, str]:
         """
         Returns results from a completed query, optionally with limit and offset
@@ -172,6 +183,7 @@ class Query:
         :param limit: number of rows to return (default all)
         :param offset: number of rows to skip
         :param sort: gor sort string in format '[column] [ASC|DESC]'
+        :param filt: filter to apply to the results serverside
         :param is_json: return rows as a dictionary containing 'header' and 'data'
         :returns: dictonary containing 'header' and 'data' lists or tsv
         :raises: QueryError
@@ -208,6 +220,7 @@ class Query:
                 "offset": num_rows_received,
                 "sort": sort,
                 "skipheader": skip_header,
+                "filt": filt,
             }
             skip_header = True
             st = time.time()
@@ -222,6 +235,8 @@ class Query:
                 num_rows_received,
                 num_rows_to_fetch,
             )
+            if callback:
+                callback(received=num_rows_received, total=num_rows_total)
         ret: Union[Dict, str]
         if is_json:
             ret = {}

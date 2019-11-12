@@ -148,6 +148,17 @@ This object is returned from query methods in the ‘query’ service.</p>
 </pre></div>
 </div>
 <dl class="method">
+<dt id="nextcode.services.query.query.Query.done">
+<em class="property">property </em><code class="sig-name descname">done</code><a class="headerlink" href="#nextcode.services.query.query.Query.done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the query in the DONE state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.query.Query.failed">
 <em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#nextcode.services.query.query.Query.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query in a failed state</p>
@@ -160,7 +171,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 
 <dl class="method">
 <dt id="nextcode.services.query.query.Query.get_results">
-<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">is_json=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">filt=None</em>, <em class="sig-param">is_json=True</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns results from a completed query, optionally with limit and offset</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -168,6 +179,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 <li><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – number of rows to return (default all)</p></li>
 <li><p><strong>offset</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – number of rows to skip</p></li>
 <li><p><strong>sort</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – gor sort string in format ‘[column] [ASC|DESC]’</p></li>
+<li><p><strong>filt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – filter to apply to the results serverside</p></li>
 <li><p><strong>is_json</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – return rows as a dictionary containing ‘header’ and ‘data’</p></li>
 </ul>
 </dd>
@@ -258,7 +270,7 @@ the query will be refreshed from the server.</p>
 
 <dl class="method">
 <dt id="nextcode.services.query.service.Service.execute">
-<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">nowait=False</em>, <em class="sig-param">persist=None</em>, <em class="sig-param">relations=None</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">nowait=False</em>, <em class="sig-param">persist=None</em>, <em class="sig-param">relations=None</em>, <em class="sig-param">job_type=None</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a gor statement on the server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -267,6 +279,7 @@ the query will be refreshed from the server.</p>
 <li><p><strong>nowait</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if True, return a Query object with PENDING status instead of waiting for query to finish</p></li>
 <li><p><strong>relations</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]]) – virtual relations to include with the query</p></li>
 <li><p><strong>persist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – File path in the project tree to persist the results to (must start with <cite>user_data/</cite>)</p></li>
+<li><p><strong>job_type</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional job type for routing purposes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -345,19 +358,8 @@ can be called to force a refresh.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="nextcode.services.query.service.Service.healthy">
-<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is the service healthy?</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nextcode.services.query.service.Service.list_templates">
-<code class="sig-name descname">list_templates</code><span class="sig-paren">(</span><em class="sig-param">organization=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.list_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.list_templates" title="Permalink to this definition">¶</a></dt>
+<dt id="nextcode.services.query.service.Service.get_templates">
+<code class="sig-name descname">get_templates</code><span class="sig-paren">(</span><em class="sig-param">organization=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all templates in the system or filtered.</p>
 <p>Returns a list of full template names in the format [organization]/[category]/[name]/[version]</p>
 <dl class="field-list simple">
@@ -372,7 +374,18 @@ can be called to force a refresh.</p>
 <dd class="field-even"><p>ServerError</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.healthy">
+<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the service healthy?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,7 +455,7 @@ can be called to force a refresh.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-08.<br/>
+      Last updated on 2019-11-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

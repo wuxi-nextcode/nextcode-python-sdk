@@ -9,3 +9,6 @@ class QueryError(Exception):
 class MissingRelations(Exception):
     def __init__(self, relations: List):
         self.relations = relations
+
+    def __repr__(self):
+        return "MissingRelations: {}".format(", ".join(self.relations))
