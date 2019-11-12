@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.25</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -271,9 +271,25 @@
         <span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="s2">&quot;Could not reach server </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
+            <span class="c1"># ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/</span>
+            <span class="c1">#   and https://[xxx]-cluster.wuxinextcode.com/</span>
+            <span class="n">lst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">old_url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span>
+            <span class="k">if</span> <span class="s2">&quot;-cluster&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-cluster.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Service not found on server </span><span class="si">%s</span><span class="s2">. Trying alternative URL </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">old_url_base</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;application/json&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span>

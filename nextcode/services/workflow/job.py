@@ -9,8 +9,8 @@ class WorkflowJob:
     def __init__(self, session, job_id, job):
         self.session = session
         self.job = job
-        self.job_id = self.job['job_id']
-        self.links = self.job['links']
+        self.job_id = self.job["job_id"]
+        self.links = self.job["links"]
 
     def __repr__(self):
         return json.dumps(self.job)
@@ -24,7 +24,7 @@ class WorkflowJob:
         elif self.status_date:
             complete_date = self.status_date
         else:
-            return '-'
+            return "-"
         ret = complete_date - self.submit_date
         # remove microseconds since no one wants them
         ret = ret - datetime.timedelta(microseconds=ret.microseconds)
@@ -41,20 +41,20 @@ class WorkflowJob:
         return self.status in FINISHED_STATUES
 
     def refresh(self):
-        self.job = self.session.get(self.links['self'])
+        self.job = self.session.get(self.links["self"])
 
     def resume(self):
-        _ = self.session.put(self.links['self'])
+        _ = self.session.put(self.links["self"])
         self.refresh()
 
     def cancel(self):
-        resp = self.session.delete(self.links['self'])
-        status_message = resp.json()['status_message']
+        resp = self.session.delete(self.links["self"])
+        status_message = resp.json()["status_message"]
         return status_message
 
     def inspect(self):
         try:
-            url = self.links['inspect']
+            url = self.links["inspect"]
         except KeyError:
             raise ServerError("Server does not support inspect functionality")
         resp = self.session.get(url)
@@ -65,30 +65,30 @@ class WorkflowJob:
         return resp.json()
 
     def processes(self, process_id=None, is_all=False, limit=50, status=None):
-        url = self.links['processes']
+        url = self.links["processes"]
         if process_id:
-            url += '/%s' % process_id
+            url += "/%s" % process_id
             resp = self.session.get(url)
             return [resp.json()]
         else:
-            data = {'limit': limit}
+            data = {"limit": limit}
             if is_all:
-                data['all'] = 1
+                data["all"] = 1
             if status:
-                data['status'] = status
+                data["status"] = status
             resp = self.session.get(url, json=data)
-            return resp.json()['processes']
+            return resp.json()["processes"]
 
     def events(self, limit=50):
-        url = self.links['events']
-        data = {'limit': limit}
+        url = self.links["events"]
+        data = {"limit": limit}
         resp = self.session.get(url, json=data)
-        return resp.json()['events']
+        return resp.json()["events"]
 
     def log_groups(self):
-        logs_url = self.links['logs']
+        logs_url = self.links["logs"]
         resp = self.session.get(logs_url)
-        return resp.json()['links']
+        return resp.json()["links"]
 
     def logs(self, log_group, log_filter):
         groups = self.log_groups()
@@ -100,7 +100,7 @@ class WorkflowJob:
         if not url:
             raise Exception("Log Group '%s' is not available." % log_group)
         if log_filter:
-            url += '?filter=%s' % log_filter
+            url += "?filter=%s" % log_filter
         logs = self.session.get(url).text
         return logs
 
@@ -110,6 +110,6 @@ class WorkflowJob:
         except KeyError:
             raise AttributeError
 
-        if name.endswith('_date') and val:
+        if name.endswith("_date") and val:
             val = dateutil.parser.parse(val)
         return val

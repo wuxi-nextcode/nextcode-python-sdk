@@ -15,7 +15,9 @@ EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # expires in 7 days
 
 
 def _get_path(project_name):
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../', project_name))
+    path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../../", project_name)
+    )
     if not os.path.exists(path):
         raise RuntimeError("Path %s does not exist" % path)
     return path
@@ -27,7 +29,7 @@ def package_and_upload(service, project_name, project_path):
         project_name,
         project_path,
     )
-    scratch_bucket = service.app_info.get('scratch_bucket', DEFAULT_SCRATCH_BUCKET)
+    scratch_bucket = service.app_info.get("scratch_bucket", DEFAULT_SCRATCH_BUCKET)
 
     if not scratch_bucket:
         raise UploadError(
@@ -45,7 +47,9 @@ def package_and_upload(service, project_name, project_path):
     except Exception as e:
         if "AccessDenied" in repr(
             e
-        ) or "The AWS Access Key Id you provided does not exist in our records" in repr(e):
+        ) or "The AWS Access Key Id you provided does not exist in our records" in repr(
+            e
+        ):
             raise UploadError(
                 "Failed to upload local package. You do not have access to s3 bucket '%s'."
                 % scratch_bucket
@@ -59,16 +63,18 @@ def _package_and_upload(scratch_bucket, project_name, project_path):
     can download it from the ec2 worker node for local deployment.
     """
     log.info("Packaging '%s'", project_path)
-    zip_filename = '{}_{}.zip'.format(project_name, socket.gethostname())
-    full_zip_filename = tempfile.mkstemp('.zip')[1]
+    zip_filename = "{}_{}.zip".format(project_name, socket.gethostname())
+    full_zip_filename = tempfile.mkstemp(".zip")[1]
     project_path = os.path.abspath(project_path)
     log.debug("project_path is %s", project_path)
-    log_archive = zipfile.ZipFile(full_zip_filename, 'w')
+    log_archive = zipfile.ZipFile(full_zip_filename, "w")
 
     files = []
-    for root, directories, filenames in os.walk(project_path, followlinks=False, topdown=True):
+    for root, directories, filenames in os.walk(
+        project_path, followlinks=False, topdown=True
+    ):
         # skip everything starting with a . and the nextflow 'work' folder
-        if any([l.startswith('.') for l in root.split('/')]):
+        if any([l.startswith(".") for l in root.split("/")]):
             continue
 
         for filename in filenames:
@@ -77,22 +83,22 @@ def _package_and_upload(scratch_bucket, project_name, project_path):
                 files.append(full_filename)
 
     for f in files:
-        write_filename = f.replace(project_path, '')
+        write_filename = f.replace(project_path, "")
         write_filename = project_name + write_filename
         log_archive.write(f, arcname=write_filename)
     log_archive.close()
     if len(files) == 0:
         raise RuntimeError("No files found in '%s'" % project_path)
-    s3_resource = boto3.resource('s3')
+    s3_resource = boto3.resource("s3")
     b = s3_resource.Bucket(scratch_bucket)
-    s3_path = 'builds/' + zip_filename
+    s3_path = "builds/" + zip_filename
     b.upload_file(full_zip_filename, s3_path)
 
     log.info("Uploaded %s to %s (%s files)", zip_filename, s3_path, len(files))
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
     url = s3_client.generate_presigned_url(
-        ClientMethod='get_object',
-        Params={'Bucket': scratch_bucket, 'Key': s3_path},
+        ClientMethod="get_object",
+        Params={"Bucket": scratch_bucket, "Key": s3_path},
         ExpiresIn=EXPIRATION_SECONDS,
     )
     # wait for a few seconds to give s3 time to catch up

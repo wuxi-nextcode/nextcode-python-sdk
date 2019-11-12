@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.25</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -309,7 +309,7 @@
 
 <span class="k">def</span> <span class="nf">get_profile_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;profiles&quot;</span><span class="p">][</span><span class="n">get_default_profile</span><span class="p">()]</span>
 
 
 <span class="n">_init_config</span><span class="p">()</span>

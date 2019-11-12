@@ -136,6 +136,9 @@ class ClientTest(BaseTestCase):
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, status=404)
+            rsps.add(
+                responses.GET, "https://test-cluster.wuxinextcode/api/query", status=404
+            )
             with self.assertRaises(ServerError):
                 _ = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
 

@@ -13,48 +13,49 @@ log = logging.getLogger(__name__)
 
 
 class Service(BaseService):
-
     def __init__(self, client: Client, *args, **kwargs) -> None:
         super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
 
     def find_job(self, job_id):
-        jobs_endpoint = self.session.url_from_endpoint('jobs')
+        jobs_endpoint = self.session.url_from_endpoint("jobs")
 
-        data = {'limit': 1}
-        if job_id == 'latest':
-            data['user_name'] = self.current_user['preferred_username']
+        data = {"limit": 1}
+        if job_id == "latest":
+            data["user_name"] = self.current_user["preferred_username"]
         else:
             try:
-                data['job_id'] = int(job_id)
+                data["job_id"] = int(job_id)
             except ValueError:
-                raise NotFound("job_id must be an integer or 'latest', not '%s'" % job_id)
+                raise NotFound(
+                    "job_id must be an integer or 'latest', not '%s'" % job_id
+                )
         resp = self.session.get(jobs_endpoint, json=data)
         resp.raise_for_status()
-        jobs = resp.json()['jobs']
+        jobs = resp.json()["jobs"]
         if not jobs:
             raise NotFound("Job not found")
 
         job = jobs[0]
-        return WorkflowJob(self.session, job['job_id'], job)
+        return WorkflowJob(self.session, job["job_id"], job)
 
     def get_jobs(self, user_name, status, limit):
-        data = {'limit': limit}
+        data = {"limit": limit}
         if user_name:
-            data['user_name'] = user_name
+            data["user_name"] = user_name
         if status:
-            data['status'] = status
+            data["status"] = status
 
         st = time.time()
-        resp = self.session.get(self.session.url_from_endpoint('jobs'), json=data)
-        jobs = resp.json()['jobs']
+        resp = self.session.get(self.session.url_from_endpoint("jobs"), json=data)
+        jobs = resp.json()["jobs"]
         log.info("Retrieved %s jobs in %.2f sec", len(jobs), time.time() - st)
         ret = []
         for job in jobs:
-            ret.append(WorkflowJob(self.session, job['job_id'], job))
+            ret.append(WorkflowJob(self.session, job["job_id"], job))
         return ret
 
-
     def post_job(
+        self,
         session,
         pipeline_name,
         project_name,
@@ -78,23 +79,23 @@ class Service(BaseService):
             profile,
         )
         data = {
-            'pipeline_name': pipeline_name,
-            'project_name': project_name,
-            'parameters': params,
-            'script': script,
-            'revision': revision or None,
-            'build_source': build_source,
-            'build_context': build_context,
-            'profile': profile,
+            "pipeline_name": pipeline_name,
+            "project_name": project_name,
+            "parameters": params,
+            "script": script,
+            "revision": revision or None,
+            "build_source": build_source,
+            "build_context": build_context,
+            "profile": profile,
         }
 
         if profile:
-            data['profile'] = profile
+            data["profile"] = profile
         if trace:
-            data['env'] = {'NXF_DEBUG': "3", 'NXF_TRACE': 'nextflow'}
+            data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}
 
-        endpoint = session.url_from_endpoint('jobs')
+        endpoint = session.url_from_endpoint("jobs")
 
         resp = session.post(endpoint, json=data)
         job = resp.json()
-        return WorkflowJob(session, job['job_id'], job=job)
+        return WorkflowJob(session, job["job_id"], job=job)

@@ -181,7 +181,11 @@ class ServiceSession(requests.Session):
                 self.url_base = self.url_base.replace("-cluster", "")
             else:
                 self.url_base = "{}-cluster.{}".format(lst[0], lst[1])
-            log.info("Service not found on server %s. Trying alternative URL %s", old_url_base, self.url_base)
+            log.info(
+                "Service not found on server %s. Trying alternative URL %s",
+                old_url_base,
+                self.url_base,
+            )
             r = requests.get(self.url_base, timeout=2.0)
 
         if r.headers["Content-Type"] != "application/json":
