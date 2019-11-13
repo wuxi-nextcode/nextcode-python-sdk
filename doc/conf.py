@@ -25,7 +25,7 @@ import os
 
 with open(os.path.join(os.path.dirname(__file__), "..", "nextcode/VERSION")) as f:
     version = f.read()
-release = "0.2.10"
+release = version
 
 # -- General configuration ---------------------------------------------------
 

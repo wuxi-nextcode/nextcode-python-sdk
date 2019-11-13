@@ -20,7 +20,7 @@ Then you intialize the extension in your notebook after you have received an API
 
     %env GOR_API_KEY=****
     %env GOR_API_PROJECT=****
-    %load_ext nextcode.gor
+    %load_ext nextcode
 
     Gor magic extension has been loaded. You can now use '%gor' and '%%gor' in this notebook
     * Python SDK Version: 0.1.6

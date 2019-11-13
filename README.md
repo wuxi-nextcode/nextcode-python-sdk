@@ -38,7 +38,7 @@ To start using the python sdk in Jupyter Notebooks you will first need to instal
 
 ```bash
 ! pip install nextcode-sdk[jupyter] -U
-%load_ext nextcode.gor
+%load_ext nextcode
 ```
 
 Jupyter notebooks running on the Wuxi Nextcode servers are preconfigured with a `GOR_API_KEY` and `GOR_PROJECT`. If you are running outside such an environment you will need to configure your environment accordingly:
