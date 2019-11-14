@@ -83,7 +83,7 @@ class BaseService:
         """
         User JWT decoded by the service
         """
-        return self.session.root_info.get("current_user")
+        return self.session.root_info.get("current_user") or {}
 
     @property
     def endpoints(self) -> Dict:

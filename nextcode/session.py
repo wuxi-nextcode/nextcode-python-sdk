@@ -85,7 +85,7 @@ class ServiceSession(requests.Session):
         self.token = get_access_token(self.api_key)
         self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
-            self.root_info = self.fetch_root_info()
+            self.fetch_root_info()
         except ServerError as ex:
             if ex.response and ex.response.get("status") == codes.not_found:
                 status = ex.response.get("status")
@@ -166,9 +166,8 @@ class ServiceSession(requests.Session):
                 self.url_base, self.headers
             )
         )
-
         try:
-            r = requests.get(self.url_base, timeout=2.0)
+            r = requests.get(self.url_base, timeout=2.0, headers=self.headers)
         except requests.exceptions.ConnectionError:
             raise ServerError("Could not reach server %s" % self.url_base) from None
 
@@ -192,8 +191,9 @@ class ServiceSession(requests.Session):
             raise ServerError(
                 "Unexpected response: %s" % r.text, url=self.url_base
             ) from None
-
-        return r.json()
+        ret = r.json()
+        self.root_info = ret
+        return ret
 
     def url_from_endpoint(self, endpoint: str) -> str:
         try:

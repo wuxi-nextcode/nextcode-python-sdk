@@ -77,6 +77,7 @@ setup(
         "hjson",
         "PyJWT",
         "boto3",
+        "pytest",
     ],
     extras_require={"jupyter": ["pandas", "ipython", "termcolor"]},
     include_package_data=True,

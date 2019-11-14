@@ -90,7 +90,7 @@ def _package_and_upload(scratch_bucket, project_name, project_path):
     if len(files) == 0:
         raise RuntimeError("No files found in '%s'" % project_path)
     s3_resource = boto3.resource("s3")
-    b = s3_resource.Bucket(scratch_bucket)
+    b = s3_resource.Bucket(scratch_bucket)  # pylint: disable=no-member
     s3_path = "builds/" + zip_filename
     b.upload_file(full_zip_filename, s3_path)
 

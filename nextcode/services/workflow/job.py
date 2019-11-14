@@ -41,7 +41,7 @@ class WorkflowJob:
         return self.status in FINISHED_STATUES
 
     def refresh(self):
-        self.job = self.session.get(self.links["self"])
+        self.job = self.session.get(self.links["self"]).json()
 
     def resume(self):
         _ = self.session.put(self.links["self"])

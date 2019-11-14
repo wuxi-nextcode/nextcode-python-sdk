@@ -258,7 +258,7 @@ class Service(BaseService):
         self._check_project()
         data = {
             "project": self.project,
-            "user_name": self.current_user["email"],
+            "user_name": self.current_user.get("email"),
             "limit": limit,
             "status": status,
         }

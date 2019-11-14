@@ -21,7 +21,7 @@ class Service(BaseService):
 
         data = {"limit": 1}
         if job_id == "latest":
-            data["user_name"] = self.current_user["preferred_username"]
+            data["user_name"] = self.current_user.get("email")
         else:
             try:
                 data["job_id"] = int(job_id)
@@ -56,7 +56,6 @@ class Service(BaseService):
 
     def post_job(
         self,
-        session,
         pipeline_name,
         project_name,
         params,
@@ -94,8 +93,8 @@ class Service(BaseService):
         if trace:
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}
 
-        endpoint = session.url_from_endpoint("jobs")
+        endpoint = self.session.url_from_endpoint("jobs")
 
-        resp = session.post(endpoint, json=data)
+        resp = self.session.post(endpoint, json=data)
         job = resp.json()
-        return WorkflowJob(session, job["job_id"], job=job)
+        return WorkflowJob(self.session, job["job_id"], job=job)

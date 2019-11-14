@@ -62,7 +62,7 @@ class QueryTest(BaseTestCase):
 
     @responses.activate
     def test_query_status(self):
-        print(self.svc.status())
+        _ = self.svc.status()
 
     def test_check_project(self):
         self.svc._check_project()
