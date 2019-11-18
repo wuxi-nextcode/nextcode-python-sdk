@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 0.3.5 documentation</title>
+    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 0.3.6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -219,10 +219,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new template from yaml file.</span>
 
+<span class="sd">        If the template already exists a TemplateError is raised. If replace is True</span>
+<span class="sd">        the template is replaced silently</span>
+
 <span class="sd">        :param filename: Full path to a yaml file containing template</span>
 <span class="sd">        :param replace: Replace an existing template</span>
 <span class="sd">        :returns: Full name of the new template</span>
-<span class="sd">        :raises: TemplateError</span>
+<span class="sd">        :raises: TemplateError if the file is not found, the template is invalid or if there is a server error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -271,7 +274,7 @@
 <span class="sd">        Deletes a template on the server by full name, e.g. /[org]/[cat]/[name]/[version]</span>
 
 <span class="sd">        :param name: Full unique name of the template</span>
-<span class="sd">        :raises: TemplateError</span>
+<span class="sd">        :raises: :exc:`TemplateError`, if the template is not found or if we cannot delete it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -281,12 +284,12 @@
 
 <div class="viewcode-block" id="Service.render_template"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.service.Service.render_template">[docs]</a>    <span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Render a template using the supplied arguments and return the full query string.</span>
+<span class="sd">        Render a template using the supplied arguments and return the full GOR query string.</span>
 
 <span class="sd">        :name: Full unique name of the template</span>
 <span class="sd">        :params: List of arguments to supply to the template</span>
-<span class="sd">        :raises: TemplateError</span>
-<span class="sd">        :returns: String containing a full rendered template</span>
+<span class="sd">        :raises: :exc:`TemplateError`</span>
+<span class="sd">        :returns: String containing a fully rendered template</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
@@ -397,7 +400,7 @@
 
 <span class="sd">        :param template_name: Full template name in the form [org]/[category]/[query]/[version]</span>
 <span class="sd">        :param nowait: if True, return a Query object with PENDING status instead of waiting for query to finish</span>
-<span class="sd">        :raises: :exc:`~exceptions.ServerError`</span>
+<span class="sd">        :raises: :exc:`~ServerError`</span>
 
 <span class="sd">        Optional keyword arguments are used for arguments into the template.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -439,7 +442,7 @@
 <span class="sd">        Get a query object for a query by id, does not require project to be set</span>
 
 <span class="sd">        :param query_id: The ID of a query that has been previously executed</span>
-<span class="sd">        :raises: QueryError</span>
+<span class="sd">        :raises: :exc:`~QueryError`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span>

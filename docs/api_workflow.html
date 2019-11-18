@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Workflow Service &#8212; nextcode-python-sdk 0.3.5 documentation</title>
+    <title>Workflow Service &#8212; nextcode-python-sdk 0.3.6 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -73,6 +73,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Workflow Service</a><ul>
 <li><a class="reference internal" href="#id1">Workflow Service</a></li>
+<li><a class="reference internal" href="#workflow-job">Workflow Job</a></li>
 </ul>
 </li>
 </ul>
@@ -122,7 +123,268 @@
 <h2>Workflow Service<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Service object for interfacing with the Workflow service API</p>
 </div>
+<span class="target" id="module-nextcode.services.workflow.service"></span><dl class="class">
+<dt id="nextcode.services.workflow.service.Service">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.workflow.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">client</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service" title="Permalink to this definition">¶</a></dt>
+<dd><p>A connection to the workflow service API server</p>
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.current_user">
+<em class="property">property </em><code class="sig-name descname">current_user</code><a class="headerlink" href="#nextcode.services.workflow.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>User JWT decoded by the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.endpoints">
+<em class="property">property </em><code class="sig-name descname">endpoints</code><a class="headerlink" href="#nextcode.services.workflow.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.find_job">
+<code class="sig-name descname">find_job</code><span class="sig-paren">(</span><em class="sig-param">job_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.find_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.find_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a job proxy object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.workflow.job.WorkflowJob" title="nextcode.services.workflow.job.WorkflowJob"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowJob</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.get_jobs">
+<code class="sig-name descname">get_jobs</code><span class="sig-paren">(</span><em class="sig-param">user_name</em>, <em class="sig-param">status</em>, <em class="sig-param">limit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of jobs satisfying the supplied criteria</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The user who created the job</p></li>
+<li><p><strong>status</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Current status of jobs</p></li>
+<li><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Maximum number of jobs to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#nextcode.services.workflow.job.WorkflowJob" title="nextcode.services.workflow.job.WorkflowJob"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowJob</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.healthy">
+<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the service healthy?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.openapi_spec">
+<code class="sig-name descname">openapi_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raw openapi spec for the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.post_job">
+<code class="sig-name descname">post_job</code><span class="sig-paren">(</span><em class="sig-param">pipeline_name</em>, <em class="sig-param">project_name</em>, <em class="sig-param">params</em>, <em class="sig-param">script</em>, <em class="sig-param">revision</em>, <em class="sig-param">build_source</em>, <em class="sig-param">build_context</em>, <em class="sig-param">profile=None</em>, <em class="sig-param">trace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.post_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.post_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a workflow job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Name of the pipeline to run</p></li>
+<li><p><strong>project_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the project to run this job on</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>]) – List of parameters to forward to the job</p></li>
+<li><p><strong>script</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Git repository url to run (only when server is in development mode)</p></li>
+<li><p><strong>revision</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Git revision or tag (only when server is in development mode)</p></li>
+<li><p><strong>build_source</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Source type of the nextflow build (builtin, git, url)</p></li>
+<li><p><strong>build_context</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Context for build_source, depends on the type.</p></li>
+<li><p><strong>profile</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Nextflow profile name to use.</p></li>
+<li><p><strong>trace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Instruct the job to run nextflow trace flags for debugging.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.status">
+<code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service information from the root endpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-nextcode.services.workflow.job"></span><div class="section" id="workflow-job">
+<h2>Workflow Job<a class="headerlink" href="#workflow-job" title="Permalink to this headline">¶</a></h2>
+<p>The Query class represents a workflow job model from the RESTFul Workflow Service API</p>
+<dl class="class">
+<dt id="nextcode.services.workflow.job.WorkflowJob">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.workflow.job.</code><code class="sig-name descname">WorkflowJob</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">job_id</em>, <em class="sig-param">job</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object for a serverside workflow job</p>
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.cancel">
+<code class="sig-name descname">cancel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel a running job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.duration">
+<em class="property">property </em><code class="sig-name descname">duration</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stringified duration of job for human consumption</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.events">
+<code class="sig-name descname">events</code><span class="sig-paren">(</span><em class="sig-param">limit=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of events reported by Nextflow for this job
+:type limit: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>
+:param limit: Maximum number of events to return</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.finished">
+<code class="sig-name descname">finished</code><span class="sig-paren">(</span><em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Has the job finished</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.inspect">
+<code class="sig-name descname">inspect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.inspect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.inspect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inspect a failed job for debugging</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.log_groups">
+<code class="sig-name descname">log_groups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.log_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.log_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available log groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.logs">
+<code class="sig-name descname">logs</code><span class="sig-paren">(</span><em class="sig-param">log_group</em>, <em class="sig-param">log_filter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.logs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get text logs for the specified log group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_group</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the log group to view</p></li>
+<li><p><strong>log_filter</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional filter to apply to the logs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">ServerError</span></code> If the log group is not available</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.processes">
+<code class="sig-name descname">processes</code><span class="sig-paren">(</span><em class="sig-param">process_id=None</em>, <em class="sig-param">is_all=False</em>, <em class="sig-param">limit=50</em>, <em class="sig-param">status=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all nextflow processes in this job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_id</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – process_id to show</p></li>
+<li><p><strong>is_all</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Show all processes, otherwise show only running processes</p></li>
+<li><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Maximum number of processes to return</p></li>
+<li><p><strong>status</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter processes by status</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the local cache of the serverside job object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.resume">
+<code class="sig-name descname">resume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.resume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rerun a job that has previously failed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.job.WorkflowJob.running">
+<code class="sig-name descname">running</code><span class="sig-paren">(</span><em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.running" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the job currently running</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
+<span class="target" id="module-nextcode.services.workflow.pytest_plugin"></span></div>
 
 
     </div>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.3.5 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.3.6 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -250,6 +250,8 @@ the query will be refreshed from the server.</p>
 <dt id="nextcode.services.query.service.Service.add_template_from_file">
 <code class="sig-name descname">add_template_from_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new template from yaml file.</p>
+<p>If the template already exists a TemplateError is raised. If replace is True
+the template is replaced silently</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -264,7 +266,7 @@ the query will be refreshed from the server.</p>
 <dd class="field-odd"><p>Full name of the new template</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p>TemplateError</p>
+<dd class="field-even"><p>TemplateError if the file is not found, the template is invalid or if there is a server error.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,7 +291,7 @@ the query will be refreshed from the server.</p>
 <dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full unique name of the template</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p>TemplateError</p>
+<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">TemplateError</span></code>, if the template is not found or if we cannot delete it.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -389,7 +391,7 @@ can be called to force a refresh.</p>
 <dd class="field-odd"><p><strong>query_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The ID of a query that has been previously executed</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p>QueryError</p>
+<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">QueryError</span></code></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.query.query.Query" title="nextcode.services.query.query.Query"><code class="xref py py-class docutils literal notranslate"><span class="pre">Query</span></code></a></p>
@@ -444,7 +446,7 @@ can be called to force a refresh.</p>
 <dl class="method">
 <dt id="nextcode.services.query.service.Service.render_template">
 <code class="sig-name descname">render_template</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.render_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.render_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Render a template using the supplied arguments and return the full query string.</p>
+<dd><p>Render a template using the supplied arguments and return the full GOR query string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Name</dt>
 <dd class="field-odd"><p>Full unique name of the template</p>
@@ -453,13 +455,13 @@ can be called to force a refresh.</p>
 <dd class="field-even"><p>List of arguments to supply to the template</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p>TemplateError</p>
+<dd class="field-odd"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">TemplateError</span></code></p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>String containing a full rendered template</p>
+<dd class="field-odd"><p>String containing a fully rendered template</p>
 </dd>
 </dl>
 </dd></dl>

@@ -116,10 +116,13 @@ class Service(BaseService):
         """
         Add a new template from yaml file.
 
+        If the template already exists a TemplateError is raised. If replace is True
+        the template is replaced silently
+
         :param filename: Full path to a yaml file containing template
         :param replace: Replace an existing template
         :returns: Full name of the new template
-        :raises: TemplateError
+        :raises: TemplateError if the file is not found, the template is invalid or if there is a server error.
         """
         p = Path(filename)
         if not p.exists():
@@ -168,7 +171,7 @@ class Service(BaseService):
         Deletes a template on the server by full name, e.g. /[org]/[cat]/[name]/[version]
 
         :param name: Full unique name of the template
-        :raises: TemplateError
+        :raises: :exc:`TemplateError`, if the template is not found or if we cannot delete it.
         """
         template = self.get_template(name)
         try:
@@ -178,12 +181,12 @@ class Service(BaseService):
 
     def render_template(self, name: str, params: Optional[Dict] = None) -> str:
         """
-        Render a template using the supplied arguments and return the full query string.
+        Render a template using the supplied arguments and return the full GOR query string.
 
         :name: Full unique name of the template
         :params: List of arguments to supply to the template
-        :raises: TemplateError
-        :returns: String containing a full rendered template
+        :raises: :exc:`TemplateError`
+        :returns: String containing a fully rendered template
         """
         template = self.get_template(name)
 
@@ -294,7 +297,7 @@ class Service(BaseService):
 
         :param template_name: Full template name in the form [org]/[category]/[query]/[version]
         :param nowait: if True, return a Query object with PENDING status instead of waiting for query to finish
-        :raises: :exc:`~exceptions.ServerError`
+        :raises: :exc:`~ServerError`
 
         Optional keyword arguments are used for arguments into the template.
         """
@@ -336,7 +339,7 @@ class Service(BaseService):
         Get a query object for a query by id, does not require project to be set
 
         :param query_id: The ID of a query that has been previously executed
-        :raises: QueryError
+        :raises: :exc:`~QueryError`
 
         """
         url = self.session.endpoints["queries"]
