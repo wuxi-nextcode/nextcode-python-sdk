@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.client &#8212; nextcode-python-sdk 0.3.4 documentation</title>
+    <title>nextcode.client &#8212; nextcode-python-sdk 0.3.5 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.4</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.5</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,8 +114,10 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlsplit</span>
+<span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ServiceNotFound</span><span class="p">,</span> <span class="n">InvalidProfile</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ServiceNotFound</span><span class="p">,</span> <span class="n">InvalidProfile</span><span class="p">,</span> <span class="n">InvalidToken</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">save_config</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">root_url_from_api_key</span><span class="p">,</span> <span class="n">get_access_token</span><span class="p">,</span> <span class="n">decode_token</span>
 
@@ -127,11 +129,53 @@
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
 
+<div class="viewcode-block" id="get_api_key"><a class="viewcode-back" href="../../api.html#nextcode.client.get_api_key">[docs]</a><span class="k">def</span> <span class="nf">get_api_key</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">realm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wuxinextcode.com&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Authenticate with keycloak server and return an API key</span>
+
+<span class="sd">    :param host: The URI of the service. e.g. host.wuxinextcode.com</span>
+<span class="sd">    :param username: Username of the keycloak user which is authenticating</span>
+<span class="sd">    :param password: Password</span>
+<span class="sd">    :param realm: The realm with which to authenticate (optional)</span>
+<span class="sd">    :returns: API Key which can be used in subsequent calls to Client()</span>
+<span class="sd">    :raises: InvalidToken</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client_id</span> <span class="o">=</span> <span class="s2">&quot;api-key-client&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">client_id</span><span class="p">,</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;offline_access&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="s2">&quot;:/&quot;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">urlsplit</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">auth_server</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;https://</span><span class="si">{host}</span><span class="s2">/auth&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using auth server &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">auth_server</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{auth_server}</span><span class="s2">/realms/</span><span class="si">{realm}</span><span class="s2">/protocol/openid-connect/token&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">}</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calling POST </span><span class="si">%s</span><span class="s2"> with headers </span><span class="si">%s</span><span class="s2"> and body </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Response (</span><span class="si">%s</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;error_description&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">raise</span> <span class="n">InvalidToken</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Error logging in: </span><span class="si">{description}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
+
+    <span class="n">api_key</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">api_key</span></div>
+
+
 <div class="viewcode-block" id="get_service"><a class="viewcode-back" href="../../api.html#nextcode.client.get_service">[docs]</a><span class="k">def</span> <span class="nf">get_service</span><span class="p">(</span>
     <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kw</span>
+    <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper method which returns a service handle and creates a client object automatically</span>

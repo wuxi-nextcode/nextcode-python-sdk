@@ -11,8 +11,10 @@ from importlib import import_module
 from pathlib import Path
 import logging
 from typing import Optional, Union, Dict, List
+from urllib.parse import urlsplit
+import requests
 
-from .exceptions import ServiceNotFound, InvalidProfile
+from .exceptions import ServiceNotFound, InvalidProfile, InvalidToken
 from .config import Config, save_config
 from .utils import root_url_from_api_key, get_access_token, decode_token
 
@@ -24,11 +26,53 @@ log = logging.getLogger()
 cfg = Config()
 
 
+def get_api_key(
+    host: str, username: str, password: str, realm: str = "wuxinextcode.com"
+) -> str:
+    """
+    Authenticate with keycloak server and return an API key
+
+    :param host: The URI of the service. e.g. host.wuxinextcode.com
+    :param username: Username of the keycloak user which is authenticating
+    :param password: Password
+    :param realm: The realm with which to authenticate (optional)
+    :returns: API Key which can be used in subsequent calls to Client()
+    :raises: InvalidToken
+    """
+    client_id = "api-key-client"
+    body = {
+        "grant_type": "password",
+        "client_id": client_id,
+        "password": password,
+        "username": username,
+        "scope": "offline_access",
+    }
+    if ":/" in host:
+        host = urlsplit(host).netloc
+    host = host.split("/")[0]
+    auth_server = f"https://{host}/auth"
+    log.info("Using auth server '%s'", auth_server)
+    url = f"{auth_server}/realms/{realm}/protocol/openid-connect/token"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
+    resp = requests.post(url, headers=headers, data=body)
+    log.debug("Response (%s): %s", resp.status_code, resp.text)
+    if resp.status_code != 200:
+        try:
+            description = resp.json()["error_description"]
+        except Exception:
+            description = resp.text
+        raise InvalidToken(f"Error logging in: {description}") from None
+
+    api_key = resp.json()["refresh_token"]
+    return api_key
+
+
 def get_service(
     service_name: str,
     api_key: Optional[str] = None,
     profile: Optional[str] = None,
-    **kw
+    **kw,
 ):
     """
     Helper method which returns a service handle and creates a client object automatically

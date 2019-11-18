@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>API Reference &#8212; nextcode-python-sdk 0.3.4 documentation</title>
+    <title>API Reference &#8212; nextcode-python-sdk 0.3.5 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.4</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.5</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -222,6 +222,31 @@ with the constructor client.Client()</p>
 <p>Available services can be listed by calling class method <cite>available_services</cite>.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="nextcode.client.get_api_key">
+<code class="sig-prename descclassname">nextcode.client.</code><code class="sig-name descname">get_api_key</code><span class="sig-paren">(</span><em class="sig-param">host</em>, <em class="sig-param">username</em>, <em class="sig-param">password</em>, <em class="sig-param">realm='wuxinextcode.com'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_api_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.get_api_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate with keycloak server and return an API key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The URI of the service. e.g. host.wuxinextcode.com</p></li>
+<li><p><strong>username</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Username of the keycloak user which is authenticating</p></li>
+<li><p><strong>password</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Password</p></li>
+<li><p><strong>realm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The realm with which to authenticate (optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>API Key which can be used in subsequent calls to Client()</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>InvalidToken</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
