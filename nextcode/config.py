@@ -49,7 +49,7 @@ def load_cache(name: str) -> Optional[Dict]:
     except FileNotFoundError:
         pass
     except Exception:
-        log.exception("Could not load from cache %s" % cache_file)
+        log.exception("Could not load from cache %s", cache_file)
     return None
 
 
@@ -63,7 +63,7 @@ def save_cache(name: str, contents: Dict) -> None:
         json.dump(contents, cache_file.open("w"), default=str)
         log.info("Dumped contents into cache %s", cache_file)
     except Exception:
-        log.exception("Could not save cache %s" % cache_file)
+        log.exception("Could not save cache %s", cache_file)
 
 
 class Config:
@@ -206,7 +206,10 @@ def get_config() -> Dict:
 
 def get_profile_config() -> Dict:
     config = Config()
-    return config.data["profiles"][get_default_profile()]
+    try:
+        return config.data["profiles"][get_default_profile()]
+    except KeyError:
+        raise InvalidProfile("No current profile found")
 
 
 _init_config()

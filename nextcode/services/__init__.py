@@ -23,16 +23,20 @@ class BaseService:
         self.client = client
 
         service_path = os.environ.get("NEXTCODE_SERVICE_PATH", service_path)
-        # ! temporary hack
-        if "localhost" in client.profile.root_url:
-            service_path = "/"
-
-        self.service_path = service_path
         root_url = client.profile.root_url
         if not root_url:
             raise InvalidProfile("Profile is not configured")
+
+        # ! temporary hack
+        if "localhost" in root_url:
+            service_path = "/"
+
+        self.service_path = service_path
         self.base_url = urljoin(root_url, service_path)
-        self.session = ServiceSession(self.base_url, client.profile.api_key)
+        api_key = client.profile.api_key
+        if client.profile.skip_auth:
+            api_key = None
+        self.session = ServiceSession(self.base_url, api_key)
 
     def __repr__(self):
         return f"<Service {self.service_name} {self.version} | {self.base_url}>"

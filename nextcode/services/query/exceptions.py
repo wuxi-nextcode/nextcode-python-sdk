@@ -1,6 +1,10 @@
 from typing import List
 
 
+class TemplateError(Exception):
+    pass
+
+
 class QueryError(Exception):
     def __init__(self, message: str, query_id: int = None):
         self.query_id = query_id

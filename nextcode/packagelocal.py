@@ -1,11 +1,15 @@
+"""
+Package a local folder and upload to S3 for workflow service and pipelines service.
+"""
 import os
-import time
+from time import sleep
 import boto3
 import socket
-import zipfile
+from zipfile import ZipFile
 import tempfile
 import logging
 from .exceptions import UploadError
+from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
 
 log = logging.getLogger(__name__)
 
@@ -14,22 +18,23 @@ DEFAULT_SCRATCH_BUCKET = "nextcode-scratch"
 EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # expires in 7 days
 
 
-def _get_path(project_name):
-    path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../../", project_name)
-    )
-    if not os.path.exists(path):
-        raise RuntimeError("Path %s does not exist" % path)
-    return path
+def package_and_upload(service: Callable, package_name: str, project_path: str) -> str:
+    """
+    Create a zip file from a folder and upload to S3. Returns a presigned https URL with an expiration of 24 hours
 
+    :param service: service instance of a workflow service or a pipelines service which supports package uploads
+    :param package_name: name of the package, will be used as a partial filename
+    :param project_path: local folder to package and upload
+    :returns: https url to the zip file on S3
+    :raises: UploadError
 
-def package_and_upload(service, project_name, project_path):
+    """
     log.debug(
-        "package_and_upload called with project_name=%s, project_path=%s",
-        project_name,
+        "package_and_upload called with package_name=%s, project_path=%s",
+        package_name,
         project_path,
     )
-    scratch_bucket = service.app_info.get("scratch_bucket", DEFAULT_SCRATCH_BUCKET)
+    scratch_bucket = service.app_info.get("scratch_bucket", DEFAULT_SCRATCH_BUCKET)  # type: ignore
 
     if not scratch_bucket:
         raise UploadError(
@@ -37,13 +42,14 @@ def package_and_upload(service, project_name, project_path):
         )
 
     log.info(
-        "Uploading local package {} from {} to s3://{}...".format(
-            project_name, project_path, scratch_bucket
-        )
+        "Uploading local package %s from %s to s3://%s...",
+        package_name,
+        project_path,
+        scratch_bucket,
     )
 
     try:
-        return _package_and_upload(scratch_bucket, project_name, project_path)
+        return _package_and_upload(scratch_bucket, package_name, project_path)
     except Exception as e:
         if "AccessDenied" in repr(
             e
@@ -55,25 +61,28 @@ def package_and_upload(service, project_name, project_path):
                 % scratch_bucket
             )
         else:
-            raise UploadError("Failed to upload local package.")
+            raise UploadError(f"Failed to upload local package ({repr(e)})")
 
 
-def _package_and_upload(scratch_bucket, project_name, project_path):
-    """Zip up all relevant files from 'project_path' and upload to s3 so that we
+def _package_and_upload(
+    scratch_bucket: str, package_name: str, project_path: str
+) -> str:
+    """
+    Zip up all relevant files from 'project_path' and upload to s3 so that we
     can download it from the ec2 worker node for local deployment.
     """
     log.info("Packaging '%s'", project_path)
-    zip_filename = "{}_{}.zip".format(project_name, socket.gethostname())
+    zip_filename = "{}_{}.zip".format(package_name, socket.gethostname())
     full_zip_filename = tempfile.mkstemp(".zip")[1]
     project_path = os.path.abspath(project_path)
     log.debug("project_path is %s", project_path)
-    log_archive = zipfile.ZipFile(full_zip_filename, "w")
+    log_archive = ZipFile(full_zip_filename, "w")
 
     files = []
     for root, directories, filenames in os.walk(
         project_path, followlinks=False, topdown=True
     ):
-        # skip everything starting with a . and the nextflow 'work' folder
+        # skip everything starting with a .
         if any([l.startswith(".") for l in root.split("/")]):
             continue
 
@@ -84,7 +93,7 @@ def _package_and_upload(scratch_bucket, project_name, project_path):
 
     for f in files:
         write_filename = f.replace(project_path, "")
-        write_filename = project_name + write_filename
+        write_filename = package_name + write_filename
         log_archive.write(f, arcname=write_filename)
     log_archive.close()
     if len(files) == 0:
@@ -102,5 +111,5 @@ def _package_and_upload(scratch_bucket, project_name, project_path):
         ExpiresIn=EXPIRATION_SECONDS,
     )
     # wait for a few seconds to give s3 time to catch up
-    time.sleep(2.0)
+    sleep(2.0)
     return url

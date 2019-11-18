@@ -58,10 +58,6 @@ class WorkflowJob:
         except KeyError:
             raise ServerError("Server does not support inspect functionality")
         resp = self.session.get(url)
-        try:
-            resp.raise_for_status()
-        except Exception:
-            raise ServerError("Cannot get job status")
         return resp.json()
 
     def processes(self, process_id=None, is_all=False, limit=50, status=None):
@@ -90,7 +86,7 @@ class WorkflowJob:
         resp = self.session.get(logs_url)
         return resp.json()["links"]
 
-    def logs(self, log_group, log_filter):
+    def logs(self, log_group, log_filter=None):
         groups = self.log_groups()
         url = None
         for k, v in groups.items():
@@ -98,7 +94,7 @@ class WorkflowJob:
                 url = v
                 break
         if not url:
-            raise Exception("Log Group '%s' is not available." % log_group)
+            raise ServerError(f"Log Group '{log_group}' is not available.")
         if log_filter:
             url += "?filter=%s" % log_filter
         logs = self.session.get(url).text

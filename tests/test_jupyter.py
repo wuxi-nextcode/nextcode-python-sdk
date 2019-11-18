@@ -5,7 +5,6 @@ from unittest.mock import patch, MagicMock
 
 from nextcode import jupyter
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
-from nextcode.services.query import jupyter
 from nextcode.services.query.exceptions import MissingRelations, QueryError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 from tests.test_query import QUERY_URL, ROOT_RESP
@@ -267,3 +266,15 @@ class GorCommandTest(JupyterTest):
         os.environ["LOG_QUERY"] = "1"
         jupyter.print_details("dummy")
         os.environ["LOG_QUERY"] = ""
+
+    def test_query_builder(self):
+        qry = jupyter.QueryBuilder()
+        qry.defs["asdf"] = "def"
+        qry.defs["ghjk"] = "def;"
+        qry.creates["qwer"] = "create"
+        qry.creates["tyu"] = "create;"
+        qry.render("gor #dbsnp#")
+        m = MagicMock()
+        m.project = "/project/"
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
+            qry.execute("gor #dbsnp#")

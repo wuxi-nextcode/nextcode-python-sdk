@@ -9,11 +9,14 @@ import logging
 import os
 from typing import Dict, Tuple, Sequence, List, Optional, Union, Any
 from requests import codes
+from pathlib import Path
+import yaml
+from urllib.parse import urlencode
 
 from ...services import BaseService
 from ...exceptions import ServerError
 from ...client import Client
-from .exceptions import QueryError, MissingRelations
+from .exceptions import QueryError, MissingRelations, TemplateError
 from .query import Query
 from .utils import get_fingerprint
 import nextcode
@@ -51,9 +54,24 @@ class Service(BaseService):
         if not self.project:
             raise QueryError("No project specified")
 
+    def set_project(self, project: str, persist: bool = True) -> None:
+        """
+        Set the current project for all subsequent queries.
+
+        :project: The project name
+        :persist: Persist the project name into the current profile
+
+        """
+        self.project = project
+        if persist:
+            self.client.profile.project = self.project
+
     def get_template(self, name: str) -> Dict:
         url = self.session.endpoints["templates"] + name
-        return self.session.get(url).json()
+        try:
+            return self.session.get(url).json()
+        except ServerError:
+            raise TemplateError(f"Template {name} not found")
 
     def get_templates(
         self, organization: str = None, category: str = None, name: str = None
@@ -93,6 +111,94 @@ class Service(BaseService):
                     if not name or template["name"] == name:
                         ret[template["full_name"]] = template
         return ret
+
+    def add_template_from_file(self, filename: str, replace: bool = False) -> str:
+        """
+        Add a new template from yaml file.
+
+        :param filename: Full path to a yaml file containing template
+        :param replace: Replace an existing template
+        :returns: Full name of the new template
+        :raises: TemplateError
+        """
+        p = Path(filename)
+        if not p.exists():
+            raise TemplateError(f"File '{filename}' not found")
+        with p.open() as f:
+            yaml_string = f.read()
+        try:
+            contents = yaml.safe_load(yaml_string)
+            if not isinstance(contents, dict):
+                raise TemplateError("File contents is not a dictionary")
+        except Exception as ex:
+            raise TemplateError(f"Yaml is invalid: {ex}")
+        name = next(iter(contents))
+        url = self.session.url_from_endpoint("templates")
+        log.info("Uploading template '%s' to %s...", name, url)
+        try:
+            resp = self.session.post(url, json={"yaml": yaml_string})
+        except ServerError as se:
+            if se.response["code"] == 409:
+                if replace:
+                    err = se.response["error"]
+                    log.info(
+                        "Template already exists with ID %s. Replacing...",
+                        err["template_id"],
+                    )
+                    try:
+                        resp = self.session.delete(err["template_url"])
+                        resp = self.session.post(url, json={"yaml": yaml_string})
+                    except ServerError as ex:
+                        raise TemplateError(str(ex))
+                else:
+                    raise TemplateError(f"Template '{name}' already exists")
+            else:
+                raise TemplateError(str(se))
+
+        full_name = resp.json()["full_name"]
+        log.info(
+            "Template '%s' (%s) has been successfully added",
+            full_name,
+            resp.json()["id"],
+        )
+        return full_name
+
+    def delete_template(self, name: str) -> None:
+        """
+        Deletes a template on the server by full name, e.g. /[org]/[cat]/[name]/[version]
+
+        :param name: Full unique name of the template
+        :raises: TemplateError
+        """
+        template = self.get_template(name)
+        try:
+            _ = self.session.delete(template["links"]["self"])
+        except ServerError as e:
+            raise TemplateError(f"Could not delete template: {e}")
+
+    def render_template(self, name: str, params: Optional[Dict] = None) -> str:
+        """
+        Render a template using the supplied arguments and return the full query string.
+
+        :name: Full unique name of the template
+        :params: List of arguments to supply to the template
+        :raises: TemplateError
+        :returns: String containing a full rendered template
+        """
+        template = self.get_template(name)
+
+        render_url = template["links"]["render"]
+        log.info("Calling render endpoint %s", render_url)
+        try:
+            resp = self.session.get(
+                render_url, params=params, headers={"Accept": "text/plain"}
+            )
+        except ServerError as ex:
+            if "Missing arguments" in str(ex):
+                raise TemplateError(str(ex))
+            else:
+                raise
+        return resp.text
 
     def execute(
         self,
@@ -227,13 +333,12 @@ class Service(BaseService):
 
     def get_query(self, query_id: int) -> Query:
         """
-        Get a query object for a query by id
+        Get a query object for a query by id, does not require project to be set
 
         :param query_id: The ID of a query that has been previously executed
         :raises: QueryError
 
         """
-        self._check_project()
         url = self.session.endpoints["queries"]
         try:
             resp = self.session.get(f"{url}{query_id}")
@@ -255,7 +360,6 @@ class Service(BaseService):
         :param status: Filter queries by status. e.g. `DONE` `RUNNING` `FAILED`
         :param limit: Limit the number of queries returned.
         """
-        self._check_project()
         data = {
             "project": self.project,
             "user_name": self.current_user.get("email"),

@@ -7,6 +7,7 @@ Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`
 
 from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
+from .utils import jupyter_available
 from typing import Dict, List, Optional, Union
 import nextcode
 import hashlib
@@ -18,24 +19,24 @@ import os
 
 log = logging.getLogger(__name__)
 
-try:
+Magics = object
+
+
+def magics_class(cls):
+    return cls
+
+
+def line_cell_magic(func):
+    return func
+
+
+def line_magic(func):
+    return func
+
+
+if jupyter_available():
     import pandas as pd
-    from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic
-
-    jupyter_available = True
-except ImportError:
-    jupyter_available = False
-    Magics = object
-    line_cell_magic = None
-
-    def magics_class(cls):
-        return cls
-
-    def line_cell_magic(func):
-        return func
-
-    def line_magic(func):
-        return func
+    from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic  # type: ignore
 
 
 def print_details(txt):
@@ -313,6 +314,6 @@ class QueryBuilder:
         return string
 
     def execute(self, stmt, **kw):
-        svc = nextcode.get_service("query")
+        svc = get_service()
         query = self.render(stmt)
         return svc.execute(query, **kw)

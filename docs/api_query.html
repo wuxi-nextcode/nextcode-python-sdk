@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.3.3 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.3.4 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.3</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.4</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -247,12 +247,52 @@ the query will be refreshed from the server.</p>
 <em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">client</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>A connection to the query api</p>
 <dl class="method">
+<dt id="nextcode.services.query.service.Service.add_template_from_file">
+<code class="sig-name descname">add_template_from_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new template from yaml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full path to a yaml file containing template</p></li>
+<li><p><strong>replace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Replace an existing template</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Full name of the new template</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>TemplateError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.service.Service.current_user">
 <em class="property">property </em><code class="sig-name descname">current_user</code><a class="headerlink" href="#nextcode.services.query.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>User JWT decoded by the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.delete_template">
+<code class="sig-name descname">delete_template</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.delete_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.delete_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a template on the server by full name, e.g. /[org]/[cat]/[name]/[version]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full unique name of the template</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>TemplateError</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -343,7 +383,7 @@ can be called to force a refresh.</p>
 <dl class="method">
 <dt id="nextcode.services.query.service.Service.get_query">
 <code class="sig-name descname">get_query</code><span class="sig-paren">(</span><em class="sig-param">query_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a query object for a query by id</p>
+<dd><p>Get a query object for a query by id, does not require project to be set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>query_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The ID of a query that has been previously executed</p>
@@ -402,6 +442,46 @@ can be called to force a refresh.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nextcode.services.query.service.Service.render_template">
+<code class="sig-name descname">render_template</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.render_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.render_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render a template using the supplied arguments and return the full query string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Name</dt>
+<dd class="field-odd"><p>Full unique name of the template</p>
+</dd>
+<dt class="field-even">Params</dt>
+<dd class="field-even"><p>List of arguments to supply to the template</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>TemplateError</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>String containing a full rendered template</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.service.Service.set_project">
+<code class="sig-name descname">set_project</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">persist=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.set_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.set_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current project for all subsequent queries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Project</dt>
+<dd class="field-odd"><p>The project name</p>
+</dd>
+<dt class="field-even">Persist</dt>
+<dd class="field-even"><p>Persist the project name into the current profile</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.service.Service.status">
 <code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service information from the root endpoint</p>
@@ -433,6 +513,17 @@ can be called to force a refresh.</p>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="nextcode.services.query.utils.jupyter_available">
+<code class="sig-prename descclassname">nextcode.services.query.utils.</code><code class="sig-name descname">jupyter_available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/utils.html#jupyter_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.utils.jupyter_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if jupyter dependencies are available without importing these heavy libraries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -455,7 +546,7 @@ can be called to force a refresh.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-14.<br/>
+      Last updated on 2019-11-18.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

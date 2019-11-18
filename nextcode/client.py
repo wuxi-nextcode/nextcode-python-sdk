@@ -139,6 +139,7 @@ class Client:
         """
         for (_, name, _) in pkgutil.iter_modules([str(SERVICES_PATH)]):
             if name == service_name:
+                log.debug("Importing service %s", name)
                 module = import_module("..services.{}".format(name), __name__)
                 svc = module.Service(client=self, **kw)  # type: ignore
                 return svc

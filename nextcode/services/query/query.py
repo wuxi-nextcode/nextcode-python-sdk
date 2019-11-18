@@ -11,16 +11,10 @@ import time
 from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
 from dateutil.parser import parse
 
-try:
-    import pandas as pd
-
-    jupyter_available = True
-except ImportError:
-    jupyter_available = False
-
 from io import StringIO
 
 from .exceptions import QueryError
+from .utils import jupyter_available
 
 SERVICE_PATH = "/api/query"
 
@@ -263,9 +257,11 @@ class Query:
         self.session.delete(self.url)
 
     def dataframe(self, limit=None):
-        if not jupyter_available:
+        if not jupyter_available():
             raise QueryError("Pandas library is not installed")
         tsv_data = self.get_results(is_json=False, limit=limit)
+        import pandas as pd
+
         if not tsv_data:
             return pd.DataFrame()
         df = pd.read_csv(StringIO(tsv_data), delimiter="\t")

@@ -30,7 +30,6 @@ class Service(BaseService):
                     "job_id must be an integer or 'latest', not '%s'" % job_id
                 )
         resp = self.session.get(jobs_endpoint, json=data)
-        resp.raise_for_status()
         jobs = resp.json()["jobs"]
         if not jobs:
             raise NotFound("Job not found")

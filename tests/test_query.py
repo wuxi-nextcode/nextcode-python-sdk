@@ -14,6 +14,7 @@ from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.utils import decode_token
 from nextcode.client import Client
 from nextcode.services.query import Service
+from nextcode.services.query.utils import jupyter_available
 from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP
 from nextcode.services.query.exceptions import QueryError, MissingRelations
 
@@ -50,6 +51,9 @@ class QueryTest(BaseTestCase):
     def setUp(self):
         super(QueryTest, self).setUp()
         self.svc = self.get_service(project="testproject")
+
+    def test_jupyter(self):
+        b = jupyter_available()
 
     @responses.activate
     def get_service(self, project=None):
@@ -333,7 +337,9 @@ class QueryTest(BaseTestCase):
             responses.GET, QUERY_RESPONSE["links"]["result"], json=RESULT_RESPONSE
         )
         df = query.dataframe()
-        with patch("nextcode.services.query.query.jupyter_available", False):
+        with patch(
+            "nextcode.services.query.query.jupyter_available", return_value=False
+        ):
             with self.assertRaises(QueryError) as ctx:
                 query.dataframe()
             self.assertIn("Pandas library is not installed", str(ctx.exception))

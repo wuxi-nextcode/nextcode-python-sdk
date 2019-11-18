@@ -10,3 +10,4 @@ tox
 mypy
 pandas
 codecov
+ipython

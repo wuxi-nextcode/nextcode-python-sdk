@@ -82,8 +82,9 @@ class ServiceSession(requests.Session):
         self.endpoints = self.root_info.get("endpoints")
 
     def _initialize(self) -> None:
-        self.token = get_access_token(self.api_key)
-        self.headers["Authorization"] = "Bearer {}".format(self.token)
+        if self.api_key:
+            self.token = get_access_token(self.api_key)
+            self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
         except ServerError as ex:
@@ -110,7 +111,8 @@ class ServiceSession(requests.Session):
             return False
         self.token = contents["token"]
         self.root_info = contents["root_info"]
-        self.headers["Authorization"] = "Bearer {}".format(self.token)
+        if self.token:
+            self.headers["Authorization"] = "Bearer {}".format(self.token)
         return True
 
     def _do_request(self, method, retry=True, *args, **kwargs):
@@ -168,8 +170,14 @@ class ServiceSession(requests.Session):
         )
         try:
             r = requests.get(self.url_base, timeout=2.0, headers=self.headers)
-        except requests.exceptions.ConnectionError:
-            raise ServerError("Could not reach server %s" % self.url_base) from None
+        except requests.exceptions.ConnectionError as ex:
+            raise ServerError(
+                f"Could not reach server {self.url_base} ({ex})"
+            ) from None
+        except requests.exceptions.ReadTimeout as ex:
+            raise ServerError(
+                f"Could not reach server {self.url_base} ({ex})"
+            ) from None
 
         if r.status_code == codes.not_found:
             # ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/

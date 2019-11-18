@@ -4,6 +4,7 @@ import datetime
 from copy import deepcopy
 
 from nextcode import Client
+from nextcode.exceptions import ServerError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 
 WORKFLOW_URL = "https://test.wuxinextcode.com/workflow"
@@ -11,6 +12,9 @@ JOBS_URL = WORKFLOW_URL + "/jobs"
 JOB_ID = 666
 JOB_URL = JOBS_URL + "/{}".format(JOB_ID)
 PROCESSES_URL = JOB_URL + "/processes"
+PROCESS_URL = PROCESSES_URL + "/1"
+EVENTS_URL = JOB_URL + "/events"
+LOGS_URL = JOB_URL + "/logs"
 ROOT_RESP = {
     "endpoints": {
         "health": WORKFLOW_URL + "/health",
@@ -23,13 +27,21 @@ ROOT_RESP = {
 dt = datetime.datetime.utcnow().isoformat()
 JOB_RESP = {
     "job_id": JOB_ID,
-    "links": {"self": JOB_URL, "inspect": JOB_URL, "processes": PROCESSES_URL},
+    "links": {
+        "self": JOB_URL,
+        "inspect": JOB_URL,
+        "processes": PROCESSES_URL,
+        "events": EVENTS_URL,
+        "logs": LOGS_URL,
+    },
     "complete_date": dt,
     "status_date": dt,
     "submit_date": dt,
     "status": "FINISHED",
 }
 JOBS_RESP = {"jobs": [JOB_RESP]}
+
+PROCESS_RESP = {"process_id": 1}
 
 
 class WorkflowTest(BaseTestCase):
@@ -88,12 +100,65 @@ class WorkflowTest(BaseTestCase):
         responses.add(responses.PUT, JOB_URL, json=JOB_RESP)
         responses.add(responses.DELETE, JOB_URL, json={"status_message": "Cancelled"})
         job = self.svc.find_job(JOB_ID)
+        _ = job.running(False)
         _ = job.running(True)
+        _ = job.finished(False)
         _ = job.finished(True)
         _ = job.resume()
         _ = job.cancel()
+
+    @responses.activate
+    def test_inspect(self):
+        responses.add(responses.GET, JOBS_URL, json=JOBS_RESP)
+        responses.add(responses.GET, JOB_URL, json=JOB_RESP)
+        responses.add(responses.PUT, JOB_URL, json=JOB_RESP)
+        responses.add(responses.DELETE, JOB_URL, json={"status_message": "Cancelled"})
+        job = self.svc.find_job(JOB_ID)
         _ = job.inspect()
-        # _ = job.processes()
+
+        del job.links["inspect"]
+        with self.assertRaises(ServerError):
+            _ = job.inspect()
+
+    @responses.activate
+    def test_processes(self):
+        responses.add(responses.GET, JOBS_URL, json=JOBS_RESP)
+        responses.add(responses.GET, JOB_URL, json=JOB_RESP)
+        responses.add(responses.GET, PROCESSES_URL, json={"processes": PROCESS_RESP})
+        responses.add(responses.GET, PROCESS_URL, json=PROCESS_RESP)
+        job = self.svc.find_job(JOB_ID)
+        _ = job.processes()
+        _ = job.processes(is_all=True)
+        _ = job.processes(status="RUNNING")
+        _ = job.processes(process_id=1)
+
+    @responses.activate
+    def test_events(self):
+        responses.add(responses.GET, JOBS_URL, json=JOBS_RESP)
+        responses.add(responses.GET, JOB_URL, json=JOB_RESP)
+        responses.add(responses.GET, EVENTS_URL, json={"events": []})
+        job = self.svc.find_job(JOB_ID)
+        _ = job.events()
+
+    @responses.activate
+    def test_logs(self):
+        responses.add(responses.GET, JOBS_URL, json=JOBS_RESP)
+        responses.add(responses.GET, JOB_URL, json=JOB_RESP)
+        log_group_url = "https://group1"
+        responses.add(
+            responses.GET, LOGS_URL, json={"links": {"group1": log_group_url}}
+        )
+        responses.add(responses.GET, log_group_url)
+        responses.add(responses.GET, log_group_url + "?filter=bleh")
+        job = self.svc.find_job(JOB_ID)
+        _ = job.log_groups()
+        with self.assertRaises(ServerError):
+            job.logs("invalidgroup")
+        job.logs("group1")
+        job.logs("group1", log_filter="bleh")
+
+        with self.assertRaises(AttributeError):
+            job.invalid
 
     @responses.activate
     def test_job_duration(self):
@@ -102,6 +167,11 @@ class WorkflowTest(BaseTestCase):
             job = self.svc.find_job(JOB_ID)
             d = job.duration
             self.assertEqual(d, datetime.timedelta(0))
+            job.complete_date = None
+            job.status = None
+            job.status_date = None
+            d = job.duration
+            self.assertEqual(d, "-")
 
         resp = deepcopy(JOBS_RESP)
         resp["jobs"][0]["complete_date"] = None
