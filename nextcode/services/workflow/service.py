@@ -21,6 +21,30 @@ class Service(BaseService):
     def __init__(self, client: Client, *args, **kwargs) -> None:
         super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
 
+    def get_pipelines(self) -> List:
+        """
+        Returns the pipelines available on the current server
+        
+        Refer to the API documentation for the Workflow service to see formatting of data.
+
+        :return: List of pipelines
+        """
+        resp = self.session.get(self.session.url_from_endpoint("pipelines"))
+        pipelines = resp.json()["pipelines"]
+        return pipelines
+
+    def get_projects(self) -> List:
+        """
+        Returns the projects that have been created on the current server
+
+        Refer to the API documentation for the Workflow service to see formatting of data.
+
+        :return: List of projects
+        """
+        resp = self.session.get(self.session.url_from_endpoint("projects"))
+        projects = resp.json()["projects"]
+        return projects
+
     def find_job(self, job_id: Union[int, str]) -> WorkflowJob:
         """
         Return a job proxy object

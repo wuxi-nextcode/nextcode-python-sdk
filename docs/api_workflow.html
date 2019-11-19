@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Workflow Service &#8212; nextcode-python-sdk 0.3.6 documentation</title>
+    <title>Workflow Service &#8212; nextcode-python-sdk 0.3.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.6</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.7</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -179,6 +179,36 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="nextcode.services.workflow.service.Service.get_pipelines">
+<code class="sig-name descname">get_pipelines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pipelines available on the current server</p>
+<p>Refer to the API documentation for the Workflow service to see formatting of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of pipelines</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.workflow.service.Service.get_projects">
+<code class="sig-name descname">get_projects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_projects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_projects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the projects that have been created on the current server</p>
+<p>Refer to the API documentation for the Workflow service to see formatting of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of projects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.workflow.service.Service.healthy">
 <code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the service healthy?</p>
@@ -271,7 +301,7 @@
 :param limit: Maximum number of events to return</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,7 +436,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-18.<br/>
+      Last updated on 2019-11-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

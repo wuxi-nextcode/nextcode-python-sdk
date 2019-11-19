@@ -9,6 +9,8 @@ from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 
 WORKFLOW_URL = "https://test.wuxinextcode.com/workflow"
 JOBS_URL = WORKFLOW_URL + "/jobs"
+PIPELINES_URL = WORKFLOW_URL + "/pipelines"
+PROJECTS_URL = WORKFLOW_URL + "/projects"
 JOB_ID = 666
 JOB_URL = JOBS_URL + "/{}".format(JOB_ID)
 PROCESSES_URL = JOB_URL + "/processes"
@@ -20,6 +22,8 @@ ROOT_RESP = {
         "health": WORKFLOW_URL + "/health",
         "documentation": WORKFLOW_URL + "/documentation",
         "jobs": JOBS_URL,
+        "pipelines": PIPELINES_URL,
+        "projects": PROJECTS_URL,
     },
     "current_user": {"email": "testuser"},
 }
@@ -42,6 +46,36 @@ JOB_RESP = {
 JOBS_RESP = {"jobs": [JOB_RESP]}
 
 PROCESS_RESP = {"process_id": 1}
+
+PIPELINES_RESP = {
+    "pipelines": [
+        {
+            "description": "Smoketest pipeline which is run without parameters to check if the service and dependencies is valid",
+            "links": {
+                "self": "https://platform-cluster.wuxinextcodedev.com/workflow/pipelines/smoketest"
+            },
+            "name": "smoketest",
+            "parameters": None,
+            "revision": None,
+            "script": "https://gitlab.com/wuxi-nextcode/cohort/workflows/workflow-smoketest.git",
+        },
+    ]
+}
+PROJECTS_RESP = {
+    "projects": [
+        {
+            "create_date": "2019-08-26T10:49:51.322125",
+            "csa_file_path": "/mnt/csa/env/dev/projects/testing",
+            "description": None,
+            "internal_name": "testing",
+            "links": {
+                "self": "https://platform-cluster.wuxinextcodedev.com/workflow/projects/35"
+            },
+            "name": None,
+            "project_id": 35,
+        }
+    ],
+}
 
 
 class WorkflowTest(BaseTestCase):
@@ -217,3 +251,16 @@ class WorkflowTest(BaseTestCase):
             build_context,
             profile,
         )
+        self.assertEqual(666, job.job_id)
+
+    @responses.activate
+    def test_pipelines(self):
+        responses.add(responses.GET, PIPELINES_URL, json=PIPELINES_RESP)
+        pipelines = self.svc.get_pipelines()
+        self.assertEqual(pipelines, PIPELINES_RESP["pipelines"])
+
+    @responses.activate
+    def test_project(self):
+        responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
+        projects = self.svc.get_projects()
+        self.assertEqual(projects, PROJECTS_RESP["projects"])

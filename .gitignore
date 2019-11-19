@@ -19,6 +19,8 @@ htmlcov/**
 coverage.xml
 test-results
 htmlcov
+.vscode
+*.*workspace
 
 # Common virtualenv names
 venv

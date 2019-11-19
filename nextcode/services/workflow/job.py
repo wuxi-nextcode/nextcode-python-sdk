@@ -125,7 +125,7 @@ class WorkflowJob:
             resp = self.session.get(url, json=data)
             return resp.json()["processes"]
 
-    def events(self, limit: int = 50) -> List:
+    def events(self, limit: int = 50) -> List[Dict]:
         """
         Get a list of events reported by Nextflow for this job
         :param limit: Maximum number of events to return
