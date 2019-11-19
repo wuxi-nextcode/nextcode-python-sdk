@@ -7,13 +7,13 @@ from nextcode import jupyter
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.services.query.exceptions import MissingRelations, QueryError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
-from tests.test_query import QUERY_URL, ROOT_RESP
+from tests.test_query import ROOT_URL, ROOT_RESP
 import pandas as pd
 
 
 def setup_responses():
     responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
-    responses.add(responses.GET, QUERY_URL, json=ROOT_RESP)
+    responses.add(responses.GET, ROOT_URL, json=ROOT_RESP)
 
 
 class JupyterTest(BaseTestCase):

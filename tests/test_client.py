@@ -7,6 +7,7 @@ import tempfile
 import shutil
 
 from nextcode import config, Client
+from nextcode.client import get_api_key
 from nextcode.session import ServiceSession
 from nextcode.exceptions import (
     InvalidToken,
@@ -29,10 +30,50 @@ class ClientTest(BaseTestCase):
         with self.assertRaises(InvalidProfile):
             _ = Client(profile="dummy")
         cfg.get("profiles")["dummy"] = {}
+        cfg.set({"default_profile": "dummy"})
         client = Client(profile="dummy")
 
         with self.assertRaises(ServiceNotFound):
             svc = client.service("notfound")
+
+    def test_default_profile(self):
+        cfg.get("profiles")["dummy"] = {}
+        cfg.set({"default_profile": "dummy"})
+        client = Client()
+
+        os.environ["GOR_API_KEY"] = "ble"
+        cfg.set({"default_profile": None})
+        with self.assertRaises(Exception):
+            client = Client()
+
+        with patch("nextcode.client.root_url_from_api_key"):
+            client = Client()
+
+        del os.environ["GOR_API_KEY"]
+        with self.assertRaises(InvalidProfile):
+            client = Client()
+
+    @responses.activate
+    def test_get_api_key(self):
+        auth_url = (
+            "https://host/auth/realms/wuxinextcode.com/protocol/openid-connect/token"
+        )
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                responses.POST, auth_url, body="Refresh token has expired", status=400
+            )
+            with self.assertRaises(InvalidToken) as ctx:
+                get_api_key("host", "username", "password")
+            self.assertIn("Refresh token has expired", repr(ctx.exception))
+
+        with responses.RequestsMock() as rsps:
+            expected_api_key = "the_token"
+            rsps.add(responses.POST, auth_url, json={"refresh_token": expected_api_key})
+            api_key = get_api_key("host", "username", "password")
+            self.assertEqual(expected_api_key, api_key)
+
+            _ = get_api_key("https://host", "username", "password")
+            _ = get_api_key("https://host/something", "username", "password")
 
     @responses.activate
     def test_get_access_token(self):

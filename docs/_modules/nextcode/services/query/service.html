@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 0.3.7 documentation</title>
+    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 0.3.8 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.7</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.8</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -169,12 +169,21 @@
         <span class="k">if</span> <span class="n">persist</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span></div>
 
-    <span class="k">def</span> <span class="nf">get_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<div class="viewcode-block" id="Service.get_template"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.service.Service.get_template">[docs]</a>    <span class="k">def</span> <span class="nf">get_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a specific template from the server based on full name.</span>
+
+<span class="sd">        The template name is in the format [organization]/[category]/[name]/[version]</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: Full template name</span>
+<span class="sd">        :raises TemplateError: if the template was not found</span>
+<span class="sd">        :return: Template dict, see Query API Spec for details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="s2">&quot;templates&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">ServerError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TemplateError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Template </span><span class="si">{name}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">TemplateError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Template </span><span class="si">{name}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Service.get_templates"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.service.Service.get_templates">[docs]</a>    <span class="k">def</span> <span class="nf">get_templates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">organization</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
@@ -244,7 +253,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">yaml_string</span><span class="p">})</span>
         <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">se</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
                     <span class="n">err</span> <span class="o">=</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span>
                     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>

@@ -187,8 +187,7 @@ class Client:
                 module = import_module("..services.{}".format(name), __name__)
                 svc = module.Service(client=self, **kw)  # type: ignore
                 return svc
-        else:
-            raise ServiceNotFound()
+        raise ServiceNotFound()
 
     def get_access_token(self, decode: bool = False) -> Union[Dict, str]:
         """Retrieve the JWT access token that is generated from the current api key.
@@ -214,7 +213,7 @@ class Client:
             return token
 
     @classmethod
-    def available_services(self) -> List[str]:
+    def available_services(cls) -> List[str]:
         """List services that can be intantiated via an client object client.service(`service`)
         """
         ret = []
@@ -223,7 +222,7 @@ class Client:
         return ret
 
     @classmethod
-    def available_profiles(self) -> List[str]:
+    def available_profiles(cls) -> List[str]:
         """List profiles that that are installed into the system and can be used
         with the constructor client.Client()
         """

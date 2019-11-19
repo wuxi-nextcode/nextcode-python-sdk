@@ -1,5 +1,4 @@
 [MASTER]
-jobs=1
 disable=R,C,W
 
 [TYPECHECK]

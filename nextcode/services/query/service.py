@@ -67,6 +67,15 @@ class Service(BaseService):
             self.client.profile.project = self.project
 
     def get_template(self, name: str) -> Dict:
+        """
+        Get a specific template from the server based on full name.
+
+        The template name is in the format [organization]/[category]/[name]/[version]
+        
+        :param name: Full template name
+        :raises TemplateError: if the template was not found
+        :return: Template dict, see Query API Spec for details
+        """
         url = self.session.endpoints["templates"] + name
         try:
             return self.session.get(url).json()
@@ -141,7 +150,7 @@ class Service(BaseService):
         try:
             resp = self.session.post(url, json={"yaml": yaml_string})
         except ServerError as se:
-            if se.response["code"] == 409:
+            if se.response and se.response.get("code") == 409:
                 if replace:
                     err = se.response["error"]
                     log.info(
