@@ -41,6 +41,7 @@ class Query:
     'DONE'
     """
 
+    raw: Dict = {}
     query_id = None
     url = None
     duration = None
@@ -114,6 +115,17 @@ class Query:
             self.refresh()
         return self.status == "DONE"
 
+    @property
+    def perspectives(self) -> List[str]:
+        """
+        Returns a list of perspectives available for this query.
+
+        This only applies to template queries. If this is an ad-hoc query the list will be empty.
+        """
+        perspective_links = self.raw["links"].get("perspectives") or []
+        ret = [p["name"] for p in perspective_links]
+        return ret
+
     def wait(self, max_seconds: Optional[int] = None):
         """
         Wait for the query to complete
@@ -168,6 +180,7 @@ class Query:
         offset: Optional[int] = None,
         sort: Optional[str] = None,
         filt: Optional[str] = None,
+        perspective: Optional[str] = None,
         is_json: bool = True,
         callback: Optional[Callable] = None,
     ) -> Union[Dict, str]:
@@ -178,6 +191,7 @@ class Query:
         :param offset: number of rows to skip
         :param sort: gor sort string in format '[column] [ASC|DESC]'
         :param filt: filter to apply to the results serverside
+        :param perspective: perspective name to apply to results (for template queries)
         :param is_json: return rows as a dictionary containing 'header' and 'data'
         :returns: dictonary containing 'header' and 'data' lists or tsv
         :raises: QueryError
@@ -215,6 +229,7 @@ class Query:
                 "sort": sort,
                 "skipheader": skip_header,
                 "filt": filt,
+                "perspective": perspective,
             }
             skip_header = True
             st = time.time()
@@ -252,11 +267,23 @@ class Query:
         return ret
 
     def cancel(self):
+        """
+        Cancel a running query
+        
+        :raises QueryError: Query is not in a running state
+        """
         if self.status not in RUNNING_STATUSES:
             raise QueryError("Query is not running")
         self.session.delete(self.url)
 
-    def dataframe(self, limit=None):
+    def dataframe(self, limit: Optional[int] = None):
+        """
+        Return a Pandas dataframe object containing the results of this query
+        
+        :param limit: Maximum number of rows to return (default all)
+        :raises QueryError: If the pandas library is not installed
+        :return: Pandas dataframe object
+        """
         if not jupyter_available():
             raise QueryError("Pandas library is not installed")
         tsv_data = self.get_results(is_json=False, limit=limit)
@@ -264,5 +291,5 @@ class Query:
 
         if not tsv_data:
             return pd.DataFrame()
-        df = pd.read_csv(StringIO(tsv_data), delimiter="\t")
+        df = pd.read_csv(StringIO(tsv_data), delimiter="\t")  # type: ignore
         return df

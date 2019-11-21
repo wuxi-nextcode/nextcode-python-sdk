@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.3.8 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.3.9 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.8</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.9</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -148,6 +148,34 @@ This object is returned from query methods in the ‘query’ service.</p>
 </pre></div>
 </div>
 <dl class="method">
+<dt id="nextcode.services.query.query.Query.cancel">
+<code class="sig-name descname">cancel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel a running query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="api_exceptions.html#nextcode.services.query.exceptions.QueryError" title="nextcode.services.query.exceptions.QueryError"><strong>QueryError</strong></a> – Query is not in a running state</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.dataframe">
+<code class="sig-name descname">dataframe</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Pandas dataframe object containing the results of this query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Maximum number of rows to return (default all)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="api_exceptions.html#nextcode.services.query.exceptions.QueryError" title="nextcode.services.query.exceptions.QueryError"><strong>QueryError</strong></a> – If the pandas library is not installed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Pandas dataframe object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.query.Query.done">
 <em class="property">property </em><code class="sig-name descname">done</code><a class="headerlink" href="#nextcode.services.query.query.Query.done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query in the DONE state</p>
@@ -171,7 +199,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 
 <dl class="method">
 <dt id="nextcode.services.query.query.Query.get_results">
-<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">filt=None</em>, <em class="sig-param">is_json=True</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">filt=None</em>, <em class="sig-param">perspective=None</em>, <em class="sig-param">is_json=True</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns results from a completed query, optionally with limit and offset</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -180,6 +208,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 <li><p><strong>offset</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – number of rows to skip</p></li>
 <li><p><strong>sort</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – gor sort string in format ‘[column] [ASC|DESC]’</p></li>
 <li><p><strong>filt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – filter to apply to the results serverside</p></li>
+<li><p><strong>perspective</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – perspective name to apply to results (for template queries)</p></li>
 <li><p><strong>is_json</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – return rows as a dictionary containing ‘header’ and ‘data’</p></li>
 </ul>
 </dd>
@@ -203,6 +232,18 @@ If the response is a ‘simple query’, e.g. from the queries list
 the object will only contain partial information.
 If the caller requests a field that is not included in the local proxy object
 the query will be refreshed from the server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.query.query.Query.perspectives">
+<em class="property">property </em><code class="sig-name descname">perspectives</code><a class="headerlink" href="#nextcode.services.query.query.Query.perspectives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of perspectives available for this query.</p>
+<p>This only applies to template queries. If this is an ad-hoc query the list will be empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -569,7 +610,7 @@ can be called to force a refresh.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-19.<br/>
+      Last updated on 2019-11-21.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

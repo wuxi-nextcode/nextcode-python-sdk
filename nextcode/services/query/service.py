@@ -322,16 +322,22 @@ class Service(BaseService):
                 raise
 
         execute_url = template["links"]["execute"]
-        args = []
+        args = {}
         for k, v in kw.items():
-            args.append({k: v})
+            args[k] = v
         payload = {
             "project": self.project,
             "args": args,
             "wait": QUERY_WAIT_SECONDS,
             "metadata": self.metadata,
         }
-        resp = self.session.post(execute_url, json=payload)
+        try:
+            resp = self.session.post(execute_url, json=payload)
+        except ServerError as ex:
+            if "Missing arguments" in repr(ex):
+                raise TemplateError(str(ex))
+            else:
+                raise
 
         gor_query = Query(self, resp.json())
         log.info(

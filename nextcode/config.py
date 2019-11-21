@@ -126,7 +126,7 @@ def _init_config() -> None:
     for name, profile in content["profiles"].copy().items():
         profile = _prepare_profile(profile)
         if not profile:
-            log.info("Profile '%s' is invalid and will be ignored", name)
+            log.warning("Profile '%s' is invalid and will be ignored", name)
             del content["profiles"][name]
 
     config.set(content)
@@ -136,9 +136,10 @@ def _prepare_profile(profile):
     ret = {}
     try:
         ret["api_key"] = profile.get("api_key")
-        ret["root_url"] = root_url_from_api_key(ret["api_key"])
         if profile.get("root_url"):
             ret["root_url"] = profile["root_url"]
+        else:
+            ret["root_url"] = root_url_from_api_key(ret["api_key"])
     except Exception:
         return None
     return ret
@@ -196,7 +197,7 @@ def get_profiles() -> Dict:
 
 def get_default_profile() -> Optional[str]:
     config = Config()
-    return config.get("default_profile")
+    return os.environ.get("NEXTCODE_PROFILE") or config.get("default_profile")
 
 
 def get_config() -> Dict:
