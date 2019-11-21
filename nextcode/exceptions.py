@@ -65,3 +65,11 @@ class NotFound(Exception):
     """
 
     pass
+
+
+class KeycloakError(Exception):
+    """
+    An error with keycloak management
+    """
+
+    pass
