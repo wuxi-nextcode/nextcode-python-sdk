@@ -5,12 +5,101 @@ from requests import codes
 import logging
 
 import nextcode
-from nextcode.exceptions import ServerError, NotFound, KeycloakError
+from nextcode.exceptions import ServerError, NotFound, AuthServerError
 
 log = logging.getLogger(__name__)
 
 
-def _get_admin_session(auth_server, username, password):
+def _get_csa_error(resp):
+    try:
+        msg = resp.json()["error"]["full_message"][0]
+    except Exception:
+        msg = str(resp.content)
+    return msg
+
+
+class CSASession:
+    def __init__(self, client, user_name, password):
+        self.client = client
+        self.session = requests.Session()
+        self.session.auth = (user_name, password)
+        root_url = self.client.profile.root_url
+        self.csa_url = urljoin(root_url, "csa/api/")
+        users_url = urljoin(self.csa_url, "users.json")
+        resp = self.session.get(users_url)
+        if resp.status_code == codes.unauthorized:
+            raise AuthServerError(
+                "User {user_name} could not authenticate with CSA Server"
+            )
+        resp.raise_for_status()
+
+    def get_user_key(self, user_name):
+        users_url = urljoin(self.csa_url, "users.json")
+        resp = self.session.get(users_url)
+        resp.raise_for_status()
+        users = resp.json()["users"]
+        for user in users:
+            if user["email"] == user_name:
+                return user["key"]
+        raise AuthServerError("User {user_name} not found")
+
+    def create_user(self, user_name, password, exist_ok=False):
+        user_id = None
+        try:
+            user = self.get_user_key(user_name)
+        except AuthServerError:
+            pass
+        else:
+            log.info("User '%s' already exists in CSA", user_name)
+            if not exist_ok:
+                raise AuthServerError(f"User '{user_name}' already exists.")
+            else:
+                return
+
+        users_url = urljoin(self.csa_url, "users.json")
+        payload = {"user": {"email": user_name, "password": password}}
+        resp = self.session.post(users_url, json=payload)
+        if resp.status_code != codes.created:
+            raise AuthServerError(_get_csa_error(resp))
+        resp.raise_for_status()
+        log.info("Created user '%s' in CSA", user_name)
+
+    def add_user_to_project(
+        self, user_name, project, role="researcher", exist_ok=False
+    ):
+        user_key = self.get_user_key(user_name)
+        roles_url = urljoin(self.csa_url, "user_roles.json")
+        resp = self.session.post(
+            roles_url,
+            json={
+                "user_role": {
+                    "project_key": project,
+                    "role": role,
+                    "user_key": user_key,
+                }
+            },
+        )
+        if resp.status_code == codes.not_found:
+            raise AuthServerError(f"Project {project} does not exist")
+        elif resp.status_code == codes.bad_request:
+            raise AuthServerError(_get_csa_error(resp))
+        resp.raise_for_status()
+        log.info(
+            "User '%s' has been added with role %s to project %s",
+            user_name,
+            role,
+            project,
+        )
+
+    def get_projects(self):
+        projects_url = urljoin(self.csa_url, "projects.json")
+        resp = self.session.get(projects_url)
+        resp.raise_for_status()
+        projects = resp.json()["projects"]
+        return [p["key"] for p in projects]
+
+
+def _get_admin_keycloak_session(auth_server, username, password):
     log.info("Managing users on keycloak server %s...", auth_server)
 
     # log the admin into the master realm
@@ -23,7 +112,7 @@ def _get_admin_session(auth_server, username, password):
     )
     if resp.status_code != 200:
         desc = resp.json()["error_description"]
-        raise KeycloakError(
+        raise AuthServerError(
             f"Could not authenticate {username} user against {url}: {desc}"
         )
     access_token = resp.json()["access_token"]
@@ -47,11 +136,11 @@ class KeycloakSession:
     ):
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
-            raise KeycloakError(f"User {username} needs an admin password")
+            raise AuthServerError(f"User {username} needs an admin password")
         self.client = client
         self.realm = realm
         self.auth_server = self._get_auth_server()
-        self.session = _get_admin_session(self.auth_server, username, password)
+        self.session = _get_admin_keycloak_session(self.auth_server, username, password)
         self.realm_url = self.auth_server + f"/admin/realms/{realm}/"
         self.master_url = self.auth_server + "/admin/realms/master/"
         self.client_id = client_id
@@ -74,7 +163,7 @@ class KeycloakSession:
         except requests.exceptions.ConnectionError:
             raise ServerError(f"Keycloak server {auth_server} is not reachable")
         if resp.status_code == requests.codes.not_found:
-            raise KeycloakError(
+            raise AuthServerError(
                 f"Realm '{self.realm}' was not found on keycloak server {auth_server}"
             )
 
@@ -85,7 +174,7 @@ class KeycloakSession:
         resp = self.session.get(users_url)
         resp.raise_for_status()
         if not resp.json():
-            raise KeycloakError(f"User '{user_name}' not found.")
+            raise AuthServerError(f"User '{user_name}' not found.")
 
         user = resp.json()[0]
         return user
@@ -123,11 +212,11 @@ class KeycloakSession:
         user_id = None
         try:
             user = self.get_user(user_name)
-        except KeycloakError:
+        except AuthServerError:
             pass
         else:
             if not exist_ok:
-                raise KeycloakError(f"User '{user_name}' already exists.")
+                raise AuthServerError(f"User '{user_name}' already exists.")
             else:
                 user_id = user["id"]
 
@@ -163,7 +252,7 @@ class KeycloakSession:
         if role_name in user_roles:
             if exist_ok:
                 return
-            raise KeycloakError(f"User '{user_name}' already has role '{role_name}'")
+            raise AuthServerError(f"User '{user_name}' already has role '{role_name}'")
 
         url = self.realm_url + f"users/{user_id}/role-mappings/realm/available"
         resp = self.session.get(url)
@@ -175,7 +264,7 @@ class KeycloakSession:
                 role = r
                 break
         if not role:
-            raise KeycloakError(
+            raise AuthServerError(
                 f"Role '{role_name}' is not available for user '{user_name}'"
             )
 
@@ -203,7 +292,7 @@ class KeycloakSession:
                 role = r
                 break
         if not role:
-            raise KeycloakError(f"User '{user_id}' does not have role '{role_name}'")
+            raise AuthServerError(f"User '{user_id}' does not have role '{role_name}'")
 
         url = self.realm_url + "users/%s/role-mappings/realm" % (user_id)
         resp = self.session.delete(url, json=[role])
@@ -265,7 +354,7 @@ class KeycloakSession:
         if resp.status_code == codes.conflict:
             if exist_ok:
                 return
-            raise KeycloakError(f"Role '{role_name}' already exists")
+            raise AuthServerError(f"Role '{role_name}' already exists")
         resp.raise_for_status()
 
     def get_roles(self):
@@ -281,7 +370,7 @@ class KeycloakSession:
     def delete_role(self, role_name):
         role = self.get_roles().get(role_name)
         if not role:
-            raise KeycloakError(f"Role '{role_name}' does not exist")
+            raise AuthServerError(f"Role '{role_name}' does not exist")
         url = self.realm_url + f"roles-by-id/{role['id']}"
         resp = self.session.delete(url)
         resp.raise_for_status()

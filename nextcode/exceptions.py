@@ -67,9 +67,9 @@ class NotFound(Exception):
     pass
 
 
-class KeycloakError(Exception):
+class AuthServerError(Exception):
     """
-    An error with keycloak management
+    An error with keycloak or CSA management
     """
 
     pass
