@@ -98,3 +98,13 @@ def get_access_token(api_key):
         )
 
     return response.json()["access_token"]
+
+
+def host_from_url(host):
+    """
+    Gets the raw URI host of a url, no matter how it is formatted.
+    """
+    if "://" in host:
+        host = urlsplit(host).netloc
+    host = host.split("/")[0]
+    return host

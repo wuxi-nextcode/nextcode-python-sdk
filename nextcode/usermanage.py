@@ -4,8 +4,8 @@ import requests
 from requests import codes
 import logging
 
-import nextcode
-from nextcode.exceptions import ServerError, NotFound, AuthServerError
+from .exceptions import ServerError, NotFound, AuthServerError
+from .utils import host_from_url
 
 log = logging.getLogger(__name__)
 
@@ -19,11 +19,10 @@ def _get_csa_error(resp):
 
 
 class CSASession:
-    def __init__(self, client, user_name, password):
-        self.client = client
+    def __init__(self, root_url, user_name, password):
+        self.root_url = "https://{}".format(host_from_url(root_url))
         self.session = requests.Session()
         self.session.auth = (user_name, password)
-        root_url = self.client.profile.root_url
         self.csa_url = urljoin(root_url, "csa/api/")
         users_url = urljoin(self.csa_url, "users.json")
         resp = self.session.get(users_url)
@@ -135,7 +134,7 @@ def _get_admin_keycloak_session(auth_server, username, password):
 class KeycloakSession:
     def __init__(
         self,
-        client,
+        root_url,
         username="admin",
         password=None,
         realm="wuxinextcode.com",
@@ -144,7 +143,7 @@ class KeycloakSession:
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
             raise AuthServerError(f"User {username} needs an admin password")
-        self.client = client
+        self.root_url = "https://{}".format(host_from_url(root_url))
         self.realm = realm
         self.auth_server = self._get_auth_server()
         self.session = _get_admin_keycloak_session(self.auth_server, username, password)
@@ -153,13 +152,12 @@ class KeycloakSession:
         self.client_id = client_id
 
     def _get_auth_server(self):
-        root_url = self.client.profile.root_url
-        auth_server = urljoin(root_url, "auth")
+        auth_server = urljoin(self.root_url, "auth")
         r = requests.get(auth_server)
         # ! temporary hack because services are split between xxx.wuxi and xxx-cluster.wuxi
         if r.status_code == codes.not_found:
             if "-cluster" not in auth_server:
-                lst = root_url.split(".", 1)
+                lst = self.root_url.split(".", 1)
                 auth_server = lst[0] + "-cluster" + lst[1]
             else:
                 auth_server = auth_server.replace("-cluster", "")

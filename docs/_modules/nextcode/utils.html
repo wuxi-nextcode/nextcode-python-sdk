@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.utils &#8212; nextcode-python-sdk 0.3.12 documentation</title>
+    <title>nextcode.utils &#8212; nextcode-python-sdk 0.3.13 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.12</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.13</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -201,6 +201,16 @@
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="host_from_url"><a class="viewcode-back" href="../../api.html#nextcode.utils.host_from_url">[docs]</a><span class="k">def</span> <span class="nf">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the raw URI host of a url, no matter how it is formatted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;://&quot;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">urlsplit</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">host</span></div>
 </pre></div>
 
     </div>

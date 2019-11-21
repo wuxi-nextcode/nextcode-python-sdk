@@ -16,7 +16,12 @@ import requests
 
 from .exceptions import ServiceNotFound, InvalidProfile, InvalidToken
 from .config import Config, save_config
-from .utils import root_url_from_api_key, get_access_token, decode_token
+from .utils import (
+    root_url_from_api_key,
+    get_access_token,
+    decode_token,
+    host_from_url,
+)
 
 SERVICES_PATH = Path(__file__).parent.joinpath("services")
 SERVICES = ["query"]
@@ -47,9 +52,7 @@ def get_api_key(
         "username": username,
         "scope": "offline_access",
     }
-    if ":/" in host:
-        host = urlsplit(host).netloc
-    host = host.split("/")[0]
+    host = host_from_url(host)
     auth_server = f"https://{host}/auth"
     log.info("Using auth server '%s'", auth_server)
     url = f"{auth_server}/realms/{realm}/protocol/openid-connect/token"

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.client &#8212; nextcode-python-sdk 0.3.12 documentation</title>
+    <title>nextcode.client &#8212; nextcode-python-sdk 0.3.13 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.12</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.13</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -119,7 +119,12 @@
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ServiceNotFound</span><span class="p">,</span> <span class="n">InvalidProfile</span><span class="p">,</span> <span class="n">InvalidToken</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">save_config</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">root_url_from_api_key</span><span class="p">,</span> <span class="n">get_access_token</span><span class="p">,</span> <span class="n">decode_token</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">root_url_from_api_key</span><span class="p">,</span>
+    <span class="n">get_access_token</span><span class="p">,</span>
+    <span class="n">decode_token</span><span class="p">,</span>
+    <span class="n">host_from_url</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">SERVICES_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;services&quot;</span><span class="p">)</span>
 <span class="n">SERVICES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
@@ -150,9 +155,7 @@
         <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
         <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;offline_access&quot;</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="s2">&quot;:/&quot;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
-        <span class="n">host</span> <span class="o">=</span> <span class="n">urlsplit</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span>
-    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
     <span class="n">auth_server</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;https://</span><span class="si">{host}</span><span class="s2">/auth&quot;</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using auth server &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">auth_server</span><span class="p">)</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{auth_server}</span><span class="s2">/realms/</span><span class="si">{realm}</span><span class="s2">/protocol/openid-connect/token&quot;</span>
