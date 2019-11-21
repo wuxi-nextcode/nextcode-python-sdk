@@ -82,7 +82,14 @@ class CSASession:
         if resp.status_code == codes.not_found:
             raise AuthServerError(f"Project {project} does not exist")
         elif resp.status_code == codes.bad_request:
-            raise AuthServerError(_get_csa_error(resp))
+            msg = _get_csa_error(resp)
+            if "Role has already been taken" in msg and exist_ok:
+                log.info(
+                    "User '%s' is already a member in project %s", user_name, project
+                )
+                return
+            else:
+                raise AuthServerError(msg)
         resp.raise_for_status()
         log.info(
             "User '%s' has been added with role %s to project %s",
