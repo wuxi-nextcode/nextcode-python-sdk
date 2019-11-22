@@ -28,7 +28,7 @@ class CSASession:
         resp = self.session.get(users_url)
         if resp.status_code == codes.unauthorized:
             raise AuthServerError(
-                "User {user_name} could not authenticate with CSA Server"
+                f"User {user_name} could not authenticate with CSA Server"
             )
         resp.raise_for_status()
 
@@ -40,7 +40,7 @@ class CSASession:
         for user in users:
             if user["email"] == user_name:
                 return user["key"]
-        raise AuthServerError("User {user_name} not found")
+        raise AuthServerError(f"User {user_name} not found")
 
     def create_user(self, user_name, password, exist_ok=False):
         user_id = None
