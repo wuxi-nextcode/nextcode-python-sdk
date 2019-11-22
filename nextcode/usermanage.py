@@ -23,7 +23,7 @@ class CSASession:
         self.root_url = "https://{}".format(host_from_url(root_url))
         self.session = requests.Session()
         self.session.auth = (user_name, password)
-        self.csa_url = urljoin(root_url, "csa/api/")
+        self.csa_url = urljoin(root_url, "/csa/api/")
         users_url = urljoin(self.csa_url, "users.json")
         resp = self.session.get(users_url)
         if resp.status_code == codes.unauthorized:
