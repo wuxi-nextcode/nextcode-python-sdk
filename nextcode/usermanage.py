@@ -1,5 +1,6 @@
 import os
-from urllib.parse import urljoin
+from urllib.parse import urlsplit
+from posixpath import join as urljoin
 import requests
 from requests import codes
 import logging
@@ -20,10 +21,10 @@ def _get_csa_error(resp):
 
 class CSASession:
     def __init__(self, root_url, user_name, password):
-        self.root_url = "https://{}".format(host_from_url(root_url))
+        self.root_url = host_from_url(root_url)
         self.session = requests.Session()
         self.session.auth = (user_name, password)
-        self.csa_url = urljoin(self.root_url, "/csa/api/")
+        self.csa_url = urljoin(self.root_url, "csa/api/")
         users_url = urljoin(self.csa_url, "users.json")
         resp = self.session.get(users_url)
         if resp.status_code == codes.unauthorized:
@@ -109,7 +110,7 @@ def _get_admin_keycloak_session(auth_server, username, password):
     log.info("Managing users on keycloak server %s...", auth_server)
 
     # log the admin into the master realm
-    url = auth_server + "/realms/master/protocol/openid-connect/token"
+    url = urljoin(auth_server, "realms/master/protocol/openid-connect/token")
     headers_form = {"Content-Type": "application/x-www-form-urlencoded"}
     resp = requests.post(
         url,
@@ -143,12 +144,12 @@ class KeycloakSession:
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
             raise AuthServerError(f"User {username} needs an admin password")
-        self.root_url = "https://{}".format(host_from_url(root_url))
+        self.root_url = host_from_url(root_url)
         self.realm = realm
         self.auth_server = self._get_auth_server()
         self.session = _get_admin_keycloak_session(self.auth_server, username, password)
-        self.realm_url = self.auth_server + f"/admin/realms/{realm}/"
-        self.master_url = self.auth_server + "/admin/realms/master/"
+        self.realm_url = urljoin(self.auth_server, "admin/realms", realm)
+        self.master_url = urljoin(self.auth_server, "admin/realms", "master")
         self.client_id = client_id
 
     def _get_auth_server(self):
@@ -162,7 +163,8 @@ class KeycloakSession:
             else:
                 auth_server = auth_server.replace("-cluster", "")
 
-        realm_url = f"{auth_server}/realms/{self.realm}"
+        # test if realm is available
+        realm_url = urljoin(auth_server, "realms", self.realm)
         try:
             resp = requests.get(realm_url)
         except requests.exceptions.ConnectionError:
@@ -175,7 +177,7 @@ class KeycloakSession:
         return auth_server
 
     def get_user(self, user_name):
-        users_url = self.realm_url + "users?username=%s" % (user_name)
+        users_url = urljoin(self.realm_url, f"users?username={user_name}")
         resp = self.session.get(users_url)
         resp.raise_for_status()
         if not resp.json():
@@ -185,7 +187,7 @@ class KeycloakSession:
         return user
 
     def get_users(self):
-        users_url = self.realm_url + "users"
+        users_url = urljoin(self.realm_url, "users")
         resp = self.session.get(users_url)
         resp.raise_for_status()
         if not resp.json():
@@ -196,7 +198,7 @@ class KeycloakSession:
     def remove_user(self, user_name):
         user_id = self.get_user(user_name)["id"]
 
-        url = self.realm_url + f"users/{user_id}"
+        url = urljoin(self.realm_url, "users", user_id)
         resp = self.session.delete(url)
         resp.raise_for_status()
         log.info("User '%s' has been deleted from realm '%s'", user_name, self.realm)
@@ -206,7 +208,7 @@ class KeycloakSession:
         Get the realm roles for this user, ignoring client-specific roles
         """
         user_id = self.get_user(user_name)["id"]
-        url = self.realm_url + f"users/{user_id}/role-mappings"
+        url = urljoin(self.realm_url, "users", str(user_id), "role-mappings")
         resp = self.session.get(url)
         resp.raise_for_status()
         roles = resp.json()
@@ -226,7 +228,7 @@ class KeycloakSession:
                 user_id = user["id"]
 
         if not user_id:
-            url = self.realm_url + "users/"
+            url = urljoin(self.realm_url, "users")
             data = {
                 "username": user_name,
                 "firstName": "None",
@@ -245,7 +247,7 @@ class KeycloakSession:
     def delete_user(self, user_name):
         user_id = self.get_user(user_name)["id"]
 
-        url = self.realm_url + f"users/{user_id}"
+        url = urljoin(self.realm_url, "users", str(user_id))
         resp = self.session.delete(url)
         resp.raise_for_status()
         log.info("User '%s' has been deleted from realm '%s'" % (user_name, self.realm))
@@ -287,7 +289,7 @@ class KeycloakSession:
         user_id = self.get_user(user_name)["id"]
         role_name = role_name.lower()
 
-        url = self.realm_url + f"users/{user_id}/role-mappings"
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings")
         resp = self.session.get(url)
         resp.raise_for_status()
         roles = resp.json()["realmMappings"]
@@ -299,7 +301,7 @@ class KeycloakSession:
         if not role:
             raise AuthServerError(f"User '{user_id}' does not have role '{role_name}'")
 
-        url = self.realm_url + "users/%s/role-mappings/realm" % (user_id)
+        url = urljoin(self.realm_url, "users/%s/role-mappings/realm" % (user_id))
         resp = self.session.delete(url, json=[role])
         resp.raise_for_status()
         log.info(
@@ -311,7 +313,7 @@ class KeycloakSession:
 
     def login_user(self, user_name, password):
         # try logging in with the new user
-        url = self.realm_url + "protocol/openid-connect/token"
+        url = urljoin(self.realm_url, "protocol/openid-connect/token")
         body = {
             "grant_type": "password",
             "client_id": self.client_id,
@@ -333,7 +335,7 @@ class KeycloakSession:
     def set_user_password(self, user_name, new_password):
         user_id = self.get_user(user_name)["id"]
 
-        url = self.realm_url + f"users/{user_id}/reset-password"
+        url = urljoin(self.realm_url, f"users/{user_id}/reset-password")
         data = {"type": "password", "temporary": False, "value": new_password}
         resp = self.session.put(url, json=data)
         resp.raise_for_status()
@@ -343,14 +345,14 @@ class KeycloakSession:
 
     def get_available_roles_for_user(self, user_name):
         user_id = self.get_user(user_name)["id"]
-        url = self.realm_url + f"users/{user_id}/role-mappings/realm/available"
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/realm/available")
         resp = self.session.get(url)
         resp.raise_for_status()
         available_roles = resp.json()
         return [r["name"] for r in available_roles]
 
     def create_role(self, role_name, description="N/A", exist_ok=False):
-        url = self.realm_url + "roles/"
+        url = urljoin(self.realm_url, "roles")
         data = {
             "name": role_name,
             "description": description,
@@ -363,7 +365,7 @@ class KeycloakSession:
         resp.raise_for_status()
 
     def get_roles(self):
-        url = self.realm_url + "roles/"
+        url = urljoin(self.realm_url + "roles")
         resp = self.session.get(url)
         resp.raise_for_status()
         roles = resp.json()
@@ -376,6 +378,6 @@ class KeycloakSession:
         role = self.get_roles().get(role_name)
         if not role:
             raise AuthServerError(f"Role '{role_name}' does not exist")
-        url = self.realm_url + f"roles-by-id/{role['id']}"
+        url = urljoin(self.realm_url, f"roles-by-id/{role['id']}")
         resp = self.session.delete(url)
         resp.raise_for_status()

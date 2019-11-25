@@ -12,6 +12,7 @@ from pathlib import Path
 import logging
 from typing import Optional, Union, Dict, List
 from urllib.parse import urlsplit
+from posixpath import join as urljoin
 import requests
 
 from .exceptions import ServiceNotFound, InvalidProfile, InvalidToken
@@ -53,9 +54,9 @@ def get_api_key(
         "scope": "offline_access",
     }
     host = host_from_url(host)
-    auth_server = f"https://{host}/auth"
+    auth_server = urljoin(host, "auth")
     log.info("Using auth server '%s'", auth_server)
-    url = f"{auth_server}/realms/{realm}/protocol/openid-connect/token"
+    url = urljoin(auth_server, f"realms/{realm}/protocol/openid-connect/token")
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
     resp = requests.post(url, headers=headers, data=body)

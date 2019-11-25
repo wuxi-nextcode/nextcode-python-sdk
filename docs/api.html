@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>API Reference &#8212; nextcode-python-sdk 0.3.15 documentation</title>
+    <title>API Reference &#8212; nextcode-python-sdk 0.3.16 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.16</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -474,7 +474,12 @@ dictionary in json format.</p>
 <dl class="function">
 <dt id="nextcode.utils.host_from_url">
 <code class="sig-prename descclassname">nextcode.utils.</code><code class="sig-name descname">host_from_url</code><span class="sig-paren">(</span><em class="sig-param">host</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/utils.html#host_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.utils.host_from_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the raw URI host of a url, no matter how it is formatted.</p>
+<dd><p>Gets the raw URI host of a url with trailing slash, no matter how it is formatted.</p>
+<dl class="simple">
+<dt>For example, www.server.com/something -&gt; <a class="reference external" href="https://www.server.com/">https://www.server.com/</a></dt><dd><p><a class="reference external" href="http://www.server.com">http://www.server.com</a> -&gt; <a class="reference external" href="http://www.server.com/">http://www.server.com/</a>
+<a class="reference external" href="http://localhost:8080/something">http://localhost:8080/something</a> -&gt; <a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -519,7 +524,7 @@ dictionary in json format.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-22.<br/>
+      Last updated on 2019-11-25.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

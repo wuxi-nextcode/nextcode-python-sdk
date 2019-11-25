@@ -8,7 +8,7 @@ from .job import WorkflowJob
 
 import logging
 
-SERVICE_PATH = "/workflow"
+SERVICE_PATH = "workflow"
 
 log = logging.getLogger(__name__)
 

@@ -21,7 +21,7 @@ from .query import Query
 from .utils import get_fingerprint
 import nextcode
 
-SERVICE_PATH = "/api/query"
+SERVICE_PATH = "api/query"
 
 RUNNING_STATUSES = ("PENDING", "RUNNING", "CANCELLING")
 RESULTS_PAGE_SIZE = 200000

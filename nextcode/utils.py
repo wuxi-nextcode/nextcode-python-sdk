@@ -102,9 +102,14 @@ def get_access_token(api_key):
 
 def host_from_url(host):
     """
-    Gets the raw URI host of a url, no matter how it is formatted.
+    Gets the raw URI host of a url with trailing slash, no matter how it is formatted.
+
+    For example, www.server.com/something -> https://www.server.com/
+                 http://www.server.com -> http://www.server.com/
+                 http://localhost:8080/something -> http://localhost:8080/
+    
     """
-    if "://" in host:
-        host = urlsplit(host).netloc
-    host = host.split("/")[0]
-    return host
+    if "://" not in host:
+        host = f"https://{host}"
+    parts = urlsplit(host)
+    return "{}://{}/".format(parts.scheme, parts.netloc)

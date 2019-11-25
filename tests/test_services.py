@@ -35,13 +35,13 @@ class ServicesTest(BaseTestCase):
     @responses.activate
     def setUp(self):
         super(ServicesTest, self).setUp()
-        self.client = Client()
+        self.client = Client(api_key=REFRESH_TOKEN)
 
     @responses.activate
     def test_base_service(self):
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, SERVICE_URL, json=ROOT_RESP)
-        svc = BaseService(self.client, service_path="/service")
+        svc = BaseService(self.client, service_path="service")
         svc.status()
         svc.status(force=True)
         self.assertEqual(
@@ -56,12 +56,12 @@ class ServicesTest(BaseTestCase):
     def test_localhost(self):
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, "http://localhost/", json=ROOT_RESP)
-        client = Client()
+        client = Client(api_key=REFRESH_TOKEN)
         client.profile.root_url = "http://localhost"
-        _ = BaseService(client, service_path="/service")
+        _ = BaseService(client, service_path="service")
         client.profile.root_url = ""
         with self.assertRaises(InvalidProfile):
-            _ = BaseService(client, service_path="/service")
+            _ = BaseService(client, service_path="service")
         client.profile.root_url = "http://localhost"
         client.profile.skip_auth = True
-        _ = BaseService(client, service_path="/service")
+        _ = BaseService(client, service_path="service")

@@ -10,7 +10,7 @@ import logging
 from ...client import Client
 from ...services import BaseService
 
-SERVICE_PATH = "/pipelines-service"
+SERVICE_PATH = "pipelines-service"
 
 log = logging.getLogger(__file__)
 
