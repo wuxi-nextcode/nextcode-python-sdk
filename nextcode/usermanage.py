@@ -261,7 +261,7 @@ class KeycloakSession:
                 return
             raise AuthServerError(f"User '{user_name}' already has role '{role_name}'")
 
-        url = self.realm_url + f"users/{user_id}/role-mappings/realm/available"
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/realm/available")
         resp = self.session.get(url)
         resp.raise_for_status()
         available_roles = resp.json()
@@ -275,7 +275,7 @@ class KeycloakSession:
                 f"Role '{role_name}' is not available for user '{user_name}'"
             )
 
-        url = self.realm_url + f"users/{user_id}/role-mappings/realm"
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/realm")
         resp = self.session.post(url, json=[role])
         resp.raise_for_status()
         log.info(
@@ -365,7 +365,7 @@ class KeycloakSession:
         resp.raise_for_status()
 
     def get_roles(self):
-        url = urljoin(self.realm_url + "roles")
+        url = urljoin(self.realm_url, "roles")
         resp = self.session.get(url)
         resp.raise_for_status()
         roles = resp.json()
