@@ -19,14 +19,53 @@ def _get_csa_error(resp):
     return msg
 
 
+def login_keycloak_user(root_url, realm, client_id, user_name, password):
+    # try logging in with the new user
+    url = urljoin(root_url, "auth", "realms", realm, "protocol/openid-connect/token")
+    body = {
+        "grant_type": "password",
+        "client_id": client_id,
+        "password": password,
+        "username": user_name,
+        "scope": "offline_access",
+    }
+    url = url.replace("admin/", "")
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
+    resp = requests.post(url, headers=headers, data=body)
+    try:
+        resp.raise_for_status()
+        return resp.json()["refresh_token"]
+    except Exception as ex:
+        raise AuthServerError("User {user_name} was unable to log in: {ex}")
+
+
 class CSASession:
     def __init__(self, root_url, user_name, password):
         self.root_url = host_from_url(root_url)
         self.session = requests.Session()
         self.session.auth = (user_name, password)
         self.csa_url = urljoin(self.root_url, "csa/api/")
-        users_url = urljoin(self.csa_url, "users.json")
-        resp = self.session.get(users_url)
+
+        resp = self.session.get(urljoin(self.csa_url, "users.json"), timeout=2.0)
+
+        if resp.status_code == codes.not_found:
+            # ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/
+            #   and https://[xxx]-cluster.wuxinextcode.com/
+            lst = self.root_url.split(".", 1)
+            old_url_base = self.root_url
+            if "-cluster" in self.root_url:
+                self.root_url = self.root_url.replace("-cluster", "")
+            else:
+                self.root_url = "{}-cluster.{}".format(lst[0], lst[1])
+            log.info(
+                "Service not found on server %s. Trying alternative URL %s",
+                old_url_base,
+                self.root_url,
+            )
+            self.csa_url = urljoin(self.root_url, "csa/api/")
+            resp = self.session.get(urljoin(self.csa_url, "users.json"), timeout=2.0)
+
         if resp.status_code == codes.unauthorized:
             raise AuthServerError(
                 f"User {user_name} could not authenticate with CSA Server"
@@ -36,6 +75,7 @@ class CSASession:
     def get_user_key(self, user_name):
         users_url = urljoin(self.csa_url, "users.json")
         resp = self.session.get(users_url)
+
         resp.raise_for_status()
         users = resp.json()["users"]
         for user in users:
@@ -312,24 +352,12 @@ class KeycloakSession:
         )
 
     def login_user(self, user_name, password):
-        # try logging in with the new user
-        url = urljoin(self.realm_url, "protocol/openid-connect/token")
-        body = {
-            "grant_type": "password",
-            "client_id": self.client_id,
-            "password": password,
-            "username": user_name,
-            "scope": "offline_access",
-        }
-        url = url.replace("admin/", "")
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
-        resp = requests.post(url, headers=headers, data=body)
         try:
-            resp.raise_for_status()
-            return resp.json()["refresh_token"]
-        except Exception as ex:
-            log.error("User %s was unable to log in: %s", user_name, ex)
+            return login_keycloak_user(
+                self.root_url, self.realm, self.client_id, user_name, password
+            )
+        except AuthServerError:
+            log.exception("Unable to log in")
             return None
 
     def set_user_password(self, user_name, new_password):
