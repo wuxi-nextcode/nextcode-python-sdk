@@ -37,7 +37,7 @@ def login_keycloak_user(root_url, realm, client_id, user_name, password):
         resp.raise_for_status()
         return resp.json()["refresh_token"]
     except Exception as ex:
-        raise AuthServerError("User {user_name} was unable to log in: {ex}")
+        raise AuthServerError(f"User {user_name} was unable to log in: {ex}")
 
 
 class CSASession:
