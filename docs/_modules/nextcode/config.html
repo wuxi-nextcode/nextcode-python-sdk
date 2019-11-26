@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.config &#8212; nextcode-python-sdk 0.3.18 documentation</title>
+    <title>nextcode.config &#8212; nextcode-python-sdk 0.3.20 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.18</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.20</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -239,6 +239,8 @@
     <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;api_key&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">profile</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;skip_auth&quot;</span><span class="p">):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;skip_auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;skip_auth&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">profile</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;root_url&quot;</span><span class="p">):</span>
             <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;root_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;root_url&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -248,17 +250,23 @@
     <span class="k">return</span> <span class="n">ret</span>
 
 
-<div class="viewcode-block" id="create_profile"><a class="viewcode-back" href="../../api.html#nextcode.config.create_profile">[docs]</a><span class="k">def</span> <span class="nf">create_profile</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="create_profile"><a class="viewcode-back" href="../../api.html#nextcode.config.create_profile">[docs]</a><span class="k">def</span> <span class="nf">create_profile</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">skip_auth</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a new profile from api key and persist to disk</span>
 
 <span class="sd">    :param name: Unique name of the profile for referencing later</span>
 <span class="sd">    :param api_key: API Key from keycloak for the server</span>
 <span class="sd">    :param root_url: root url of the server. If not set, the url from the api key is used</span>
+<span class="sd">    :param skip_auth: Do not use authentication (local development)</span>
 <span class="sd">    :raises: InvalidProfile</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">_prepare_profile</span><span class="p">({</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">,</span> <span class="s2">&quot;root_url&quot;</span><span class="p">:</span> <span class="n">root_url</span><span class="p">})</span>
+    <span class="n">contents</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">,</span> <span class="s2">&quot;root_url&quot;</span><span class="p">:</span> <span class="n">root_url</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">skip_auth</span><span class="p">:</span>
+        <span class="n">contents</span><span class="p">[</span><span class="s2">&quot;skip_auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">_prepare_profile</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">profile</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span><span class="s2">&quot;Profile does not contain a valid api_key&quot;</span><span class="p">)</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>

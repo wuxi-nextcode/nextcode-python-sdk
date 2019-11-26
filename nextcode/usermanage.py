@@ -10,6 +10,9 @@ from .utils import host_from_url
 
 log = logging.getLogger(__name__)
 
+DEFAULT_REALM = "wuxinextcode.com"
+DEFAULT_CLIENT_ID = "api-key-client"
+
 
 def _get_csa_error(resp):
     try:
@@ -19,7 +22,9 @@ def _get_csa_error(resp):
     return msg
 
 
-def login_keycloak_user(root_url, realm, client_id, user_name, password):
+def login_keycloak_user(
+    root_url, user_name, password, realm=DEFAULT_REALM, client_id=DEFAULT_CLIENT_ID
+):
     # try logging in with the new user
     url = urljoin(root_url, "auth", "realms", realm, "protocol/openid-connect/token")
     body = {
@@ -178,8 +183,8 @@ class KeycloakSession:
         root_url,
         username="admin",
         password=None,
-        realm="wuxinextcode.com",
-        client_id="api-key-client",
+        realm=DEFAULT_REALM,
+        client_id=DEFAULT_CLIENT_ID,
     ):
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:

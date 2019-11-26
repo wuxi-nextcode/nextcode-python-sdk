@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>API Reference &#8212; nextcode-python-sdk 0.3.18 documentation</title>
+    <title>API Reference &#8212; nextcode-python-sdk 0.3.20 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.18</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.20</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -412,7 +412,7 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 
 <dl class="function">
 <dt id="nextcode.config.create_profile">
-<code class="sig-prename descclassname">nextcode.config.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">api_key</em>, <em class="sig-param">root_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.config.create_profile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">nextcode.config.</code><code class="sig-name descname">create_profile</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">api_key</em>, <em class="sig-param">root_url=None</em>, <em class="sig-param">skip_auth=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#create_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.config.create_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new profile from api key and persist to disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,6 +420,7 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 <li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Unique name of the profile for referencing later</p></li>
 <li><p><strong>api_key</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – API Key from keycloak for the server</p></li>
 <li><p><strong>root_url</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – root url of the server. If not set, the url from the api key is used</p></li>
+<li><p><strong>skip_auth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Do not use authentication (local development)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>

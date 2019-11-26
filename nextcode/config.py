@@ -136,6 +136,8 @@ def _prepare_profile(profile):
     ret = {}
     try:
         ret["api_key"] = profile.get("api_key")
+        if profile.get("skip_auth"):
+            ret["skip_auth"] = profile.get("skip_auth")
         if profile.get("root_url"):
             ret["root_url"] = profile["root_url"]
         else:
@@ -145,17 +147,23 @@ def _prepare_profile(profile):
     return ret
 
 
-def create_profile(name: str, api_key: str, root_url: Optional[str] = None) -> None:
+def create_profile(
+    name: str, api_key: str, root_url: Optional[str] = None, skip_auth: bool = False
+) -> None:
     """
     Create a new profile from api key and persist to disk
 
     :param name: Unique name of the profile for referencing later
     :param api_key: API Key from keycloak for the server
     :param root_url: root url of the server. If not set, the url from the api key is used
+    :param skip_auth: Do not use authentication (local development)
     :raises: InvalidProfile
 
     """
-    profile = _prepare_profile({"api_key": api_key, "root_url": root_url})
+    contents: Dict = {"api_key": api_key, "root_url": root_url}
+    if skip_auth:
+        contents["skip_auth"] = True
+    profile = _prepare_profile(contents)
     if not profile:
         raise InvalidProfile("Profile does not contain a valid api_key")
     config = Config()
