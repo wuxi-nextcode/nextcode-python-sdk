@@ -11,7 +11,6 @@ from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
 from .utils import jupyter_available
 from typing import Dict, List, Optional, Union
-import pandas as pd
 import nextcode
 import hashlib
 import time
@@ -40,6 +39,7 @@ def line_magic(func):
 if jupyter_available():
     """
     """
+    import pandas as pd
     from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic  # type: ignore
 
 

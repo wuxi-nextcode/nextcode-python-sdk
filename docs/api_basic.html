@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Basic facilities &#8212; nextcode-python-sdk 0.3.23 documentation</title>
+    <title>Basic facilities &#8212; nextcode-python-sdk 0.3.24 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.23</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.24</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -73,6 +73,7 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Basic facilities</a><ul>
+<li><a class="reference internal" href="#client">client</a></li>
 <li><a class="reference internal" href="#session">session</a></li>
 <li><a class="reference internal" href="#config">config</a></li>
 <li><a class="reference internal" href="#utils">utils</a></li>
@@ -119,9 +120,143 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-nextcode.session">
-<span id="basic-facilities"></span><h1>Basic facilities<a class="headerlink" href="#module-nextcode.session" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="session">
+  <div class="section" id="module-nextcode.client">
+<span id="basic-facilities"></span><h1>Basic facilities<a class="headerlink" href="#module-nextcode.client" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="client">
+<h2>client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
+<p>This is the basic entrypoint to interact with services.</p>
+<dl class="class">
+<dt id="nextcode.client.Client">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.client.</code><code class="sig-name descname">Client</code><span class="sig-paren">(</span><em class="sig-param">api_key=None</em>, <em class="sig-param">profile=None</em>, <em class="sig-param">root_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>A base client object from which to access various services</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api_key</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – api key to use for this client</p></li>
+<li><p><strong>profile</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – name of a saved profile to use with this client</p></li>
+<li><p><strong>root_url</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – override the URL of the server root. e.g. <a class="reference external" href="https://server.wuxinextcode.com">https://server.wuxinextcode.com</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>InvalidProfile</p>
+</dd>
+</dl>
+<p>Order of precedence:
+1) passed in ‘profile’
+2) passed in ‘api_key’
+3) NEXTCODE_PROFILE from environment
+3) GOR_API_KEY from environment</p>
+<dl class="method">
+<dt id="nextcode.client.Client.available_profiles">
+<em class="property">classmethod </em><code class="sig-name descname">available_profiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_profiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.Client.available_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>List profiles that that are installed into the system and can be used
+with the constructor client.Client()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.client.Client.available_services">
+<em class="property">classmethod </em><code class="sig-name descname">available_services</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_services"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.Client.available_services" title="Permalink to this definition">¶</a></dt>
+<dd><p>List services that can be intantiated via an client object client.service(<cite>service</cite>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.client.Client.get_access_token">
+<code class="sig-name descname">get_access_token</code><span class="sig-paren">(</span><em class="sig-param">decode=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.get_access_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.Client.get_access_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the JWT access token that is generated from the current api key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Decode the token and return a dictionary instead of the raw string</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>InvalidToken</p>
+</dd>
+</dl>
+<p>Example usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;xxx.yyy.zzz&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">())</span>
+<span class="go">&quot;iii.jjj.kkk&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;xxx.yyy.zzz&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">(</span><span class="n">decode</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="go">{&quot;jti&quot;: &quot;...&quot;, ...}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.client.Client.service">
+<code class="sig-name descname">service</code><span class="sig-paren">(</span><em class="sig-param">service_name</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.Client.service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve an instance to a service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>service_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name of the service</p>
+</dd>
+</dl>
+<p>Available services can be listed by calling class method <cite>available_services</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nextcode.client.get_api_key">
+<code class="sig-prename descclassname">nextcode.client.</code><code class="sig-name descname">get_api_key</code><span class="sig-paren">(</span><em class="sig-param">host</em>, <em class="sig-param">username</em>, <em class="sig-param">password</em>, <em class="sig-param">realm='wuxinextcode.com'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_api_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.get_api_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate with keycloak server and return an API key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The URI of the service. e.g. host.wuxinextcode.com</p></li>
+<li><p><strong>username</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Username of the keycloak user which is authenticating</p></li>
+<li><p><strong>password</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Password</p></li>
+<li><p><strong>realm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The realm with which to authenticate (optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>API Key which can be used in subsequent calls to Client()</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>InvalidToken</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="nextcode.client.get_service">
+<code class="sig-prename descclassname">nextcode.client.</code><code class="sig-name descname">get_service</code><span class="sig-paren">(</span><em class="sig-param">service_name</em>, <em class="sig-param">api_key=None</em>, <em class="sig-param">profile=None</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.get_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method which returns a service handle and creates a client object automatically</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api_key</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – api key to use for this client</p></li>
+<li><p><strong>profile</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – name of a saved profile to use with this client</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>InvalidProfile, ServiceNotFound</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<span class="target" id="module-nextcode.session"></span><div class="section" id="session">
 <h2>session<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h2>
 <p>Service Session, low-level object for communicating with RESTFul services.</p>
 <dl class="class">
