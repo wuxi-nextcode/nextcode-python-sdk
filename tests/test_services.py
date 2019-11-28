@@ -54,6 +54,7 @@ class ServicesTest(BaseTestCase):
 
     @responses.activate
     def test_localhost(self):
+        os.environ["SERVICE_IN_ROOT"] = "1"
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, "http://localhost/", json=ROOT_RESP)
         client = Client(api_key=REFRESH_TOKEN)
@@ -65,3 +66,4 @@ class ServicesTest(BaseTestCase):
         client.profile.root_url = "http://localhost"
         client.profile.skip_auth = True
         _ = BaseService(client, service_path="service")
+        del os.environ["SERVICE_IN_ROOT"]

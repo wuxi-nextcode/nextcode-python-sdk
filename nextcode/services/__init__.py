@@ -27,8 +27,8 @@ class BaseService:
         if not root_url:
             raise InvalidProfile("Profile is not configured")
 
-        # ! temporary hack
-        if "localhost" in root_url:
+        # ! explicit temporary hack
+        if os.environ.get("SERVICE_IN_ROOT"):
             service_path = "/"
 
         self.service_path = service_path

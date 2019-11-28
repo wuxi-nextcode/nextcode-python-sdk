@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services &#8212; nextcode-python-sdk 0.3.24 documentation</title>
+    <title>nextcode.services &#8212; nextcode-python-sdk 0.3.25 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.25</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -131,8 +131,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">root_url</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidProfile</span><span class="p">(</span><span class="s2">&quot;Profile is not configured&quot;</span><span class="p">)</span>
 
-        <span class="c1"># ! temporary hack</span>
-        <span class="k">if</span> <span class="s2">&quot;localhost&quot;</span> <span class="ow">in</span> <span class="n">root_url</span><span class="p">:</span>
+        <span class="c1"># ! explicit temporary hack</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVICE_IN_ROOT&quot;</span><span class="p">):</span>
             <span class="n">service_path</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">service_path</span> <span class="o">=</span> <span class="n">service_path</span>
