@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Example Jupyter Notebook &#8212; nextcode-python-sdk 0.3.22 documentation</title>
+    <title>Example Jupyter Notebook &#8212; nextcode-python-sdk 0.3.23 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.22</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.23</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -82,7 +82,8 @@
 <li><a class="reference internal" href="#Gor-expression-with-defs-and-create-statements">Gor expression with defs and create statements</a></li>
 <li><a class="reference internal" href="#Compound-expressions">Compound expressions</a></li>
 <li><a class="reference internal" href="#Virtual-relations">Virtual relations</a></li>
-<li><a class="reference internal" href="#Cancelling-queries">Cancelling queries</a><ul>
+<li><a class="reference internal" href="#Cancelling-queries">Cancelling queries</a></li>
+<li><a class="reference internal" href="#Graphing-results">Graphing results</a><ul>
 <li><a class="reference internal" href="#Using-the-SDK-without-magic-syntax">Using the SDK without magic syntax</a></li>
 </ul>
 </li>
@@ -90,6 +91,7 @@
 <li><a class="reference internal" href="#Running-basic-queries">Running basic queries</a></li>
 <li><a class="reference internal" href="#Analysing-failed-queries">Analysing failed queries</a></li>
 <li><a class="reference internal" href="#Using-virtual-relations">Using virtual relations</a></li>
+<li><a class="reference internal" href="#Using-the-Query-Builder">Using the Query Builder</a></li>
 </ul>
 </li>
 </ul>
@@ -341,8 +343,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Install the python sdk, if needed</span>
-<span class="o">!</span> pip install nextcode-sdk<span class="o">[</span>jupyter<span class="o">]</span> -U &gt;/dev/null
+<span></span><span class="c1"># Install the python sdk and other python libraries here</span>
+<span class="o">!</span> pip install nextcode-sdk<span class="o">[</span>jupyter<span class="o">]</span> -U &gt; /dev/null
+<span class="o">!</span> pip install matplotlib -U &gt; /dev/null
 </pre></div>
 </div>
 </div>
@@ -351,10 +354,12 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># load the magic extension and imports</span>
-<span class="o">%</span><span class="k">reload_ext</span> nextcode
+<span></span><span class="c1"># import libraries and initialize magic extension</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="o">%</span><span class="k">env</span> LOG_QUERY=1
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="o">%</span><span class="k">reload_ext</span> nextcode
+<span class="c1">#%env LOG_QUERY=1 # set this to get information about queries</span>
 </pre></div>
 </div>
 </div>
@@ -364,12 +369,11 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
  Gor magic extension has been loaded. You can now use &#39;%gor&#39; and &#39;%%gor&#39; in this notebook
- * Python SDK Version: 0.2.10
- * Query API Version: 1.9.0
- * GOR Version: 9.4-SNAPSHOT (git SHA 8fc327bb08282d02f9e987e11c4073e64ec77677)
+ * Python SDK Version: 0.3.22
+ * Query API Version: 1.9.4
+ * GOR Version: 9.5-SNAPSHOT (git SHA c4ca0fce323ab019ee24e5bee58ed3ccec8d4c2a)
  * Root Endpoint: https://platform.wuxinextcodedev.com/api/query/
  * Current User: jonb@wuxinextcode.com
-env: LOG_QUERY=1
 </pre></div></div>
 </div>
 <div class="section" id="Simple-single-line-gor-expression">
@@ -382,14 +386,6 @@ env: LOG_QUERY=1
 <span></span><span class="o">%</span><span class="k">gor</span> nor #dbsnp# | top 2
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1953 returned 2 rows in 0.31 sec
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -445,7 +441,7 @@ Query 1953 returned 2 rows in 0.31 sec
 </div>
 <div class="section" id="Single-line-gor-expression-which-stores-results-in-local-variable">
 <h2>Single-line gor expression which stores results in local variable<a class="headerlink" href="#Single-line-gor-expression-which-stores-results-in-local-variable" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
@@ -453,65 +449,6 @@ Query 1953 returned 2 rows in 0.31 sec
 <span></span><span class="n">var</span> <span class="o">=</span> <span class="o">%</span><span class="k">gor</span> nor #dbsnp# | top 2
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1954 returned 2 rows in 0.21 sec
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Chrom</th>
-      <th>pos</th>
-      <th>reference</th>
-      <th>allele</th>
-      <th>rsids</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>chr1</td>
-      <td>10020</td>
-      <td>AA</td>
-      <td>A</td>
-      <td>rs775809821</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>chr1</td>
-      <td>10039</td>
-      <td>A</td>
-      <td>C</td>
-      <td>rs978760828</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
 </div>
 </div>
 <div class="section" id="Simple-multi-line-gor-expression">
@@ -528,14 +465,6 @@ Query 1954 returned 2 rows in 0.21 sec
    | top #top#;
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1955 returned 2 rows in 0.21 sec
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -592,7 +521,7 @@ Query 1955 returned 2 rows in 0.21 sec
 <div class="section" id="Multi-line-gor-expression-which-stores-results-in-local-variable">
 <h2>Multi-line gor expression which stores results in local variable<a class="headerlink" href="#Multi-line-gor-expression-which-stores-results-in-local-variable" title="Permalink to this headline">¶</a></h2>
 <p>To load results from a multi-line gor expression into a variable you can use the special <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> operator</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
@@ -602,14 +531,6 @@ def #tops# = 10;
 gor #dbsnp# | top #tops#;
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1956 returned 10 rows in 0.21 sec
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -633,7 +554,7 @@ Query 1956 returned 10 rows in 0.21 sec
 <div class="section" id="Store-results-in-the-user_data-folder">
 <h2>Store results in the user_data folder<a class="headerlink" href="#Store-results-in-the-user_data-folder" title="Permalink to this headline">¶</a></h2>
 <p>Instead of fetching the data to the jupyter server you can also use the &lt;&lt; operator to store files in the user_data folder within the project on NFS.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
@@ -643,14 +564,6 @@ Query 1956 returned 10 rows in 0.21 sec
    | top 1000;
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1957 returned 38000 rows in 0.48 sec
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -679,14 +592,6 @@ outfile.gorz (345.1KiB)
 <span class="o">%</span><span class="k">gor</span> user_data/outfile.gorz | GROUP chrom -count | top 2
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1959 returned 2 rows in 0.21 sec
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -759,14 +664,6 @@ Query 1959 returned 2 rows in 0.21 sec
    | TOP $n;
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1960 returned 5 rows in 0.21 sec
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -862,14 +759,6 @@ create mydbsnp = gor -p chr1:69000-70000 #dbsnp#
 gor [mydbsnp];
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1961 returned 5 rows in 0.21 sec
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
@@ -980,14 +869,6 @@ Query 1961 returned 5 rows in 0.21 sec
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Query 1962 returned 2 rows in 0.21 sec
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -1065,15 +946,6 @@ Query 1962 returned 2 rows in 0.21 sec
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Loading relations [var:allpns] from local state
-Query 1963 returned 5 rows in 0.37 sec
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
@@ -1130,7 +1002,7 @@ Query 1963 returned 5 rows in 0.37 sec
 <h2>Cancelling queries<a class="headerlink" href="#Cancelling-queries" title="Permalink to this headline">¶</a></h2>
 <p>Try executing this long-running query and then click the stop button</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1146,6 +1018,56 @@ Query 1963 returned 5 rows in 0.37 sec
 Query has been cancelled
 </pre></div></div>
 </div>
+</div>
+<div class="section" id="Graphing-results">
+<h2>Graphing results<a class="headerlink" href="#Graphing-results" title="Permalink to this headline">¶</a></h2>
+<p>Since the primitive that is returned from magic gor commands is just a pandas dataframe we won’t go into detail here on how to graph results since there is plenty of material available on the web.</p>
+<p>Let’s however give one brief example. Here we count the number of rows per chromosome from the <em>dbsnp</em> table and want to display it as a bar chart.</p>
+<p>We start by running the query which is quite heavy since <em>dbnsp</em> is large but we only need to do this once. This query will run for 1-2 minutes, grab a cup of coffee.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%%</span><span class="k">gor</span> df &lt;&lt;
+pgor #dbsnp#
+    | GROUP chrom -count
+    | select 1,4
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># add a new column that coverts chrom names to have leading 0 for lexical sorting. chr1 -&gt; chr01, etc.</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">Chrom</span><span class="p">:</span>
+    <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;chr{:02d}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;chr&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;sort_col&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vals</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;sort_col&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Chrom&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;allCount&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/notebook_32_0.png" src="_images/notebook_32_0.png" />
+</div>
+</div>
 <div class="section" id="Using-the-SDK-without-magic-syntax">
 <h3>Using the SDK without magic syntax<a class="headerlink" href="#Using-the-SDK-without-magic-syntax" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">%</span></code> and <code class="docutils literal notranslate"><span class="pre">%%</span></code> is simply syntactic sugar for executing queries through the python sdk. You can use the sdk directly as well and that is probably the preferred method for serious analysis.</p>
@@ -1155,14 +1077,14 @@ Query has been cancelled
 <h2>Initializing the SDK<a class="headerlink" href="#Initializing-the-SDK" title="Permalink to this headline">¶</a></h2>
 <p>The SDK usually needs to be initialized with an API key and a project. However, in Wuxi notebooks this has already been done for you.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#%env GOR_API_KEY=[jwt token]</span>
 <span class="c1">#%env GOR_API_PROJECT=[project name]</span>
 <span class="kn">import</span> <span class="nn">nextcode</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="c1"># get a handle on a query service proxy</span>
 <span class="n">svc</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1172,7 +1094,7 @@ Query has been cancelled
 <div class="section" id="Running-basic-queries">
 <h2>Running basic queries<a class="headerlink" href="#Running-basic-queries" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1190,12 +1112,12 @@ Query has been cancelled
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Query 1966 is DONE. Runtime was 42 ms and it produced 2 rows.
+Query 2896 is DONE. Runtime was 39 ms and it produced 2 rows.
 The query that was run: gor #dbsnp# | top 2;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1248,15 +1170,17 @@ The query that was run: gor #dbsnp# | top 2;
 </div>
 <div class="section" id="Analysing-failed-queries">
 <h2>Analysing failed queries<a class="headerlink" href="#Analysing-failed-queries" title="Permalink to this headline">¶</a></h2>
+<p>If you run a query through the SDK an exception will not be raised if the query fails. You will need to check for it explicitly. You can use the helper attribute ‘failed’ for control flow.</p>
+<p>If a query failed then <code class="docutils literal notranslate"><span class="pre">status_message</span></code> will be set and shows a short error message. You can view more detailed information in the <code class="docutils literal notranslate"><span class="pre">query.error</span></code> dictionary.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;gor #unknowndef# | top 2;&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">failed</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">sys</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Query failed with error: {qry.error[&#39;message&#39;]}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Query failed with error: {qry.status_message}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Additional information available from qry.error[]: {list(qry.error.keys())}&quot;</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1266,7 +1190,7 @@ The query that was run: gor #dbsnp# | top 2;
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Query failed with error: Resource not found for iterator: /mnt/csa/env/dev/projects/ukbb_hg38/#unknowndef# /mnt/csa/env/dev/projects/ukbb_hg38/#unknowndef#
+Query failed with error: Resource not found for iterator: #unknowndef# #unknowndef#
 
 Additional information available from qry.error[]: [&#39;command&#39;, &#39;commandIndex&#39;, &#39;commandName&#39;, &#39;commandSource&#39;, &#39;description&#39;, &#39;errorType&#39;, &#39;gorMessage&#39;, &#39;message&#39;, &#39;requestId&#39;, &#39;stackTrace&#39;, &#39;type&#39;, &#39;uri&#39;]
 </pre></div></div>
@@ -1275,7 +1199,7 @@ Additional information available from qry.error[]: [&#39;command&#39;, &#39;comm
 <div class="section" id="Using-virtual-relations">
 <h2>Using virtual relations<a class="headerlink" href="#Using-virtual-relations" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1311,6 +1235,180 @@ Additional information available from qry.error[]: [&#39;command&#39;, &#39;comm
    hello  world
 0      1      2
 </pre></div></div>
+</div>
+</div>
+<div class="section" id="Using-the-Query-Builder">
+<h2>Using the Query Builder<a class="headerlink" href="#Using-the-Query-Builder" title="Permalink to this headline">¶</a></h2>
+<p>The jupyter modules comes with a query builder which is a helper class for writing queries. Here is an example of how that might be used.</p>
+<p>This is functionally equal to the <em>compound expressions</em> example above.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">nextcode.services.query.jupyter</span> <span class="kn">import</span> <span class="n">QueryBuilder</span>
+<span class="n">bld</span> <span class="o">=</span> <span class="n">QueryBuilder</span><span class="p">()</span>
+<span class="n">bld</span><span class="o">.</span><span class="n">creates</span><span class="p">[</span><span class="s2">&quot;mydbsnp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gor -p chr1:69000-70000 #dbsnp#&quot;</span>
+<span class="n">bld</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="s2">&quot;#myfirstdef#&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">bld</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="s2">&quot;#myseconddef#&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">print</span><span class="p">(</span><span class="n">bld</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s2">&quot;gor [mydbsnp]&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+def #myfirstdef# = 2;
+def #myseconddef# = 2;
+
+create [mydbsnp] = gor -p chr1:69000-70000 #dbsnp#;
+
+gor [mydbsnp]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">qry</span> <span class="o">=</span> <span class="n">bld</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;gor [mydbsnp]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">qry</span><span class="o">.</span><span class="n">dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Chrom</th>
+      <th>pos</th>
+      <th>reference</th>
+      <th>allele</th>
+      <th>rsids</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>chr1</td>
+      <td>69045</td>
+      <td>A</td>
+      <td>G</td>
+      <td>rs1360507296</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>chr1</td>
+      <td>69063</td>
+      <td>T</td>
+      <td>C</td>
+      <td>rs1260343719</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>chr1</td>
+      <td>69071</td>
+      <td>C</td>
+      <td>A</td>
+      <td>rs1314111151</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>chr1</td>
+      <td>69071</td>
+      <td>C</td>
+      <td>G</td>
+      <td>rs1314111151</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>chr1</td>
+      <td>69072</td>
+      <td>G</td>
+      <td>A</td>
+      <td>rs1379296286</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>243</th>
+      <td>chr1</td>
+      <td>69968</td>
+      <td>A</td>
+      <td>G</td>
+      <td>rs1365205342</td>
+    </tr>
+    <tr>
+      <th>244</th>
+      <td>chr1</td>
+      <td>69986</td>
+      <td>C</td>
+      <td>A</td>
+      <td>rs1198102769</td>
+    </tr>
+    <tr>
+      <th>245</th>
+      <td>chr1</td>
+      <td>69989</td>
+      <td>A</td>
+      <td>C</td>
+      <td>rs1246160656</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>chr1</td>
+      <td>69989</td>
+      <td>A</td>
+      <td>G</td>
+      <td>rs1246160656</td>
+    </tr>
+    <tr>
+      <th>247</th>
+      <td>chr1</td>
+      <td>69995</td>
+      <td>G</td>
+      <td>C</td>
+      <td>rs778633020</td>
+    </tr>
+  </tbody>
+</table>
+<p>248 rows × 5 columns</p>
+</div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
