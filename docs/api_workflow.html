@@ -14,7 +14,7 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Exceptions" href="api_exceptions.html" />
+    <link rel="next" title="Pipelines Service" href="api_pipelines.html" />
     <link rel="prev" title="Query Service" href="api_query.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -58,6 +58,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebook.html">Example Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="apidoc.html">Server API Documention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Developer information</a></li>
 </ul>
 </ul>
 </li>
@@ -72,8 +73,9 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Workflow Service</a><ul>
-<li><a class="reference internal" href="#id1">Workflow Service</a></li>
+<li><a class="reference internal" href="#service-class">Service class</a></li>
 <li><a class="reference internal" href="#workflow-job">Workflow Job</a></li>
+<li><a class="reference internal" href="#pytest-plugin">Pytest plugin</a></li>
 </ul>
 </li>
 </ul>
@@ -89,7 +91,7 @@
     </a>
   </li>
   <li>
-    <a href="api_exceptions.html" title="Next Chapter: Exceptions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Exceptions &raquo;</span>
+    <a href="api_pipelines.html" title="Next Chapter: Pipelines Service"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Pipelines Service &raquo;</span>
     </a>
   </li>
               
@@ -117,13 +119,16 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-nextcode.services.workflow">
-<span id="workflow-service"></span><h1>Workflow Service<a class="headerlink" href="#module-nextcode.services.workflow" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2>Workflow Service<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>Service object for interfacing with the Workflow service API</p>
-</div>
-<span class="target" id="module-nextcode.services.workflow.service"></span><dl class="class">
+  <div class="section" id="module-nextcode.services.workflow.service">
+<span id="workflow-service"></span><h1>Workflow Service<a class="headerlink" href="#module-nextcode.services.workflow.service" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="service-class">
+<h2>Service class<a class="headerlink" href="#service-class" title="Permalink to this headline">¶</a></h2>
+<p>Service object for interfacing with the Workflow Service API.</p>
+<p>This class instance is used to communicate with a RESTFul service. The <cite>post_job</cite> method
+creates a new job on the server and <cite>find_job</cite> and <cite>get_jobs</cite> allow you to inspect running
+and past workflow jobs.</p>
+<p>Note: This service has not been fully integrated into the SDK and access is still quite raw.</p>
+<dl class="class">
 <dt id="nextcode.services.workflow.service.Service">
 <em class="property">class </em><code class="sig-prename descclassname">nextcode.services.workflow.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">client</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>A connection to the workflow service API server</p>
@@ -264,6 +269,7 @@
 
 </dd></dl>
 
+</div>
 <span class="target" id="module-nextcode.services.workflow.job"></span><div class="section" id="workflow-job">
 <h2>Workflow Job<a class="headerlink" href="#workflow-job" title="Permalink to this headline">¶</a></h2>
 <p>The Query class represents a workflow job model from the RESTFul Workflow Service API</p>
@@ -414,7 +420,11 @@
 </dd></dl>
 
 </div>
-<span class="target" id="module-nextcode.services.workflow.pytest_plugin"></span></div>
+<span class="target" id="module-nextcode.services.workflow.pytest_plugin"></span><div class="section" id="pytest-plugin">
+<h2>Pytest plugin<a class="headerlink" href="#pytest-plugin" title="Permalink to this headline">¶</a></h2>
+<p>This is a pytest plugin that is used by workflow CI jobs for automatically testing against a live server.</p>
+</div>
+</div>
 
 
     </div>
@@ -436,7 +446,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-26.<br/>
+      Last updated on 2019-11-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

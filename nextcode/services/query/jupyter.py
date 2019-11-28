@@ -2,7 +2,9 @@
 Jupyter Extensions
 ------------------
 
-Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`
+Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`.
+
+Use `%env LOG_QUERY=1` in Jupyter to see details.
 """
 
 from ...exceptions import ServerError, InvalidToken
@@ -35,22 +37,33 @@ def line_magic(func):
 
 
 if jupyter_available():
+    """
+    """
     import pandas as pd
     from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic  # type: ignore
 
 
 def print_details(txt):
+    """
+    Print string, but only if LOG_QUERY is set
+    """
     if os.environ.get("LOG_QUERY"):
         print(txt)
         sys.stdout.flush()
 
 
 def print_error(txt):
+    """
+    Print string to stderr
+    """
     print(txt, file=sys.stderr)
     sys.stderr.flush()
 
 
 def sizeof_fmt(num, suffix="B"):
+    """
+    Pretty-printed number format for size.
+    """
     import math
 
     if not num:
@@ -65,17 +78,30 @@ def sizeof_fmt(num, suffix="B"):
 
 
 def get_service():
+    """
+    Helper method to get a query service instance
+    """
     svc = nextcode.get_service("query")
     return svc
 
 
 @magics_class
 class GorMagics(Magics):
+    """
+    The basic 'ipython magic' extension that loads up the sdk as a `%gor` plugin in Jupyter notebook.
+    """
+
     def handle_exception(self):
+        """
+        Print out any exception on the stack.
+        """
         exception = sys.exc_info()
         print_error(str(exception[1]))
 
     def replace_vars(self, string):
+        """
+        Handle variable substitution in a gor string to interact with local state.
+        """
         replacement_vars = re.findall("\\$([a-zA-Z0-9_]+)?", string)
         ret = string
         user_ns = self.shell.user_ns
@@ -87,6 +113,9 @@ class GorMagics(Magics):
         return ret
 
     def load_relations(self, relation_names):
+        """
+        Find relations in local iPython state for inclusion in a remote gor query.
+        """
         relations = []
         user_ns = self.shell.user_ns
         print_details(
@@ -117,6 +146,11 @@ class GorMagics(Magics):
 
     @line_cell_magic
     def gor(self, line, cell=None):
+        """
+        Execute a gor statement and return the results, supports virtual relations.
+
+        See Jupyter notebook for examples and details.
+        """
         try:
             st = time.time()
             svc = get_service()
@@ -208,7 +242,7 @@ class GorMagics(Magics):
     @line_magic
     def gorls(self, line):
         """
-        Just a fun little experiment
+        List out the contents of the selected folder. Example `%gorls .`
         """
         svc = get_service()
         parts = line.replace("  ", " ").split(" ")
@@ -238,7 +272,7 @@ class GorMagics(Magics):
     @line_magic
     def gorfind(self, line):
         """
-        Just a fun little experiment
+        Find a file within the project tree. Example `%gorfind pns.txt`
         """
         svc = get_service()
         string = line

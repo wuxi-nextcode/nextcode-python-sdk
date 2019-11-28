@@ -1,7 +1,7 @@
 """
-Workflow Service
+Service class
 ------------------
-Service object for interfacing with the Workflow service API
+Service object for interfacing with the Pipelines service API
 
 """
 

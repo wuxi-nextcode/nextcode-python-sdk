@@ -29,6 +29,7 @@ Then you intialize the extension in your notebook after you have received an API
     * Root Endpoint: https://test.wuxinextcode.com/api/query/
     * Current User: testuser@wuxinextcode.com
 
+
 Getting Started
 ===============
 
@@ -52,3 +53,5 @@ The magic commands return a pandas dataframe object which by default prints out 
     1   chr1    10039   A   C   rs978760828
 
 ... etc.
+
+Please see the included Example Jupyter Notebook page for more examples.

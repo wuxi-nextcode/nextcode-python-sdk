@@ -13,17 +13,16 @@ When using the SDK you always start by getting a `Client` instance using an API 
    svc = client.service("query")
    svc.status()
 
-.. automodule:: nextcode.client
-   :members:
+There is a helper method available to get a service directly without first invoking a client.
 
-.. automodule:: nextcode.session
-   :members:
+.. code-block:: python
+   :linenos:
 
-.. automodule:: nextcode.config
-   :members:
+   import nextcode
+   svc = nextcode.get_service("query")
 
-.. automodule:: nextcode.utils
-   :members:
+In this example we assume the `api_key` has already been set but it can also be passed in.
+
 
 Available Services
 ==================
@@ -33,4 +32,6 @@ Available Services
 
    api_query
    api_workflow
+   api_pipelines
    api_exceptions
+   api_basic

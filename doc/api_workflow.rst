@@ -1,9 +1,6 @@
 Workflow Service
 ================
 
-.. automodule:: nextcode.services.workflow
-   :inherited-members:
-
 .. automodule:: nextcode.services.workflow.service
    :inherited-members:
 

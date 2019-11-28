@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../notebook.html">Example Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../apidoc.html">Server API Documention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Developer information</a></li>
 </ul>
 </ul>
 </li>
@@ -102,9 +103,13 @@
       
   <h1>Source code for nextcode.services.query.service</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Query-API Service</span>
+<span class="sd">Service class</span>
 <span class="sd">------------------</span>
-<span class="sd">Service object for interfacing with the GOR Query API</span>
+<span class="sd">Service object for interfacing with the GOR Query API.</span>
+
+<span class="sd">This class instance is used to communicate with a RESTFul service. Use the `execute` and `execute_template`</span>
+<span class="sd">methods to get started. To view past queries you can use the `get_queries` and `get_query` methods which return</span>
+<span class="sd">`Query` objects.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -509,7 +514,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-26.<br/>
+      Last updated on 2019-11-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

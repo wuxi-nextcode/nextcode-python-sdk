@@ -1,3 +1,10 @@
+"""
+Pytest plugin
+------------------
+
+This is a pytest plugin that is used by workflow CI jobs for automatically testing against a live server.
+
+"""
 from nextcode.packagelocal import package_and_upload
 from nextcode import get_service
 

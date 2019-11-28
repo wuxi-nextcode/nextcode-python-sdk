@@ -208,7 +208,7 @@
     }
    ],
    "source": [
-    "%gor nor #dbsnp# | top 2"
+    "var = %gor nor #dbsnp# | top 2"
    ]
   },
   {

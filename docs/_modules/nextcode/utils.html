@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebook.html">Example Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../apidoc.html">Server API Documention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Developer information</a></li>
 </ul>
 </ul>
 </li>
@@ -163,7 +164,7 @@
     <span class="k">return</span> <span class="n">root_url</span>
 
 
-<div class="viewcode-block" id="get_access_token"><a class="viewcode-back" href="../../api.html#nextcode.utils.get_access_token">[docs]</a><span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">):</span>
+<div class="viewcode-block" id="get_access_token"><a class="viewcode-back" href="../../api_basic.html#nextcode.utils.get_access_token">[docs]</a><span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
@@ -203,7 +204,7 @@
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="host_from_url"><a class="viewcode-back" href="../../api.html#nextcode.utils.host_from_url">[docs]</a><span class="k">def</span> <span class="nf">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
+<div class="viewcode-block" id="host_from_url"><a class="viewcode-back" href="../../api_basic.html#nextcode.utils.host_from_url">[docs]</a><span class="k">def</span> <span class="nf">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets the raw URI host of a url with trailing slash, no matter how it is formatted.</span>
 
@@ -233,7 +234,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-26.<br/>
+      Last updated on 2019-11-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

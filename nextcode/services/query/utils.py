@@ -1,3 +1,10 @@
+"""
+Utility methods
+------------------
+
+Utility methods used by the query service.
+"""
+
 from importlib.util import find_spec
 import hashlib
 

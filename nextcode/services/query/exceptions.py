@@ -1,3 +1,11 @@
+"""
+Exceptions
+~~~~~~~~~~
+
+Custom exceptions raised by the query service.
+
+"""
+
 from typing import List
 
 

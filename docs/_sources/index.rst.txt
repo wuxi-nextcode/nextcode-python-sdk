@@ -50,6 +50,7 @@ Contents
    api
    notebook
    apidoc
+   development
 
 Indices and tables
 -------------------

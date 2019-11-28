@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebook.html">Example Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../apidoc.html">Server API Documention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Developer information</a></li>
 </ul>
 </ul>
 </li>
@@ -135,7 +136,7 @@
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="get_api_key"><a class="viewcode-back" href="../../api.html#nextcode.client.get_api_key">[docs]</a><span class="k">def</span> <span class="nf">get_api_key</span><span class="p">(</span>
+<div class="viewcode-block" id="get_api_key"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.get_api_key">[docs]</a><span class="k">def</span> <span class="nf">get_api_key</span><span class="p">(</span>
     <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">realm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wuxinextcode.com&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -175,7 +176,7 @@
     <span class="k">return</span> <span class="n">api_key</span></div>
 
 
-<div class="viewcode-block" id="get_service"><a class="viewcode-back" href="../../api.html#nextcode.client.get_service">[docs]</a><span class="k">def</span> <span class="nf">get_service</span><span class="p">(</span>
+<div class="viewcode-block" id="get_service"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.get_service">[docs]</a><span class="k">def</span> <span class="nf">get_service</span><span class="p">(</span>
     <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -221,7 +222,7 @@
                 <span class="n">save_config</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../api.html#nextcode.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A base client object from which to access various services</span>
 
 <span class="sd">    :param api_key: api key to use for this client</span>
@@ -280,7 +281,7 @@
                 <span class="n">root_url</span> <span class="o">=</span> <span class="n">root_url_from_api_key</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">,</span> <span class="s2">&quot;root_url&quot;</span><span class="p">:</span> <span class="n">root_url</span><span class="p">})</span>
 
-<div class="viewcode-block" id="Client.service"><a class="viewcode-back" href="../../api.html#nextcode.client.Client.service">[docs]</a>    <span class="k">def</span> <span class="nf">service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.service"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.Client.service">[docs]</a>    <span class="k">def</span> <span class="nf">service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve an instance to a service.</span>
 
@@ -296,7 +297,7 @@
                 <span class="k">return</span> <span class="n">svc</span>
         <span class="k">raise</span> <span class="n">ServiceNotFound</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Client.get_access_token"><a class="viewcode-back" href="../../api.html#nextcode.client.Client.get_access_token">[docs]</a>    <span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="Client.get_access_token"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.Client.get_access_token">[docs]</a>    <span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the JWT access token that is generated from the current api key.</span>
 
 <span class="sd">        :param decode: Decode the token and return a dictionary instead of the raw string</span>
@@ -319,7 +320,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">token</span></div>
 
-<div class="viewcode-block" id="Client.available_services"><a class="viewcode-back" href="../../api.html#nextcode.client.Client.available_services">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Client.available_services"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.Client.available_services">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">available_services</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;List services that can be intantiated via an client object client.service(`service`)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -328,7 +329,7 @@
             <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
-<div class="viewcode-block" id="Client.available_profiles"><a class="viewcode-back" href="../../api.html#nextcode.client.Client.available_profiles">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Client.available_profiles"><a class="viewcode-back" href="../../api_basic.html#nextcode.client.Client.available_profiles">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">available_profiles</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;List profiles that that are installed into the system and can be used</span>
 <span class="sd">        with the constructor client.Client()</span>
@@ -354,7 +355,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-26.<br/>
+      Last updated on 2019-11-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

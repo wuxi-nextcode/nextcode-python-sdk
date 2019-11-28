@@ -1,3 +1,15 @@
+"""
+Service class
+------------------
+Service object for interfacing with the Workflow Service API.
+
+This class instance is used to communicate with a RESTFul service. The `post_job` method
+creates a new job on the server and `find_job` and `get_jobs` allow you to inspect running
+and past workflow jobs.
+
+Note: This service has not been fully integrated into the SDK and access is still quite raw. 
+
+"""
 import time
 
 from typing import Optional, List, Union, Dict

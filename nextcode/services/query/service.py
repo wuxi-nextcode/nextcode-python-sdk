@@ -1,7 +1,11 @@
 """
-Query-API Service
+Service class
 ------------------
-Service object for interfacing with the GOR Query API
+Service object for interfacing with the GOR Query API.
+
+This class instance is used to communicate with a RESTFul service. Use the `execute` and `execute_template`
+methods to get started. To view past queries you can use the `get_queries` and `get_query` methods which return
+`Query` objects.
 
 """
 

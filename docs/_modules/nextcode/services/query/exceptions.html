@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../notebook.html">Example Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../apidoc.html">Server API Documention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Developer information</a></li>
 </ul>
 </ul>
 </li>
@@ -101,19 +102,27 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for nextcode.services.query.exceptions</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Exceptions</span>
+<span class="sd">~~~~~~~~~~</span>
+
+<span class="sd">Custom exceptions raised by the query service.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
 
-<span class="k">class</span> <span class="nc">TemplateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span>
+<div class="viewcode-block" id="TemplateError"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.TemplateError">[docs]</a><span class="k">class</span> <span class="nc">TemplateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="QueryError"><a class="viewcode-back" href="../../../../api_exceptions.html#nextcode.services.query.exceptions.QueryError">[docs]</a><span class="k">class</span> <span class="nc">QueryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="QueryError"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.QueryError">[docs]</a><span class="k">class</span> <span class="nc">QueryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span> <span class="o">=</span> <span class="n">query_id</span></div>
 
 
-<div class="viewcode-block" id="MissingRelations"><a class="viewcode-back" href="../../../../api_exceptions.html#nextcode.services.query.exceptions.MissingRelations">[docs]</a><span class="k">class</span> <span class="nc">MissingRelations</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MissingRelations"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.MissingRelations">[docs]</a><span class="k">class</span> <span class="nc">MissingRelations</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">relations</span> <span class="o">=</span> <span class="n">relations</span>
 
@@ -136,7 +145,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-26.<br/>
+      Last updated on 2019-11-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>
