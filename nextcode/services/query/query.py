@@ -129,11 +129,12 @@ class Query:
         ret = [p["name"] for p in perspective_links]
         return ret
 
-    def wait(self, max_seconds: Optional[int] = None):
+    def wait(self, max_seconds: Optional[int] = None, poll_period: float = 0.5):
         """
         Wait for the query to complete
 
         :param max_seconds: raise an exception if the query runs longer than this
+        :param poll_period: Number of seconds to wait between polling (max 10 seconds)
 
         :raises: QueryError
         """
@@ -142,15 +143,15 @@ class Query:
         log.info("Waiting for query %s to complete...", self.query_id)
         start_time = time.time()
         duration = 0.0
-        period = 0.5
+        period = poll_period
         while self.running:
             time.sleep(period)
             duration = time.time() - start_time
-            if max_seconds and duration > max_seconds:
+            if self.running and max_seconds and duration > max_seconds:
                 raise QueryError(
-                    f"Query {self.query_id} has running status {self.status} after {max_seconds} seconds"
+                    f"Query {self.query_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
                 )
-            period = min(period + 0.5, 5.0)
+            period = min(period + 0.5, 10.0)
         if self.status == "DONE":
             log.info(
                 "Query %s completed in %.2f sec and returned %s rows",

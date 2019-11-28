@@ -11,6 +11,7 @@ from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
 from .utils import jupyter_available
 from typing import Dict, List, Optional, Union
+import pandas as pd
 import nextcode
 import hashlib
 import time
@@ -39,7 +40,6 @@ def line_magic(func):
 if jupyter_available():
     """
     """
-    import pandas as pd
     from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic  # type: ignore
 
 
@@ -182,14 +182,16 @@ class GorMagics(Magics):
                     gor_string, relations=relations, nowait=True, persist=persist
                 )
             start_time = time.time()
+            period = 0.2
             while qry.running is True:
                 try:
-                    qry.wait(max_seconds=10)
+                    qry.wait(max_seconds=10, poll_period=period)
                 except QueryError as ex:
                     if qry.running:
                         print_details(
-                            f"Query {qry.query_id} has status {qry.status} after {(time.time()-start_time):.0f} seconds"
+                            f"Query {qry.query_id} has status {qry.status} after {(time.time()-start_time):.0f} seconds. Still waiting..."
                         )
+                        period = 10.0
                     else:
                         raise
 

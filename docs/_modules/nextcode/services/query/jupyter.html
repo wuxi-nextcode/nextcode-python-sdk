@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.3.20 documentation</title>
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.3.21 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.20</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -286,14 +286,16 @@
                     <span class="n">gor_string</span><span class="p">,</span> <span class="n">relations</span><span class="o">=</span><span class="n">relations</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span>
                 <span class="p">)</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="mf">0.2</span>
             <span class="k">while</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">qry</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">max_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                    <span class="n">qry</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">max_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">poll_period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">QueryError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
                         <span class="n">print_details</span><span class="p">(</span>
-                            <span class="n">f</span><span class="s2">&quot;Query </span><span class="si">{qry.query_id}</span><span class="s2"> has status </span><span class="si">{qry.status}</span><span class="s2"> after {(time.time()-start_time):.0f} seconds&quot;</span>
+                            <span class="n">f</span><span class="s2">&quot;Query </span><span class="si">{qry.query_id}</span><span class="s2"> has status </span><span class="si">{qry.status}</span><span class="s2"> after {(time.time()-start_time):.0f} seconds. Still waiting...&quot;</span>
                         <span class="p">)</span>
+                        <span class="n">period</span> <span class="o">=</span> <span class="mf">10.0</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span>
 
