@@ -126,7 +126,10 @@ class Service(BaseService):
         return ret
 
     def add_template_from_file(
-        self, filename: str, package_version: Optional[str] = None, replace: bool = False
+        self,
+        filename: str,
+        package_version: Optional[str] = None,
+        replace: bool = False,
     ) -> str:
         """
         Add a new template from yaml file.
