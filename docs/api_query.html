@@ -135,7 +135,7 @@ methods to get started. To view past queries you can use the <cite>get_queries</
 <dd><p>A connection to the query api</p>
 <dl class="method">
 <dt id="nextcode.services.query.service.Service.add_template_from_file">
-<code class="sig-name descname">add_template_from_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_template_from_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">package_version=''</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new template from yaml file.</p>
 <p>If the template already exists a TemplateError is raised. If replace is True
 the template is replaced silently</p>
@@ -143,6 +143,7 @@ the template is replaced silently</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full path to a yaml file containing template</p></li>
+<li><p><strong>package_version</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Version of CLA Query Package that contained the Template</p></li>
 <li><p><strong>replace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Replace an existing template</p></li>
 </ul>
 </dd>
@@ -742,7 +743,7 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-28.<br/>
+      Last updated on 2019-11-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

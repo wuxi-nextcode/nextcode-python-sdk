@@ -109,12 +109,12 @@ def _load_config() -> Dict:
 
 def save_config() -> None:
     config = Config()
-    config_file = root_config_folder.joinpath("config.yaml")
-    log.debug(
-        "Saving config with %s profiles to %s", len(config.get("profiles")), config_file
-    )
+    config_filename = root_config_folder.joinpath("config.yaml")
+    no_profiles = len(config.get("profiles"))
+    log.debug("Saving config with %s profiles to %s", no_profiles, config_filename)
     os.makedirs(root_config_folder, exist_ok=True)
-    yaml.safe_dump(config.dict(), config_file.open("w"))
+    with config_filename.open("w") as conf_file:
+        yaml.safe_dump(config.dict(), conf_file)
 
 
 def _init_config() -> None:

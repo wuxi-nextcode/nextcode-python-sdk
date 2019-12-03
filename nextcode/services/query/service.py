@@ -125,7 +125,9 @@ class Service(BaseService):
                         ret[template["full_name"]] = template
         return ret
 
-    def add_template_from_file(self, filename: str, replace: bool = False) -> str:
+    def add_template_from_file(
+        self, filename: str, package_version: Optional[str] = None, replace: bool = False
+    ) -> str:
         """
         Add a new template from yaml file.
 
@@ -133,6 +135,7 @@ class Service(BaseService):
         the template is replaced silently
 
         :param filename: Full path to a yaml file containing template
+        :param package_version: Version of CLA Query Package that contained the Template
         :param replace: Replace an existing template
         :returns: Full name of the new template
         :raises: TemplateError if the file is not found, the template is invalid or if there is a server error.
@@ -152,7 +155,9 @@ class Service(BaseService):
         url = self.session.url_from_endpoint("templates")
         log.info("Uploading template '%s' to %s...", name, url)
         try:
-            resp = self.session.post(url, json={"yaml": yaml_string})
+            resp = self.session.post(
+                url, json={"yaml": yaml_string, "package_version": package_version}
+            )
         except ServerError as se:
             if se.response and se.response.get("code") == 409:
                 if replace:
@@ -163,7 +168,13 @@ class Service(BaseService):
                     )
                     try:
                         resp = self.session.delete(err["template_url"])
-                        resp = self.session.post(url, json={"yaml": yaml_string})
+                        resp = self.session.post(
+                            url,
+                            json={
+                                "yaml": yaml_string,
+                                "package_version": package_version,
+                            },
+                        )
                     except ServerError as ex:
                         raise TemplateError(str(ex))
                 else:

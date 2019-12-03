@@ -229,7 +229,9 @@
                         <span class="n">ret</span><span class="p">[</span><span class="n">template</span><span class="p">[</span><span class="s2">&quot;full_name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">template</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
-<div class="viewcode-block" id="Service.add_template_from_file"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.service.Service.add_template_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_template_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Service.add_template_from_file"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.service.Service.add_template_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_template_from_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">package_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new template from yaml file.</span>
 
@@ -237,6 +239,7 @@
 <span class="sd">        the template is replaced silently</span>
 
 <span class="sd">        :param filename: Full path to a yaml file containing template</span>
+<span class="sd">        :param package_version: Version of CLA Query Package that contained the Template</span>
 <span class="sd">        :param replace: Replace an existing template</span>
 <span class="sd">        :returns: Full name of the new template</span>
 <span class="sd">        :raises: TemplateError if the file is not found, the template is invalid or if there is a server error.</span>
@@ -256,7 +259,9 @@
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;templates&quot;</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Uploading template &#39;</span><span class="si">%s</span><span class="s2">&#39; to </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">yaml_string</span><span class="p">})</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">yaml_string</span><span class="p">,</span> <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">package_version</span><span class="p">}</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">se</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">se</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
@@ -267,7 +272,13 @@
                     <span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="s2">&quot;template_url&quot;</span><span class="p">])</span>
-                        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">yaml_string</span><span class="p">})</span>
+                        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                            <span class="n">url</span><span class="p">,</span>
+                            <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+                                <span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">yaml_string</span><span class="p">,</span>
+                                <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">package_version</span><span class="p">,</span>
+                            <span class="p">},</span>
+                        <span class="p">)</span>
                     <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="n">TemplateError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -520,7 +531,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-11-28.<br/>
+      Last updated on 2019-11-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>
