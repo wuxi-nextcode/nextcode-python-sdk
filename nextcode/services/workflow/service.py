@@ -82,13 +82,22 @@ class Service(BaseService):
         return WorkflowJob(self.session, job["job_id"], job)
 
     def get_jobs(
-        self, user_name: Optional[str], status: Optional[str], limit: Optional[int]
+        self,
+        user_name: Optional[str] = None,
+        status: Optional[str] = None,
+        project: Optional[str] = None,
+        pipeline: Optional[str] = None,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> List[WorkflowJob]:
         """
         Get a list of jobs satisfying the supplied criteria
 
         :param user_name: The user who created the job
         :param status: Current status of jobs
+        :param project: Filter by project
+        :param pipeline: Filter by pipeline name
+        :oaram state: Filter by state, each state encapsulates several statuses (running, finished)
         :param limit: Maximum number of jobs to return
         """
         data: Dict = {"limit": limit}
@@ -96,7 +105,12 @@ class Service(BaseService):
             data["user_name"] = user_name
         if status:
             data["status"] = status
-
+        if project:
+            data["project_name"] = project
+        if pipeline:
+            data["pipeline_name"] = pipeline
+        if state:
+            data["state"] = state
         st = time.time()
         resp = self.session.get(self.session.url_from_endpoint("jobs"), json=data)
         jobs = resp.json()["jobs"]
@@ -117,6 +131,7 @@ class Service(BaseService):
         build_context: Optional[str] = None,
         profile: Optional[str] = None,
         trace: bool = False,
+        details: Optional[Dict] = None,
     ):
         """
         Run a workflow job
@@ -130,6 +145,7 @@ class Service(BaseService):
         :param build_context: Context for build_source, depends on the type.
         :param profile: Nextflow profile name to use.
         :param trace: Instruct the job to run nextflow trace flags for debugging.
+        :param details: Dictionary containing the initial values for 'details' in the job
 
         """
         log.debug(
@@ -151,6 +167,7 @@ class Service(BaseService):
             "script": script,
             "build_context": build_context,
             "profile": profile,
+            "details": details,
         }
         if build_source:
             data["build_source"] = build_source

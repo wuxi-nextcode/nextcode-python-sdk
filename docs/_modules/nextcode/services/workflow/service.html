@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.workflow.service &#8212; nextcode-python-sdk 0.3.28 documentation</title>
+    <title>nextcode.services.workflow.service &#8212; nextcode-python-sdk 0.3.29 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.3.28</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.29</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -186,13 +186,22 @@
         <span class="k">return</span> <span class="n">WorkflowJob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">job</span><span class="p">[</span><span class="s2">&quot;job_id&quot;</span><span class="p">],</span> <span class="n">job</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Service.get_jobs"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.service.Service.get_jobs">[docs]</a>    <span class="k">def</span> <span class="nf">get_jobs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pipeline</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">WorkflowJob</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of jobs satisfying the supplied criteria</span>
 
 <span class="sd">        :param user_name: The user who created the job</span>
 <span class="sd">        :param status: Current status of jobs</span>
+<span class="sd">        :param project: Filter by project</span>
+<span class="sd">        :param pipeline: Filter by pipeline name</span>
+<span class="sd">        :oaram state: Filter by state, each state encapsulates several statuses (running, finished)</span>
 <span class="sd">        :param limit: Maximum number of jobs to return</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">}</span>
@@ -200,7 +209,12 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_name</span>
         <span class="k">if</span> <span class="n">status</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
-
+        <span class="k">if</span> <span class="n">project</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">project</span>
+        <span class="k">if</span> <span class="n">pipeline</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pipeline_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
         <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;jobs&quot;</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="n">jobs</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;jobs&quot;</span><span class="p">]</span>
@@ -221,6 +235,7 @@
         <span class="n">build_context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">profile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">trace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">details</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run a workflow job</span>
@@ -234,6 +249,7 @@
 <span class="sd">        :param build_context: Context for build_source, depends on the type.</span>
 <span class="sd">        :param profile: Nextflow profile name to use.</span>
 <span class="sd">        :param trace: Instruct the job to run nextflow trace flags for debugging.</span>
+<span class="sd">        :param details: Dictionary containing the initial values for &#39;details&#39; in the job</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
@@ -255,6 +271,7 @@
             <span class="s2">&quot;script&quot;</span><span class="p">:</span> <span class="n">script</span><span class="p">,</span>
             <span class="s2">&quot;build_context&quot;</span><span class="p">:</span> <span class="n">build_context</span><span class="p">,</span>
             <span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">profile</span><span class="p">,</span>
+            <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">details</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">build_source</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;build_source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">build_source</span>
