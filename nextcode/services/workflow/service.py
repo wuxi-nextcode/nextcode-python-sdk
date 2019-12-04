@@ -132,6 +132,7 @@ class Service(BaseService):
         profile: Optional[str] = None,
         trace: bool = False,
         details: Optional[Dict] = None,
+        description: Optional[str] = None,
     ):
         """
         Run a workflow job
@@ -149,7 +150,7 @@ class Service(BaseService):
 
         """
         log.debug(
-            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s",
+            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s",
             pipeline_name,
             project_name,
             params,
@@ -158,6 +159,7 @@ class Service(BaseService):
             build_source,
             build_context,
             profile,
+            description,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -168,6 +170,7 @@ class Service(BaseService):
             "build_context": build_context,
             "profile": profile,
             "details": details,
+            "description": description,
         }
         if build_source:
             data["build_source"] = build_source
