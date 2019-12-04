@@ -110,11 +110,11 @@ class Service(BaseService):
         self,
         pipeline_name: Optional[str],
         project_name: str,
-        params: Optional[Dict],
-        script: Optional[str],
-        revision: Optional[str],
-        build_source: Optional[str],
-        build_context: Optional[str],
+        params: Optional[Dict] = None,
+        script: Optional[str] = None,
+        revision: Optional[str] = None,
+        build_source: Optional[str] = None,
+        build_context: Optional[str] = None,
         profile: Optional[str] = None,
         trace: bool = False,
     ):
@@ -143,16 +143,17 @@ class Service(BaseService):
             build_context,
             profile,
         )
-        data = {
+        data: Dict = {
             "pipeline_name": pipeline_name,
             "project_name": project_name,
             "parameters": params,
-            "script": script,
             "revision": revision or None,
-            "build_source": build_source,
+            "script": script,
             "build_context": build_context,
             "profile": profile,
         }
+        if build_source:
+            data["build_source"] = build_source
 
         if trace:
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}  # type: ignore
