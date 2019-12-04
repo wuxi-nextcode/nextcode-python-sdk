@@ -113,6 +113,9 @@ class ServiceSession(requests.Session):
         self.root_info = contents["root_info"]
         if self.token:
             self.headers["Authorization"] = "Bearer {}".format(self.token)
+        # if the service does not have our user available make sure to refresh
+        if not self.root_info.get("current_user"):
+            return False
         return True
 
     def _do_request(self, method, retry=True, *args, **kwargs):
@@ -169,7 +172,7 @@ class ServiceSession(requests.Session):
             )
         )
         try:
-            r = requests.get(self.url_base, timeout=2.0, headers=self.headers)
+            r = requests.get(self.url_base, timeout=3.0, headers=self.headers)
         except requests.exceptions.ConnectionError as ex:
             raise ServerError(
                 f"Could not reach server {self.url_base} ({ex})"
@@ -193,7 +196,7 @@ class ServiceSession(requests.Session):
                 old_url_base,
                 self.url_base,
             )
-            r = requests.get(self.url_base, timeout=2.0)
+            r = requests.get(self.url_base, timeout=3.0, headers=self.headers)
 
         if r.headers["Content-Type"] != "application/json":
             raise ServerError(

@@ -110,7 +110,7 @@ class Service(BaseService):
         self,
         pipeline_name: Optional[str],
         project_name: str,
-        params: Optional[List],
+        params: Optional[Dict],
         script: Optional[str],
         revision: Optional[str],
         build_source: Optional[str],
@@ -123,7 +123,7 @@ class Service(BaseService):
 
         :param pipeline_name: Name of the pipeline to run
         :param project_name: Name of the project to run this job on
-        :param params: List of parameters to forward to the job
+        :param params: Dictionary of parameters to forward to the job
         :param script: Git repository url to run (only when server is in development mode)
         :param revision: Git revision or tag (only when server is in development mode)
         :param build_source: Source type of the nextflow build (builtin, git, url)
