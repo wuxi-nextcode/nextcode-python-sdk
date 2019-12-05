@@ -77,11 +77,18 @@ class WorkflowJob:
         _ = self.session.put(self.links["self"])
         self.refresh()
 
-    def cancel(self) -> None:
+    def cancel(
+        self, status: Optional[str] = None, status_message: Optional[str] = None
+    ) -> Optional[str]:
         """
         Cancel a running job
+
+        :param status: status of the cancelled job. Defaults to CANCELLED
         """
-        resp = self.session.delete(self.links["self"])
+        data: Dict = {}
+        data["status"] = status or "CANCELLED"
+        data["status_message"] = status_message
+        resp = self.session.delete(self.links["self"], json=data)
         status_message = resp.json()["status_message"]
         return status_message
 

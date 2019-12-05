@@ -88,7 +88,7 @@ class Service(BaseService):
         project: Optional[str] = None,
         pipeline: Optional[str] = None,
         state: Optional[str] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 50,
     ) -> List[WorkflowJob]:
         """
         Get a list of jobs satisfying the supplied criteria
