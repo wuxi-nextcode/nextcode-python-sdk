@@ -5,7 +5,7 @@ import requests
 from requests import codes
 import logging
 
-from .exceptions import ServerError, NotFound, AuthServerError
+from .exceptions import ServerError, NotFound, AuthServerError, CSAError
 from .utils import host_from_url
 
 log = logging.getLogger(__name__)
@@ -13,10 +13,18 @@ log = logging.getLogger(__name__)
 
 def _get_csa_error(resp):
     try:
-        msg = resp.json()["error"]["full_message"][0]
+        msg = resp.json()["error"]["full_message"]
+        if isinstance(msg, list):
+            msg = ", ".join(msg)
     except Exception:
         msg = str(resp.content)
     return msg
+
+
+def _check_csa_error(resp):
+    if 400 <= resp.status_code < 500:
+        raise CSAError(_get_csa_error(resp))
+    resp.raise_for_status()
 
 
 class CSASession:
@@ -70,16 +78,14 @@ class CSASession:
         else:
             log.info("User '%s' already exists in CSA", user_name)
             if not exist_ok:
-                raise AuthServerError(f"User '{user_name}' already exists.")
+                raise CSAError(f"User '{user_name}' already exists.")
             else:
                 return
 
         users_url = urljoin(self.csa_url, "users.json")
         payload = {"user": {"email": user_name, "password": password}}
         resp = self.session.post(users_url, json=payload)
-        if resp.status_code != codes.created:
-            raise AuthServerError(_get_csa_error(resp))
-        resp.raise_for_status()
+        _check_csa_error(resp)
         log.info("Created user '%s' in CSA", user_name)
 
     def add_user_to_project(
@@ -97,18 +103,7 @@ class CSASession:
                 }
             },
         )
-        if resp.status_code == codes.not_found:
-            raise AuthServerError(f"Project {project} does not exist")
-        elif resp.status_code == codes.bad_request:
-            msg = _get_csa_error(resp)
-            if "Role has already been taken" in msg and exist_ok:
-                log.info(
-                    "User '%s' is already a member in project %s", user_name, project
-                )
-                return
-            else:
-                raise AuthServerError(msg)
-        resp.raise_for_status()
+        _check_csa_error(resp)
         log.info(
             "User '%s' has been added with role %s to project %s",
             user_name,
@@ -116,25 +111,51 @@ class CSASession:
             project,
         )
 
-    def get_projects(self):
+    def get_project_names(self):
         projects_url = urljoin(self.csa_url, "projects.json")
         resp = self.session.get(projects_url)
         resp.raise_for_status()
         projects = resp.json()["projects"]
         return [p["key"] for p in projects]
 
+    def get_project(self, project_name):
+        url = urljoin(self.csa_url, f"projects/{project_name}.json")
+        resp = self.session.get(url)
+        if resp.status_code == codes.not_found:
+            return None
+        resp.raise_for_status()
+        return resp.json()["project"]
+
+    def create_project(
+        self, project_name, org_name, ref_version="hg38", exist_ok=False
+    ):
+        url = urljoin(self.csa_url, "projects.json")
+        data = {
+            "project": {
+                "key": project_name,
+                "name": project_name,
+                "organization_key": org_name,
+                "reference_version": ref_version,
+            }
+        }
+        resp = self.session.post(url, json=data)
+        _check_csa_error(resp)
+        resp.raise_for_status()
+        return resp.json()["project"]
+
     def add_credentials(self, owner_key, service, lookup_key, credential_attributes):
         lookup_key = lookup_key.lower()
-        cred_url = urljoin(self.csa_url, "auth/v1/credentials.json")
+        url = urljoin(self.csa_url, "auth/v1/credentials.json")
+        url = url.replace("/api", "")
 
         log.info(
             "Calling '%s' to add '%s' credentials to CSA project '%s'",
-            cred_url,
+            url,
             service,
             owner_key,
         )
-        response = self.session.post(
-            cred_url,
+        resp = self.session.post(
+            url,
             json={
                 "credential": {
                     "owner_type": "Project",
@@ -146,17 +167,43 @@ class CSASession:
                 }
             },
         )
-        response.raise_for_status()
+        _check_csa_error(resp)
+        return resp.json()
 
-        try:
-            return response.json()
-        except Exception:
-            log.exception(
-                "could not parse JSON response from server while reserving pipeline step"
-            )
-            raise
-
-    def add_s3_credentials(self, owner_key, lookup_key, aws_key, aws_secret):
+    def add_s3_credentials(self, owner_key, bucket_name, aws_key, aws_secret):
         return self.add_credentials(
-            owner_key, "s3", lookup_key, {"key": aws_key, "secret": aws_secret}
+            owner_key, "s3", bucket_name, {"key": aws_key, "secret": aws_secret}
         )
+
+    def add_s3_credentials_to_project(
+        self, project_name, bucket_name, aws_key, aws_secret
+    ):
+        return self.add_s3_credentials(project_name, bucket_name, aws_key, aws_secret)
+
+    def get_s3_credentials_for_project(self, project_name):
+        url = urljoin(
+            self.csa_url,
+            f"auth/v1/credentials.json?find[service]=s3&find[project_key]={project_name}",
+        )
+        url = url.replace("/api", "")
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        creds = resp.json()["credentials"]
+        ret = {}
+        for cred in creds:
+            ret[cred["lookup_key"]] = {
+                "aws_access_key_id": cred["credential_attributes"]["key"],
+                "aws_secret_access_key": cred["credential_attributes"]["secret"],
+                "project_name": cred["owner_key"],
+            }
+        return ret
+
+    def import_sample(self, sample_data):
+        url = urljoin(self.csa_url, "sample_data_sets.json")
+        json_data = {"sample_data_set": sample_data}
+        log.info("Importing sample into CSA")
+        log.debug("Calling '%s' to import sample: %s", url, json_data)
+        resp = self.session.post(url, json=json_data)
+        _check_csa_error(resp)
+        log.debug("Import sample returned content '%s'", resp.content)
+        return resp.json()

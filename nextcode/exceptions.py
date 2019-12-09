@@ -45,7 +45,7 @@ class InvalidProfile(Exception):
 
 class ServiceNotFound(Exception):
     """
-    The requested server is not available on the server.
+    The requested service is not available on the server.
     """
 
     pass
@@ -70,6 +70,14 @@ class NotFound(Exception):
 class AuthServerError(Exception):
     """
     An error with keycloak or CSA management
+    """
+
+    pass
+
+
+class CSAError(Exception):
+    """
+    An error occurred when interfacing with CSA
     """
 
     pass

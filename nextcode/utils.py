@@ -9,6 +9,8 @@ import logging
 from urllib.parse import urlsplit
 import requests
 from requests import codes
+import binascii
+import os
 
 from .exceptions import ServerError, InvalidToken
 
@@ -113,3 +115,7 @@ def host_from_url(host):
         host = f"https://{host}"
     parts = urlsplit(host)
     return "{}://{}/".format(parts.scheme, parts.netloc)
+
+
+def random_string(num: int = 8) -> str:
+    return binascii.hexlify(os.urandom(100)).decode("ascii")[:num]
