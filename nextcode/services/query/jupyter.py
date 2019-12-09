@@ -248,7 +248,7 @@ class GorMagics(Magics):
         """
         svc = get_service()
         parts = line.replace("  ", " ").split(" ")
-        path = parts[0]
+        path = parts[0] or "."
         grep = None
         if len(parts) >= 2:
             grep = parts[1]
@@ -321,6 +321,7 @@ def load_ipython_extension(ipython):
     print(" * GOR Version: {}".format(status["build_info"]["gor_services_version"]))
     print(" * Root Endpoint: {}".format(status["root"]))
     print(" * Current User: {}".format(svc.current_user["email"]))
+    print(" * Current Project: {} (%%env GOR_API_PROJECT=xxx)".format(svc.project))
 
 
 class QueryBuilder:

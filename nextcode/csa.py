@@ -103,7 +103,8 @@ class CSASession:
                 }
             },
         )
-        _check_csa_error(resp)
+        if not exist_ok:
+            _check_csa_error(resp)
         log.info(
             "User '%s' has been added with role %s to project %s",
             user_name,
@@ -129,6 +130,13 @@ class CSASession:
     def create_project(
         self, project_name, org_name, ref_version="hg38", exist_ok=False
     ):
+        existing_project = self.get_project(project_name)
+        if existing_project:
+            if not exist_ok:
+                raise CSAError("Project already exists")
+            else:
+                return existing_project
+
         url = urljoin(self.csa_url, "projects.json")
         data = {
             "project": {
@@ -140,7 +148,6 @@ class CSASession:
         }
         resp = self.session.post(url, json=data)
         _check_csa_error(resp)
-        resp.raise_for_status()
         return resp.json()["project"]
 
     def add_credentials(self, owner_key, service, lookup_key, credential_attributes):
