@@ -411,5 +411,8 @@ class Service(BaseService):
         rsp = self.session.get(self.session.endpoints["queries"], json=data)
         queries = []
         for payload in rsp.json()["queries"]:
-            queries.append(Query(self, payload))
+            q = Query(self, payload)
+            if q.running:
+                pass
+            queries.append(q)
         return queries

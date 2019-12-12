@@ -321,7 +321,7 @@ def load_ipython_extension(ipython):
     print(" * GOR Version: {}".format(status["build_info"]["gor_services_version"]))
     print(" * Root Endpoint: {}".format(status["root"]))
     print(" * Current User: {}".format(svc.current_user["email"]))
-    print(" * Current Project: {} (%%env GOR_API_PROJECT=xxx)".format(svc.project))
+    print(" * Current Project: {} (%env GOR_API_PROJECT=xxx)".format(svc.project))
 
 
 class QueryBuilder:
@@ -344,7 +344,7 @@ class QueryBuilder:
         for k, v in self.creates.items():
             if not v.endswith(";"):
                 v += ";"
-            string += "create [{}] = {}\n".format(k, v)
+            string += "create {} = {}\n".format(k, v)
         string += "\n"
 
         string += stmt
