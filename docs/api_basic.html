@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Basic facilities &#8212; nextcode-python-sdk 0.4.2 documentation</title>
+    <title>Basic facilities &#8212; nextcode-python-sdk 0.4.3 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -54,6 +54,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jupyter.html">Jupyter Notebooks Integration</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebook.html">Example Jupyter Notebook</a></li>
@@ -77,6 +78,8 @@
 <li><a class="reference internal" href="#session">session</a></li>
 <li><a class="reference internal" href="#config">config</a></li>
 <li><a class="reference internal" href="#utils">utils</a></li>
+<li><a class="reference internal" href="#keycloak">keycloak</a></li>
+<li><a class="reference internal" href="#csa">csa</a></li>
 </ul>
 </li>
 </ul>
@@ -216,7 +219,8 @@ with the constructor client.Client()</p>
 <dl class="function">
 <dt id="nextcode.client.get_api_key">
 <code class="sig-prename descclassname">nextcode.client.</code><code class="sig-name descname">get_api_key</code><span class="sig-paren">(</span><em class="sig-param">host</em>, <em class="sig-param">username</em>, <em class="sig-param">password</em>, <em class="sig-param">realm='wuxinextcode.com'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_api_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.client.get_api_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticate with keycloak server and return an API key</p>
+<dd><p>Authenticate with keycloak server and return an API key.</p>
+<p>Assumes client api-key-client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -473,6 +477,81 @@ dictionary in json format.</p>
 </dd></dl>
 
 </div>
+<span class="target" id="module-nextcode.keycloak"></span><div class="section" id="keycloak">
+<h2>keycloak<a class="headerlink" href="#keycloak" title="Permalink to this headline">¶</a></h2>
+<p>Keycloak login helpers and management features</p>
+<dl class="class">
+<dt id="nextcode.keycloak.KeycloakSession">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.keycloak.</code><code class="sig-name descname">KeycloakSession</code><span class="sig-paren">(</span><em class="sig-param">root_url</em>, <em class="sig-param">username='admin'</em>, <em class="sig-param">password=None</em>, <em class="sig-param">realm='wuxinextcode.com'</em>, <em class="sig-param">client_id='api-key-client'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>A session object on a keycloak server intended to provide high-level interfaces
+for managing users and roles on the server.</p>
+<p>The user that is passed into the constructor is assumed to be a keycloak admin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_url</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The URL of the instance where keycloak is running. e.g. www.myhost.com</p></li>
+<li><p><strong>username</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Username of the keycloak admin. Default: admin</p></li>
+<li><p><strong>passwrod</strong> – Admin password</p></li>
+<li><p><strong>realm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Keycloak realm to manage. Default: wuxinextcode.com</p></li>
+<li><p><strong>client_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Client to log admin into. Default: api-key-client</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="nextcode.keycloak.KeycloakSession.get_user_roles">
+<code class="sig-name descname">get_user_roles</code><span class="sig-paren">(</span><em class="sig-param">user_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession.get_user_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession.get_user_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the realm roles for this user, ignoring client-specific roles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nextcode.keycloak.auth_popup">
+<code class="sig-prename descclassname">nextcode.keycloak.</code><code class="sig-name descname">auth_popup</code><span class="sig-paren">(</span><em class="sig-param">root_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#auth_popup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.keycloak.auth_popup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a web browser on the login page for the specified server</p>
+<p>The user can log in using OAuth2 flow and aquire an API Key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="nextcode.keycloak.login_keycloak_user">
+<code class="sig-prename descclassname">nextcode.keycloak.</code><code class="sig-name descname">login_keycloak_user</code><span class="sig-paren">(</span><em class="sig-param">root_url</em>, <em class="sig-param">user_name</em>, <em class="sig-param">password</em>, <em class="sig-param">realm='wuxinextcode.com'</em>, <em class="sig-param">client_id='api-key-client'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#login_keycloak_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.keycloak.login_keycloak_user" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_url</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The root url of the service. e.g. www.myhost.com</p></li>
+<li><p><strong>user_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Local keycloak username</p></li>
+<li><p><strong>password</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Password of the user</p></li>
+<li><p><strong>realm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Realm to authenticate against. Default: wuxinextcode.com</p></li>
+<li><p><strong>client_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Client to log in as. Default: api-key-client</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>AuthServerError</cite></p>
+</dd>
+</dl>
+<p>Logs into the keycloak server using a username and password. Returns the api key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<span class="target" id="module-nextcode.csa"></span><div class="section" id="csa">
+<h2>csa<a class="headerlink" href="#csa" title="Permalink to this headline">¶</a></h2>
+<p>CSA management features</p>
+</div>
 </div>
 
 
@@ -495,7 +574,7 @@ dictionary in json format.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-12-12.<br/>
+      Last updated on 2019-12-18.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

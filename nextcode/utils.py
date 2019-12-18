@@ -21,8 +21,8 @@ def decode_token(token):
     try:
         decoded_token = jwt.decode(token, algorithms=["RS256"], verify=False)
         return decoded_token
-    except (KeyError, jwt.InvalidTokenError):
-        raise InvalidToken("Token could not be decoded")
+    except (KeyError, jwt.InvalidTokenError) as ex:
+        raise InvalidToken(f"Token could not be decoded ({ex}): {token}")
 
 
 def check_resp_error(resp):

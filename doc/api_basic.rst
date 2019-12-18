@@ -12,4 +12,9 @@ Basic facilities
 
 .. automodule:: nextcode.utils
    :members:
-   
+
+.. automodule:: nextcode.keycloak
+   :members:
+
+.. automodule:: nextcode.csa
+   :members:

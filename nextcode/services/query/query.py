@@ -7,6 +7,8 @@ The Query class represents a query model from the RESTFul Query API.
 There are several helper methods available here but you can view the
 raw server response in the `raw` member.
 
+Note that the object is dynamic and some of the attributes available are not
+documented here because they are added from the server response.
 """
 
 import logging

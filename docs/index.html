@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Nextcode Python SDK &#8212; nextcode-python-sdk 0.4.2 documentation</title>
+    <title>Nextcode Python SDK &#8212; nextcode-python-sdk 0.4.3 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Jupyter Notebooks Integration" href="jupyter.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="#">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -53,6 +53,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jupyter.html">Jupyter Notebooks Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebook.html">Example Jupyter Notebook</a></li>
@@ -74,7 +75,6 @@
 <li><a class="reference internal" href="#">Nextcode Python SDK</a><ul>
 <li><a class="reference internal" href="#what-is-it">What is it?</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 <li><a class="reference internal" href="#resources">Resources</a></li>
@@ -89,7 +89,7 @@
               
                 
   <li>
-    <a href="jupyter.html" title="Next Chapter: Jupyter Notebooks Integration"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Jupyter Noteb... &raquo;</span>
+    <a href="quickstart.html" title="Next Chapter: Quick Start"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Quick Start &raquo;</span>
     </a>
   </li>
               
@@ -130,30 +130,22 @@
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>To install this package you can can either install the raw sdk or include the jupyter dependencies if you intend to
-run this through jupyter notebooks.</p>
+<p>To install this package you can can either install the raw sdk or include the jupyter dependencies if you intend to run this through jupyter notebooks.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install nextcode-sdk -U
 pip install nextcode-sdk<span class="o">[</span>jupyter<span class="o">]</span> -U
 </pre></div>
 </div>
 <p>Note that this package supports Python version <strong>3.6</strong> and higher only.</p>
 </div>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>In order to use this SDK you will need to start by getting an <strong>API KEY</strong> from a WuXi Nextcode server. These API Keys are JWT token that you must use to initialize the SDK.</p>
-<p>You can then get started with the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nextcode</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;xxx&quot;</span><span class="p">)</span>
-<span class="n">qry</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
-<span class="n">qry</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>This example allows you to verify that the API Key is correct and that the <em>query</em> service is responding. Please refer to the included documents for actual use cases.</p>
-</div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#api-key">API Key</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="jupyter.html">Jupyter Notebooks Integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="jupyter.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jupyter.html#getting-started">Getting Started</a></li>
@@ -242,7 +234,7 @@ pip install nextcode-sdk<span class="o">[</span>jupyter<span class="o">]</span> 
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-12-12.<br/>
+      Last updated on 2019-12-18.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

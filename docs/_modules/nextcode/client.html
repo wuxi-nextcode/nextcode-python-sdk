@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.client &#8212; nextcode-python-sdk 0.4.2 documentation</title>
+    <title>nextcode.client &#8212; nextcode-python-sdk 0.4.3 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -52,6 +52,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../jupyter.html">Jupyter Notebooks Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebook.html">Example Jupyter Notebook</a></li>
@@ -130,6 +131,7 @@
 
 <span class="n">SERVICES_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;services&quot;</span><span class="p">)</span>
 <span class="n">SERVICES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
+<span class="n">DEFAULT_CLIENT_ID</span> <span class="o">=</span> <span class="s2">&quot;api-key-client&quot;</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 
@@ -140,7 +142,9 @@
     <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">realm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wuxinextcode.com&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Authenticate with keycloak server and return an API key</span>
+<span class="sd">    Authenticate with keycloak server and return an API key.</span>
+
+<span class="sd">    Assumes client api-key-client.</span>
 
 <span class="sd">    :param host: The URI of the service. e.g. host.wuxinextcode.com</span>
 <span class="sd">    :param username: Username of the keycloak user which is authenticating</span>
@@ -149,18 +153,16 @@
 <span class="sd">    :returns: API Key which can be used in subsequent calls to Client()</span>
 <span class="sd">    :raises: InvalidToken</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">client_id</span> <span class="o">=</span> <span class="s2">&quot;api-key-client&quot;</span>
     <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">client_id</span><span class="p">,</span>
+        <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">DEFAULT_CLIENT_ID</span><span class="p">,</span>
         <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
         <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
         <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;offline_access&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">host</span> <span class="o">=</span> <span class="n">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-    <span class="n">auth_server</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;auth&quot;</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using auth server &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">auth_server</span><span class="p">)</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">auth_server</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;realms/</span><span class="si">{realm}</span><span class="s2">/protocol/openid-connect/token&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;auth&quot;</span><span class="p">,</span> <span class="s2">&quot;realms&quot;</span><span class="p">,</span> <span class="n">realm</span><span class="p">,</span> <span class="s2">&quot;protocol/openid-connect/token&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using auth server &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">}</span>
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calling POST </span><span class="si">%s</span><span class="s2"> with headers </span><span class="si">%s</span><span class="s2"> and body </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
     <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
@@ -355,7 +357,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2019-12-12.<br/>
+      Last updated on 2019-12-18.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

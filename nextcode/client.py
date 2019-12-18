@@ -26,6 +26,7 @@ from .utils import (
 
 SERVICES_PATH = Path(__file__).parent.joinpath("services")
 SERVICES = ["query"]
+DEFAULT_CLIENT_ID = "api-key-client"
 
 log = logging.getLogger()
 
@@ -36,7 +37,9 @@ def get_api_key(
     host: str, username: str, password: str, realm: str = "wuxinextcode.com"
 ) -> str:
     """
-    Authenticate with keycloak server and return an API key
+    Authenticate with keycloak server and return an API key.
+
+    Assumes client api-key-client.
 
     :param host: The URI of the service. e.g. host.wuxinextcode.com
     :param username: Username of the keycloak user which is authenticating
@@ -45,18 +48,16 @@ def get_api_key(
     :returns: API Key which can be used in subsequent calls to Client()
     :raises: InvalidToken
     """
-    client_id = "api-key-client"
     body = {
         "grant_type": "password",
-        "client_id": client_id,
+        "client_id": DEFAULT_CLIENT_ID,
         "password": password,
         "username": username,
         "scope": "offline_access",
     }
     host = host_from_url(host)
-    auth_server = urljoin(host, "auth")
-    log.info("Using auth server '%s'", auth_server)
-    url = urljoin(auth_server, f"realms/{realm}/protocol/openid-connect/token")
+    url = urljoin(host, "auth", "realms", realm, "protocol/openid-connect/token")
+    log.info("Using auth server '%s'", url)
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
     resp = requests.post(url, headers=headers, data=body)

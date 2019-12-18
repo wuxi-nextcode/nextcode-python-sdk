@@ -1,9 +1,17 @@
+"""
+keycloak
+~~~~~~~~~~
+Keycloak login helpers and management features
+"""
+
 import os
 from urllib.parse import urlsplit
 from posixpath import join as urljoin
 import requests
 from requests import codes
 import logging
+import webbrowser
+from typing import Optional, Union, Dict, List, Any
 
 from .exceptions import ServerError, NotFound, AuthServerError
 from .utils import host_from_url
@@ -15,9 +23,25 @@ DEFAULT_CLIENT_ID = "api-key-client"
 
 
 def login_keycloak_user(
-    root_url, user_name, password, realm=DEFAULT_REALM, client_id=DEFAULT_CLIENT_ID
-):
+    root_url: str,
+    user_name: str,
+    password: str,
+    realm: str = DEFAULT_REALM,
+    client_id: str = DEFAULT_CLIENT_ID,
+) -> str:
+    """
+    :param root_url: The root url of the service. e.g. www.myhost.com
+    :param user_name: Local keycloak username
+    :param password: Password of the user
+    :param realm: Realm to authenticate against. Default: wuxinextcode.com
+    :param client_id: Client to log in as. Default: api-key-client
+
+    :raises: `AuthServerError`
+
+    Logs into the keycloak server using a username and password. Returns the api key.
+    """
     # try logging in with the new user
+    root_url = host_from_url(root_url)
     url = urljoin(root_url, "auth", "realms", realm, "protocol/openid-connect/token")
     body = {
         "grant_type": "password",
@@ -35,6 +59,17 @@ def login_keycloak_user(
         return resp.json()["refresh_token"]
     except Exception as ex:
         raise AuthServerError(f"User {user_name} was unable to log in: {ex}")
+
+
+def auth_popup(root_url: str) -> None:
+    """
+    Opens a web browser on the login page for the specified server
+
+    The user can log in using OAuth2 flow and aquire an API Key
+    """
+    root_url = host_from_url(root_url)
+    url = urljoin(root_url, "api-key-service")
+    webbrowser.open(url)
 
 
 def _get_admin_keycloak_session(auth_server, username, password):
@@ -64,13 +99,26 @@ def _get_admin_keycloak_session(auth_server, username, password):
 
 
 class KeycloakSession:
+    """
+    A session object on a keycloak server intended to provide high-level interfaces
+    for managing users and roles on the server. 
+
+    The user that is passed into the constructor is assumed to be a keycloak admin.
+
+    :param root_url: The URL of the instance where keycloak is running. e.g. www.myhost.com
+    :param username: Username of the keycloak admin. Default: admin
+    :param passwrod: Admin password
+    :param realm: Keycloak realm to manage. Default: wuxinextcode.com
+    :param client_id: Client to log admin into. Default: api-key-client
+    """
+
     def __init__(
         self,
-        root_url,
-        username="admin",
-        password=None,
-        realm=DEFAULT_REALM,
-        client_id=DEFAULT_CLIENT_ID,
+        root_url: str,
+        username: str = "admin",
+        password: Optional[str] = None,
+        realm: str = DEFAULT_REALM,
+        client_id: str = DEFAULT_CLIENT_ID,
     ):
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
@@ -107,7 +155,7 @@ class KeycloakSession:
 
         return auth_server
 
-    def get_user(self, user_name):
+    def get_user(self, user_name: str) -> Dict:
         users_url = urljoin(self.realm_url, f"users?username={user_name}")
         resp = self.session.get(users_url)
         resp.raise_for_status()
@@ -117,7 +165,7 @@ class KeycloakSession:
         user = resp.json()[0]
         return user
 
-    def get_users(self):
+    def get_users(self) -> List:
         users_url = urljoin(self.realm_url, "users")
         resp = self.session.get(users_url)
         resp.raise_for_status()
@@ -126,7 +174,7 @@ class KeycloakSession:
         users = resp.json()
         return users
 
-    def remove_user(self, user_name):
+    def remove_user(self, user_name: str) -> None:
         user_id = self.get_user(user_name)["id"]
 
         url = urljoin(self.realm_url, "users", user_id)
@@ -134,7 +182,7 @@ class KeycloakSession:
         resp.raise_for_status()
         log.info("User '%s' has been deleted from realm '%s'", user_name, self.realm)
 
-    def get_user_roles(self, user_name):
+    def get_user_roles(self, user_name: str) -> List[str]:
         """
         Get the realm roles for this user, ignoring client-specific roles
         """
@@ -146,7 +194,9 @@ class KeycloakSession:
         role_names = [r["name"] for r in roles.get("realmMappings", [])]
         return role_names
 
-    def create_user(self, user_name, new_password, exist_ok=False):
+    def create_user(
+        self, user_name: str, new_password: str, exist_ok: bool = False
+    ) -> None:
         user_id = None
         try:
             user = self.get_user(user_name)
@@ -175,7 +225,7 @@ class KeycloakSession:
         self.set_user_password(user_name, new_password)
         log.info("User '%s' has been created in realm '%s'.", user_name, self.realm)
 
-    def delete_user(self, user_name):
+    def delete_user(self, user_name: str) -> None:
         user_id = self.get_user(user_name)["id"]
 
         url = urljoin(self.realm_url, "users", str(user_id))
@@ -183,7 +233,9 @@ class KeycloakSession:
         resp.raise_for_status()
         log.info("User '%s' has been deleted from realm '%s'" % (user_name, self.realm))
 
-    def add_role_to_user(self, user_name, role_name, exist_ok=False):
+    def add_role_to_user(
+        self, user_name: str, role_name: str, exist_ok: bool = False
+    ) -> None:
         user_id = self.get_user(user_name)["id"]
         role_name = role_name.lower()
         user_roles = self.get_user_roles(user_name)
@@ -216,7 +268,7 @@ class KeycloakSession:
             self.realm,
         )
 
-    def remove_role_from_user(self, user_name, role_name):
+    def remove_role_from_user(self, user_name: str, role_name: str) -> None:
         user_id = self.get_user(user_name)["id"]
         role_name = role_name.lower()
 
@@ -242,7 +294,7 @@ class KeycloakSession:
             self.realm,
         )
 
-    def login_user(self, user_name, password):
+    def login_user(self, user_name: str, password: str) -> Optional[str]:
         try:
             return login_keycloak_user(
                 self.root_url, self.realm, self.client_id, user_name, password
@@ -251,7 +303,7 @@ class KeycloakSession:
             log.exception("Unable to log in")
             return None
 
-    def set_user_password(self, user_name, new_password):
+    def set_user_password(self, user_name: str, new_password: str) -> None:
         user_id = self.get_user(user_name)["id"]
 
         url = urljoin(self.realm_url, f"users/{user_id}/reset-password")
@@ -262,7 +314,7 @@ class KeycloakSession:
         if not api_key:
             raise Exception("Changed password but could not log in!")
 
-    def get_available_roles_for_user(self, user_name):
+    def get_available_roles_for_user(self, user_name: str) -> List[str]:
         user_id = self.get_user(user_name)["id"]
         url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/realm/available")
         resp = self.session.get(url)
@@ -270,7 +322,9 @@ class KeycloakSession:
         available_roles = resp.json()
         return [r["name"] for r in available_roles]
 
-    def create_role(self, role_name, description="N/A", exist_ok=False):
+    def create_role(
+        self, role_name: str, description: str = "N/A", exist_ok: bool = False
+    ) -> None:
         url = urljoin(self.realm_url, "roles")
         data = {
             "name": role_name,
@@ -283,7 +337,7 @@ class KeycloakSession:
             raise AuthServerError(f"Role '{role_name}' already exists")
         resp.raise_for_status()
 
-    def get_roles(self):
+    def get_roles(self) -> Dict[str, Any]:
         url = urljoin(self.realm_url, "roles")
         resp = self.session.get(url)
         resp.raise_for_status()
@@ -293,7 +347,7 @@ class KeycloakSession:
             ret[r["name"]] = r
         return ret
 
-    def delete_role(self, role_name):
+    def delete_role(self, role_name: str) -> None:
         role = self.get_roles().get(role_name)
         if not role:
             raise AuthServerError(f"Role '{role_name}' does not exist")
