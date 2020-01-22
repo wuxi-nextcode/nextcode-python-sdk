@@ -159,11 +159,10 @@ class KeycloakSession:
         users_url = urljoin(self.realm_url, f"users?username={user_name}")
         resp = self.session.get(users_url)
         resp.raise_for_status()
-        if not resp.json():
+        users = [u for u in resp.json() if u.get('username') == user_name]
+        if not users:
             raise AuthServerError(f"User '{user_name}' not found.")
-
-        user = resp.json()[0]
-        return user
+        return users[0]
 
     def get_users(self) -> List:
         users_url = urljoin(self.realm_url, "users")
