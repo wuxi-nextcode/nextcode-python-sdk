@@ -218,6 +218,13 @@ class KeycloakSession:
                 "emailVerified": True,
             }
             resp = self.session.post(url, json=data)
+            if resp.status_code != codes.created:
+                msg = resp.text
+                try:
+                    msg = resp.json()['errorMessage']
+                except Exception:
+                    pass
+                raise AuthServerError(msg)
             resp.raise_for_status()
             user_id = self.get_user(user_name)["id"]
 
