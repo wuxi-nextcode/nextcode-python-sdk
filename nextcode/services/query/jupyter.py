@@ -316,11 +316,17 @@ def load_ipython_extension(ipython):
     print(
         " Gor magic extension has been loaded. You can now use '%gor' and '%%gor' in this notebook"
     )
+    build_info = status["build_info"]
+    try:
+        gor_version = build_info["query_service"]["gor_version"]
+    except KeyError: # backwards compability
+        gor_version = build_info["gor_services_version"]
+
     print(" * Python SDK Version: {}".format(nextcode.__version__))
-    print(" * Query API Version: {}".format(status["build_info"]["version"]))
-    print(" * GOR Version: {}".format(status["build_info"]["gor_services_version"]))
+    print(" * Query API Version: {}".format(build_info["version"]))
+    print(" * GOR Version: {}".format(gor_version))
     print(" * Root Endpoint: {}".format(status["root"]))
-    print(" * Current User: {}".format(svc.current_user["email"]))
+    print(" * Current User: {}".format(svc.current_user.get("email")))
     print(" * Current Project: {} (%env GOR_API_PROJECT=xxx)".format(svc.project))
 
 
