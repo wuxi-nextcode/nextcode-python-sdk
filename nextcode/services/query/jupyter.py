@@ -259,9 +259,12 @@ class GorMagics(Magics):
             gor_string += f" | GREP {grep}"
         qry = svc.execute(gor_string)
         results = qry.get_results()
+        rows = results.get("data", [])
+        if not rows:
+            print("No results found")
 
         ret = []
-        for row in results["data"]:
+        for row in rows:
             txt = row[0]
             if row[1] == "true":
                 txt += "/"
@@ -284,11 +287,11 @@ class GorMagics(Magics):
         gor_string = f"""nor . -r -d 3 | SELECT Filepath | GREP {string}"""
         qry = svc.execute(gor_string)
         results = qry.get_results()
-        folders = results["data"]
-        ret = []
+        folders = results.get("data", [])
+        if not folders:
+            print("No results found")
         for f in folders:
             ff = f[0].split(svc.project)[-1]
-            ret.append(ff)
             print(ff)
 
 
