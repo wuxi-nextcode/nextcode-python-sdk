@@ -190,7 +190,7 @@ def run_workflow(request):
         profile=profile,
     )
     last_status = ""
-    while job.running():
+    while job.running:
         time.sleep(5)
         job.refresh()
         if last_status == job.status:

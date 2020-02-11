@@ -134,10 +134,10 @@ class WorkflowTest(BaseTestCase):
         responses.add(responses.PUT, JOB_URL, json=JOB_RESP)
         responses.add(responses.DELETE, JOB_URL, json={"status_message": "Cancelled"})
         job = self.svc.find_job(JOB_ID)
-        _ = job.running(False)
-        _ = job.running(True)
-        _ = job.finished(False)
-        _ = job.finished(True)
+        _ = job.running
+        _ = job.running
+        _ = job.finished
+        _ = job.finished
         _ = job.resume()
         _ = job.cancel()
 

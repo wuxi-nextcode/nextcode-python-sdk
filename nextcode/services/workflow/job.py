@@ -9,11 +9,16 @@ The Query class represents a workflow job model from the RESTFul Workflow Servic
 import json
 import datetime
 import dateutil
+import time
+import logging
 from typing import Callable, Union, Optional, Dict, List
 
-from . import RUNNING_STATUSES, FINISHED_STATUES
+from . import RUNNING_STATUSES, FINISHED_STATUES, FAILED_STATUES
+from .exceptions import JobError
 from ...exceptions import ServerError
 from ...session import ServiceSession
+
+log = logging.getLogger(__name__)
 
 
 class WorkflowJob:
@@ -48,21 +53,41 @@ class WorkflowJob:
         ret = ret - datetime.timedelta(microseconds=ret.microseconds)
         return ret
 
-    def running(self, force: bool = False) -> bool:
-        """
-        If the job currently running
-        """
-        if force:
-            self.refresh()
-        return self.status in RUNNING_STATUSES
-
+    @property
     def finished(self, force: bool = False) -> bool:
         """
-        Has the job finished
+        Has the job finished (might be failed)
         """
         if force:
             self.refresh()
         return self.status in FINISHED_STATUES
+
+    @property
+    def running(self) -> bool:
+        """
+        Is the job currently running
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status in RUNNING_STATUSES
+
+    @property
+    def failed(self) -> bool:
+        """
+        Is the job in a failed state
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status in FAILED_STATUES
+
+    @property
+    def done(self) -> bool:
+        """
+        Has the job completed successfully
+        """
+        if self.status in RUNNING_STATUSES:
+            self.refresh()
+        return self.status == "COMPLETED"
 
     def refresh(self) -> None:
         """
@@ -76,6 +101,45 @@ class WorkflowJob:
         """
         _ = self.session.put(self.links["self"])
         self.refresh()
+
+    def wait(self, max_seconds: Optional[int] = None, poll_period: float = 0.5):
+        """
+        Wait for the job to complete
+
+        :param max_seconds: raise an exception if the job runs longer than this
+        :param poll_period: Number of seconds to wait between polling (max 10 seconds)
+
+        :raises: JobError
+        """
+        if not self.running:
+            return self
+        log.info("Waiting for job %s to complete...", self.job_id)
+        start_time = time.time()
+        duration = 0.0
+        period = poll_period
+        while self.running:
+            time.sleep(period)
+            duration = time.time() - start_time
+            if self.running and max_seconds and duration > max_seconds:
+                raise JobError(
+                    f"Job {self.job_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
+                )
+            period = min(period + 0.5, 10.0)
+        if self.status == "DONE":
+            log.info(
+                "Job %s completed in %.2f sec and returned %s rows",
+                self.job_id,
+                duration,
+                self.line_count,
+            )
+        else:
+            log.info(
+                "Job %s has status %s after %.2f sec",
+                self.job_id,
+                self.status,
+                duration,
+            )
+        return self
 
     def cancel(
         self, status: Optional[str] = None, status_message: Optional[str] = None
