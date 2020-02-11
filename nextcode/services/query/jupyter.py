@@ -258,6 +258,9 @@ class GorMagics(Magics):
         if grep:
             gor_string += f" | GREP {grep}"
         qry = svc.execute(gor_string)
+        if qry.failed:
+            print("No results found")
+
         results = qry.get_results()
         rows = results.get("data", [])
         if not rows:
@@ -286,6 +289,8 @@ class GorMagics(Magics):
         # folders to grep for the string
         gor_string = f"""nor . -r -d 3 | SELECT Filepath | GREP {string}"""
         qry = svc.execute(gor_string)
+        if qry.failed:
+            print("No results found")
         results = qry.get_results()
         folders = results.get("data", [])
         if not folders:
