@@ -66,11 +66,6 @@ def get_api_key(
         raise InvalidToken(f"Error logging in: {description}") from None
 
     api_key = resp.json()["refresh_token"]
-    log.debug("Decoded refresh token:\n%s", json.dumps(decode_token(api_key), indent=4))
-    log.debug(
-        "Decoded access token:\n%s",
-        json.dumps(decode_token(resp.json()["access_token"]), indent=4),
-    )
     return api_key
 
 
