@@ -265,6 +265,7 @@ class GorMagics(Magics):
         qry = svc.execute(gor_string)
         if qry.failed:
             print("No results found")
+            return None
 
         results = qry.get_results()
         rows = results.get("data", [])
@@ -296,6 +297,7 @@ class GorMagics(Magics):
         qry = svc.execute(gor_string)
         if qry.failed:
             print("No results found")
+            return None
         results = qry.get_results()
         folders = results.get("data", [])
         if not folders:
