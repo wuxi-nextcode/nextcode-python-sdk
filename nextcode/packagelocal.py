@@ -38,7 +38,9 @@ def package_and_upload(service: Callable, package_name: str, project_path: str) 
         package_name,
         project_path,
     )
-    scratch_bucket = service.app_info.get("scratch_bucket", DEFAULT_SCRATCH_BUCKET)  # type: ignore
+    scratch_bucket = service.app_info.get(
+        "scratch_bucket", DEFAULT_SCRATCH_BUCKET
+    )  # type: ignore
 
     if not scratch_bucket:
         raise UploadError(

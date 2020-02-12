@@ -52,6 +52,6 @@ def set_status_message(msg):
     if not weblog_url:
         log.warning("No weblog url set. Cannot send message")
         return
-    contents = {"event": "custom_status_message", "details": {"message": msg,}}
+    contents = {"event": "custom_status_message", "details": {"message": msg}}
     resp = requests.post(weblog_url, json=contents)
     resp.raise_for_status()

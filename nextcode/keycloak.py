@@ -159,7 +159,7 @@ class KeycloakSession:
         users_url = urljoin(self.realm_url, f"users?username={user_name}")
         resp = self.session.get(users_url)
         resp.raise_for_status()
-        users = [u for u in resp.json() if u.get('username') == user_name]
+        users = [u for u in resp.json() if u.get("username") == user_name]
         if not users:
             raise AuthServerError(f"User '{user_name}' not found.")
         return users[0]
@@ -221,7 +221,7 @@ class KeycloakSession:
             if resp.status_code != codes.created:
                 msg = resp.text
                 try:
-                    msg = resp.json()['errorMessage']
+                    msg = resp.json()["errorMessage"]
                 except Exception:
                     pass
                 raise AuthServerError(msg)
@@ -303,7 +303,7 @@ class KeycloakSession:
     def login_user(self, user_name: str, password: str) -> Optional[str]:
         try:
             return login_keycloak_user(
-                self.root_url, user_name, password, self.realm, self.client_id,
+                self.root_url, user_name, password, self.realm, self.client_id
             )
         except AuthServerError:
             log.exception("Unable to log in")
@@ -332,10 +332,7 @@ class KeycloakSession:
         self, role_name: str, description: str = "N/A", exist_ok: bool = False
     ) -> None:
         url = urljoin(self.realm_url, "roles")
-        data = {
-            "name": role_name,
-            "description": description,
-        }
+        data = {"name": role_name, "description": description}
         resp = self.session.post(url, json=data)
         if resp.status_code == codes.conflict:
             if exist_ok:

@@ -58,7 +58,7 @@ PIPELINES_RESP = {
             "parameters": None,
             "revision": None,
             "script": "https://gitlab.com/wuxi-nextcode/cohort/workflows/workflow-smoketest.git",
-        },
+        }
     ]
 }
 PROJECTS_RESP = {
@@ -74,7 +74,7 @@ PROJECTS_RESP = {
             "name": None,
             "project_id": 35,
         }
-    ],
+    ]
 }
 
 

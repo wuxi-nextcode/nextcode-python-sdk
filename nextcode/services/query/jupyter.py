@@ -40,7 +40,12 @@ if jupyter_available():
     """
     """
     import pandas as pd
-    from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic  # type: ignore
+    from IPython.core.magic import (
+        Magics,
+        magics_class,
+        line_magic,
+        line_cell_magic,
+    )  # type: ignore
 
 
 def print_details(txt):
@@ -327,7 +332,7 @@ def load_ipython_extension(ipython):
     build_info = status["build_info"]
     try:
         gor_version = build_info["query_service"]["gor_version"]
-    except KeyError: # backwards compability
+    except KeyError:  # backwards compability
         gor_version = build_info["gor_services_version"]
 
     print(" * Python SDK Version: {}".format(nextcode.__version__))

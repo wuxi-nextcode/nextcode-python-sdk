@@ -389,6 +389,7 @@ class Service(BaseService):
         status: Optional[str] = None,
         user_name: Optional[str] = None,
         limit: int = 100,
+        all: Optional[bool] = False,
     ) -> Sequence[Query]:
         """
         Get all queries that have been run by the current user in the current project, optionally filtered by status.
@@ -398,13 +399,20 @@ class Service(BaseService):
         Note that queries are returned in `partial` state which means they might not be up to date. `query.refresh()`
         can be called to force a refresh.
 
-        :param status: Filter queries by status. e.g. `DONE` `RUNNING` `FAILED`
-        :param user_name: Show queries for another user (only available to admin)
+        :param status: Filter queries by status. e.g. `DONE` `RUNNING` `FAILED`.
+        :param user_name: Show queries for another user (only available to admin).
         :param limit: Limit the number of queries returned.
+        :param all: Fetch all queries in all projects (only available to admin).
         """
+        if all:
+            user_name = None
+            project = None
+        else:
+            user_name = user_name or self.current_user.get("email")
+            project = self.project
         data: Dict[str, Union[str, Any]] = {
-            "project": self.project,
-            "user_name": user_name or self.current_user.get("email"),
+            "project": project,
+            "user_name": user_name,
             "limit": limit,
             "status": status,
         }
