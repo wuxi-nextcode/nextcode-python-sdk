@@ -124,6 +124,22 @@ class WorkflowJob:
                 raise JobError(
                     f"Job {self.job_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
                 )
+            # cancel the wait if the executor pod is in trouble after 30 seconds of waiting
+            if self.status == "PENDING" and duration > 30.0:
+                log.info("Job has been PENDING for %.0fsec. Inspecting it...", duration)
+                curr_status = self.inspect()
+                executor_pod = None
+                for pod in curr_status['pods']:
+                    if pod['metadata']['labels']['app-name'] == 'nextflow-executor':
+                        executor_pod = pod
+                        break
+                if not executor_pod:
+                    log.warning("Job is still pending after %.0fsec and executor pod is missing", duration)
+                    return self
+                if not executor_pod['status']['container_statuses'][0]['state']['running']:
+                    log.warning("Job is still pending after %.0fsec and executor pod is not in running state", duration)
+                    return self
+
             period = min(period + 0.5, 10.0)
         if self.status == "DONE":
             log.info(
