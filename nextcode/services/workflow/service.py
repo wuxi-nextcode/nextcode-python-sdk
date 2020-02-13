@@ -11,12 +11,15 @@ Note: This service has not been fully integrated into the SDK and access is stil
 
 """
 import time
+import os
 
 from typing import Optional, List, Union, Dict
 from ...services import BaseService
 from ...client import Client
 from ...exceptions import NotFound
 from .job import WorkflowJob
+from .exceptions import JobError
+from ...packagelocal import package_and_upload
 
 import logging
 
@@ -120,10 +123,46 @@ class Service(BaseService):
             ret.append(WorkflowJob(self.session, job["job_id"], job))
         return ret
 
+    def run_local(
+        self,
+        path,
+        project_name: str = None,
+        params: Optional[Dict] = None,
+        profile: Optional[str] = None,
+        trace: bool = False,
+        details: Optional[Dict] = None,
+        description: Optional[str] = None,
+    ):
+        """
+        Run a workflow job from a local nextflow folder
+
+        This will package the passed-in folder and upload to a specific bucket that is exported from the workflow
+        service on the cluster (see 'scratch-bucket' from the svc.status() method)
+        AWS access keys must be set up correctly to upload to this bucket using typical aws/boto environment and
+        credential management.
+
+        :param path: Path (relative or absolute) to a folder containing a nextflow script
+        :param project_name: Name of the project to run this job on, defaults to GOR_API_PROJECT in environment
+        :param params: Dictionary of parameters to forward to the job
+        :param profile: Nextflow profile name to use.
+        :param trace: Instruct the job to run nextflow trace flags for debugging.
+        :param details: Dictionary containing the initial values for 'details' in the job
+        :param description: Human readable description of the job
+        """
+
+        build_context = package_and_upload(self, "local_workflow", path)
+        return self.post_job(
+            None,
+            project_name,
+            build_source="url",
+            build_context=build_context,
+            params=params,
+        )
+
     def post_job(
         self,
-        pipeline_name: Optional[str],
-        project_name: str,
+        pipeline_name: Optional[str] = None,
+        project_name: str = None,
         params: Optional[Dict] = None,
         script: Optional[str] = None,
         revision: Optional[str] = None,
@@ -138,7 +177,7 @@ class Service(BaseService):
         Run a workflow job
 
         :param pipeline_name: Name of the pipeline to run
-        :param project_name: Name of the project to run this job on
+        :param project_name: Name of the project to run this job on, defaults to GOR_API_PROJECT in environment
         :param params: Dictionary of parameters to forward to the job
         :param script: Git repository url to run (only when server is in development mode)
         :param revision: Git revision or tag (only when server is in development mode)
@@ -147,8 +186,15 @@ class Service(BaseService):
         :param profile: Nextflow profile name to use.
         :param trace: Instruct the job to run nextflow trace flags for debugging.
         :param details: Dictionary containing the initial values for 'details' in the job
+        :param description: Human readable description of the job
 
         """
+        if not project_name:
+            project_name = os.environ.get("GOR_API_PROJECT")
+        if not project_name:
+            raise JobError(
+                "No project specified and GOR_API_PROJECT not set in environment"
+            )
         log.debug(
             "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s",
             pipeline_name,

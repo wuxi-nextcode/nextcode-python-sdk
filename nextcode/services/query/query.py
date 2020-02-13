@@ -146,10 +146,12 @@ class Query:
         start_time = time.time()
         duration = 0.0
         period = poll_period
-        while self.running:
+        is_running = self.running
+        while is_running:
             time.sleep(period)
             duration = time.time() - start_time
-            if self.running and max_seconds and duration > max_seconds:
+            is_running = self.running
+            if is_running and max_seconds and duration > max_seconds:
                 raise QueryError(
                     f"Query {self.query_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
                 )

@@ -117,28 +117,41 @@ class WorkflowJob:
         start_time = time.time()
         duration = 0.0
         period = poll_period
-        while self.running:
+        is_running = self.running
+        while is_running:
             time.sleep(period)
             duration = time.time() - start_time
-            if self.running and max_seconds and duration > max_seconds:
-                raise JobError(
-                    f"Job {self.job_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
-                )
-            # cancel the wait if the executor pod is in trouble after 30 seconds of waiting
-            if self.status == "PENDING" and duration > 30.0:
+            is_running = self.running
+
+            # cancel the wait if the executor pod is in trouble after 30 seconds of waiting to start.
+            # it most likely means that the nextflow script has a syntax error or something.
+            if self.status == "PENDING" and (max_seconds and duration > max_seconds or duration > 30.0):
                 log.info("Job has been PENDING for %.0fsec. Inspecting it...", duration)
                 curr_status = self.inspect()
                 executor_pod = None
-                for pod in curr_status['pods']:
-                    if pod['metadata']['labels']['app-name'] == 'nextflow-executor':
+                for pod in curr_status["pods"]:
+                    if pod["metadata"]["labels"]["app-name"] == "nextflow-executor":
                         executor_pod = pod
                         break
                 if not executor_pod:
-                    log.warning("Job is still pending after %.0fsec and executor pod is missing", duration)
-                    return self
-                if not executor_pod['status']['container_statuses'][0]['state']['running']:
-                    log.warning("Job is still pending after %.0fsec and executor pod is not in running state", duration)
-                    return self
+                    log.warning(
+                        "Job is still pending after %.0fsec and executor pod is missing",
+                        duration,
+                    )
+                    raise JobError(f"Job is still pending after {duration:.0f}s and executor pod is missing. View logs or inspect job for failures.")
+                if not executor_pod["status"]["container_statuses"][0]["state"][
+                    "running"
+                ]:
+                    log.warning(
+                        "Job is still pending after %.0fsec and executor pod is not in running state",
+                        duration,
+                    )
+                    raise JobError(f"Job is still pending after {duration:.0f}s and executor pod is not in running state. View logs or inspect job for failures.")
+
+            if is_running and max_seconds and duration > max_seconds:
+                raise JobError(
+                    f"Job {self.job_id} has exceeded wait time {max_seconds}s and we will not wait any longer. It is currently {self.status}."
+                )
 
             period = min(period + 0.5, 10.0)
         if self.status == "DONE":
@@ -230,7 +243,7 @@ class WorkflowJob:
         resp = self.session.get(logs_url)
         return resp.json()["links"]
 
-    def logs(self, log_group: str, log_filter: Optional[str] = None) -> str:
+    def logs(self, log_group: str = "pod", log_filter: Optional[str] = None) -> str:
         """
         Get text logs for the specified log group
 
