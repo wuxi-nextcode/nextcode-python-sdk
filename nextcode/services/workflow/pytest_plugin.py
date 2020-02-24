@@ -70,7 +70,7 @@ def pytest_addoption(parser):
         "--profile",
         action="store",
         dest="profile",
-        help="Specifies the profile used to run the workflow",
+        help="Specifies the default profile used to run the workflow",
         default="test",
     )
 
@@ -102,7 +102,7 @@ start_time = 0
 def pytest_report_header(config, startdir):
 
     return (
-        "Running workflow in project '%s'. This can take some time so have some patience :)"
+        "Running workflow in project '%s'. This can take some time so going for a coffee is not a bad idea :)"
         % config.option.project
     )
 
@@ -134,8 +134,13 @@ def run_workflow(request):
         prev_dir = request.config.cache.get(last_run_key, None)
         if prev_dir:
             print_status("Previous file dir found: %s." % prev_dir)
-            request.cls.result_dir = prev_dir
-            return
+            # use the previous directory if it exists
+            if os.path.exists(prev_dir):
+                request.cls.result_dir = prev_dir
+                return
+            # previous directory doesn't exists.  Remove the key and continue with the run.
+            print_status("WARN: '%s' doesn't exist anymore.  Rerunning workflow." % prev_dir)
+            request.config.cache.set(last_run_key, None)
         else:
             print_status("Previous file dir not found. Starting a new run.")
 
@@ -143,7 +148,8 @@ def run_workflow(request):
     project_name = request.config.option.project
     run_mode = request.config.option.run_mode
     run_id = request.config.option.run_id
-    profile = request.config.option.profile
+    # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
+    profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
 
     if run_mode == "repository":
@@ -161,7 +167,7 @@ def run_workflow(request):
         build_context = p
 
     # Add the parameters if the TestCase defines them
-    params = request.cls.params if hasattr(request.cls, "params") else {}
+    params = getattr(request.cls, "params", {})
 
     # add result_dir
     result_dir = "{prefix}/{run}/{instance}/".format(
