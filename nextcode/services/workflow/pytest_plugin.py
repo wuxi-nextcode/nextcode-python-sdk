@@ -149,7 +149,7 @@ def run_workflow(request):
     run_mode = request.config.option.run_mode
     run_id = request.config.option.run_id
     # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
-    profile = request.cls.profile if hasattr(request.cls, "profile") else request.config.option.profile
+    profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
 
     if run_mode == "repository":
@@ -167,7 +167,7 @@ def run_workflow(request):
         build_context = p
 
     # Add the parameters if the TestCase defines them
-    params = request.cls.params if hasattr(request.cls, "params") else {}
+    params = getattr(request.cls, "params", {})
 
     # add result_dir
     result_dir = "{prefix}/{run}/{instance}/".format(
