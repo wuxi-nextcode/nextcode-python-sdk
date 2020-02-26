@@ -14,6 +14,7 @@ import tempfile
 import logging
 from .exceptions import UploadError
 from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
+from .services import BaseService
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +23,9 @@ DEFAULT_SCRATCH_BUCKET = "nextcode-scratch"
 EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # expires in 7 days
 
 
-def package_and_upload(service: Callable, package_name: str, project_path: str) -> str:
+def package_and_upload(
+    service: BaseService, package_name: str, project_path: str
+) -> str:
     """
     Create a zip file from a folder and upload to S3. Returns a presigned https URL with an expiration of 24 hours
 

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.workflow.job &#8212; nextcode-python-sdk 0.4.5 documentation</title>
+    <title>nextcode.services.workflow.job &#8212; nextcode-python-sdk 0.5.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.5.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,16 +114,24 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">dateutil</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">RUNNING_STATUSES</span><span class="p">,</span> <span class="n">FINISHED_STATUES</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">RUNNING_STATUSES</span><span class="p">,</span> <span class="n">FINISHED_STATUES</span><span class="p">,</span> <span class="n">FAILED_STATUES</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">JobError</span>
 <span class="kn">from</span> <span class="nn">...exceptions</span> <span class="k">import</span> <span class="n">ServerError</span>
 <span class="kn">from</span> <span class="nn">...session</span> <span class="k">import</span> <span class="n">ServiceSession</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WorkflowJob"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob">[docs]</a><span class="k">class</span> <span class="nc">WorkflowJob</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Proxy object for a serverside workflow job</span>
+<span class="sd">    Proxy object for a serverside workflow job.</span>
+
+<span class="sd">    This object can be queried for the current status of a workflow job and will</span>
+<span class="sd">    automatically refresh from server until the job is finished (or failed)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ServiceSession</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
@@ -153,21 +161,41 @@
         <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">microseconds</span><span class="o">=</span><span class="n">ret</span><span class="o">.</span><span class="n">microseconds</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span>
 
-<div class="viewcode-block" id="WorkflowJob.running"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.running">[docs]</a>    <span class="k">def</span> <span class="nf">running</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If the job currently running</span>
+<span class="sd">        Has the job finished (might be failed)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">FINISHED_STATUES</span>
 
-<div class="viewcode-block" id="WorkflowJob.finished"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.finished">[docs]</a>    <span class="k">def</span> <span class="nf">finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Has the job finished</span>
+<span class="sd">        Is the job currently running</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">FINISHED_STATUES</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">failed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Is the job in a failed state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">FAILED_STATUES</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Has the job completed successfully</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;COMPLETED&quot;</span>
 
 <div class="viewcode-block" id="WorkflowJob.refresh"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -182,6 +210,85 @@
         <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="WorkflowJob.wait"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">poll_period</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wait for a running job to complete.</span>
+
+<span class="sd">        This is similar to the wait method in the Query Service and will wait by default</span>
+<span class="sd">        indefinitely for a workflow job to complete and poll the server regularly to update</span>
+<span class="sd">        the local status. When the job is completed (or failed) the method will return the</span>
+<span class="sd">        workflow job object.</span>
+
+<span class="sd">        :param max_seconds: raise an exception if the job runs longer than this</span>
+<span class="sd">        :param poll_period: Number of seconds to wait between polling (max 10 seconds)</span>
+<span class="sd">        :returns: WorkflowJob</span>
+<span class="sd">        :raises: :exc:`JobError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Waiting for job </span><span class="si">%s</span><span class="s2"> to complete...&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="n">poll_period</span>
+        <span class="n">is_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span>
+        <span class="k">while</span> <span class="n">is_running</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="n">is_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span>
+
+            <span class="c1"># cancel the wait if the executor pod is in trouble after 30 seconds of waiting to start.</span>
+            <span class="c1"># it most likely means that the nextflow script has a syntax error or something.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;PENDING&quot;</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">max_seconds</span> <span class="ow">and</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="n">max_seconds</span> <span class="ow">or</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="mf">30.0</span>
+            <span class="p">):</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Job has been PENDING for </span><span class="si">%.0f</span><span class="s2">sec. Inspecting it...&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+                <span class="n">curr_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inspect</span><span class="p">()</span>
+                <span class="n">executor_pod</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">pod</span> <span class="ow">in</span> <span class="n">curr_status</span><span class="p">[</span><span class="s2">&quot;pods&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">pod</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="s2">&quot;app-name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;nextflow-executor&quot;</span><span class="p">:</span>
+                        <span class="n">executor_pod</span> <span class="o">=</span> <span class="n">pod</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">executor_pod</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Job is still pending after </span><span class="si">%.0f</span><span class="s2">sec and executor pod is missing&quot;</span><span class="p">,</span>
+                        <span class="n">duration</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
+                        <span class="n">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{duration:.0f}</span><span class="s2">s and executor pod is missing. View logs or inspect job for failures.&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">executor_pod</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">][</span><span class="s2">&quot;container_statuses&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;state&quot;</span><span class="p">][</span>
+                    <span class="s2">&quot;running&quot;</span>
+                <span class="p">]:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Job is still pending after </span><span class="si">%.0f</span><span class="s2">sec and executor pod is not in running state&quot;</span><span class="p">,</span>
+                        <span class="n">duration</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
+                        <span class="n">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{duration:.0f}</span><span class="s2">s and executor pod is not in running state. View logs or inspect job for failures.&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">is_running</span> <span class="ow">and</span> <span class="n">max_seconds</span> <span class="ow">and</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="n">max_seconds</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s2">&quot;Job </span><span class="si">{self.job_id}</span><span class="s2"> has exceeded wait time </span><span class="si">{max_seconds}</span><span class="s2">s and we will not wait any longer. It is currently </span><span class="si">{self.status}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">period</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">period</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Job </span><span class="si">%s</span><span class="s2"> completed in </span><span class="si">%.2f</span><span class="s2"> sec and returned </span><span class="si">%s</span><span class="s2"> rows&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span>
+                <span class="n">duration</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Job </span><span class="si">%s</span><span class="s2"> has status </span><span class="si">%s</span><span class="s2"> after </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                <span class="n">duration</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
 <div class="viewcode-block" id="WorkflowJob.cancel"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status_message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -189,6 +296,7 @@
 <span class="sd">        Cancel a running job</span>
 
 <span class="sd">        :param status: status of the cancelled job. Defaults to CANCELLED</span>
+<span class="sd">        :returns: Status message from the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span> <span class="ow">or</span> <span class="s2">&quot;CANCELLED&quot;</span>
@@ -199,7 +307,12 @@
 
 <div class="viewcode-block" id="WorkflowJob.inspect"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.inspect">[docs]</a>    <span class="k">def</span> <span class="nf">inspect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Inspect a failed job for debugging</span>
+<span class="sd">        Inspect a failed job for debugging.</span>
+
+<span class="sd">        Returns unfiltered pod and node information from the kubernetes system</span>
+
+<span class="sd">        :returns: Dictionary containing low-level debugging information</span>
+<span class="sd">        :raises: :exc:`ServerError` if the server is not configured for inspection capabilities</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;inspect&quot;</span><span class="p">]</span>
@@ -240,6 +353,7 @@
 <div class="viewcode-block" id="WorkflowJob.events"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.events">[docs]</a>    <span class="k">def</span> <span class="nf">events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of events reported by Nextflow for this job</span>
+
 <span class="sd">        :param limit: Maximum number of events to return</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;events&quot;</span><span class="p">]</span>
@@ -250,12 +364,14 @@
 <div class="viewcode-block" id="WorkflowJob.log_groups"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.log_groups">[docs]</a>    <span class="k">def</span> <span class="nf">log_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get available log groups</span>
+
+<span class="sd">        :returns: Dictionary with log group name and server url to the log group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logs_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;logs&quot;</span><span class="p">]</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">logs_url</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="WorkflowJob.logs"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.logs">[docs]</a>    <span class="k">def</span> <span class="nf">logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_group</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="WorkflowJob.logs"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.job.WorkflowJob.logs">[docs]</a>    <span class="k">def</span> <span class="nf">logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_group</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pod&quot;</span><span class="p">,</span> <span class="n">log_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get text logs for the specified log group</span>
 
@@ -302,7 +418,7 @@
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2020-01-20.<br/>
+      Last updated on 2020-02-26.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

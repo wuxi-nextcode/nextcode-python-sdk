@@ -79,7 +79,7 @@ class BaseService:
         return self.session.root_info["build_info"]
 
     @property
-    def app_info(self) -> str:
+    def app_info(self) -> Dict:
         return self.session.root_info.get("app_info")
 
     @property

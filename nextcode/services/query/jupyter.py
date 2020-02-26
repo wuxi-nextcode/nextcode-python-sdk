@@ -21,20 +21,6 @@ import os
 
 log = logging.getLogger(__name__)
 
-Magics = object
-
-
-def magics_class(cls):
-    return cls
-
-
-def line_cell_magic(func):
-    return func
-
-
-def line_magic(func):
-    return func
-
 
 if jupyter_available():
     """
@@ -46,6 +32,18 @@ if jupyter_available():
         line_magic,
         line_cell_magic,
     )  # type: ignore
+else:
+
+    Magics = object
+
+    def magics_class(cls):
+        return cls
+
+    def line_cell_magic(func):
+        return func
+
+    def line_magic(func):
+        return func
 
 
 def print_details(txt):

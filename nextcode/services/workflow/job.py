@@ -23,7 +23,10 @@ log = logging.getLogger(__name__)
 
 class WorkflowJob:
     """
-    Proxy object for a serverside workflow job
+    Proxy object for a serverside workflow job.
+
+    This object can be queried for the current status of a workflow job and will
+    automatically refresh from server until the job is finished (or failed)
     """
 
     def __init__(self, session: ServiceSession, job_id: int, job: Dict):
@@ -54,11 +57,11 @@ class WorkflowJob:
         return ret
 
     @property
-    def finished(self, force: bool = False) -> bool:
+    def finished(self) -> bool:
         """
         Has the job finished (might be failed)
         """
-        if force:
+        if self.status in RUNNING_STATUSES:
             self.refresh()
         return self.status in FINISHED_STATUES
 
@@ -104,12 +107,17 @@ class WorkflowJob:
 
     def wait(self, max_seconds: Optional[int] = None, poll_period: float = 0.5):
         """
-        Wait for the job to complete
+        Wait for a running job to complete.
+
+        This is similar to the wait method in the Query Service and will wait by default
+        indefinitely for a workflow job to complete and poll the server regularly to update
+        the local status. When the job is completed (or failed) the method will return the
+        workflow job object.
 
         :param max_seconds: raise an exception if the job runs longer than this
         :param poll_period: Number of seconds to wait between polling (max 10 seconds)
-
-        :raises: JobError
+        :returns: WorkflowJob
+        :raises: :exc:`JobError`
         """
         if not self.running:
             return self
@@ -125,7 +133,9 @@ class WorkflowJob:
 
             # cancel the wait if the executor pod is in trouble after 30 seconds of waiting to start.
             # it most likely means that the nextflow script has a syntax error or something.
-            if self.status == "PENDING" and (max_seconds and duration > max_seconds or duration > 30.0):
+            if self.status == "PENDING" and (
+                max_seconds and duration > max_seconds or duration > 30.0
+            ):
                 log.info("Job has been PENDING for %.0fsec. Inspecting it...", duration)
                 curr_status = self.inspect()
                 executor_pod = None
@@ -138,7 +148,9 @@ class WorkflowJob:
                         "Job is still pending after %.0fsec and executor pod is missing",
                         duration,
                     )
-                    raise JobError(f"Job is still pending after {duration:.0f}s and executor pod is missing. View logs or inspect job for failures.")
+                    raise JobError(
+                        f"Job is still pending after {duration:.0f}s and executor pod is missing. View logs or inspect job for failures."
+                    )
                 if not executor_pod["status"]["container_statuses"][0]["state"][
                     "running"
                 ]:
@@ -146,7 +158,9 @@ class WorkflowJob:
                         "Job is still pending after %.0fsec and executor pod is not in running state",
                         duration,
                     )
-                    raise JobError(f"Job is still pending after {duration:.0f}s and executor pod is not in running state. View logs or inspect job for failures.")
+                    raise JobError(
+                        f"Job is still pending after {duration:.0f}s and executor pod is not in running state. View logs or inspect job for failures."
+                    )
 
             if is_running and max_seconds and duration > max_seconds:
                 raise JobError(
@@ -177,6 +191,7 @@ class WorkflowJob:
         Cancel a running job
 
         :param status: status of the cancelled job. Defaults to CANCELLED
+        :returns: Status message from the server
         """
         data: Dict = {}
         data["status"] = status or "CANCELLED"
@@ -187,7 +202,12 @@ class WorkflowJob:
 
     def inspect(self) -> Dict:
         """
-        Inspect a failed job for debugging
+        Inspect a failed job for debugging.
+
+        Returns unfiltered pod and node information from the kubernetes system
+
+        :returns: Dictionary containing low-level debugging information
+        :raises: :exc:`ServerError` if the server is not configured for inspection capabilities
         """
         try:
             url = self.links["inspect"]
@@ -228,6 +248,7 @@ class WorkflowJob:
     def events(self, limit: int = 50) -> List[Dict]:
         """
         Get a list of events reported by Nextflow for this job
+
         :param limit: Maximum number of events to return
         """
         url = self.links["events"]
@@ -238,6 +259,8 @@ class WorkflowJob:
     def log_groups(self) -> Dict:
         """
         Get available log groups
+
+        :returns: Dictionary with log group name and server url to the log group
         """
         logs_url = self.links["logs"]
         resp = self.session.get(logs_url)

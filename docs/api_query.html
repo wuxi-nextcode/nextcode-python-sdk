@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.4.5 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.5.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -253,7 +253,7 @@ to transition to a completed status. Therefore, most small queries will return i
 
 <dl class="method">
 <dt id="nextcode.services.query.service.Service.get_queries">
-<code class="sig-name descname">get_queries</code><span class="sig-paren">(</span><em class="sig-param">status=None</em>, <em class="sig-param">user_name=None</em>, <em class="sig-param">limit=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_queries" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_queries</code><span class="sig-paren">(</span><em class="sig-param">status=None</em>, <em class="sig-param">user_name=None</em>, <em class="sig-param">limit=100</em>, <em class="sig-param">all=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_queries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all queries that have been run by the current user in the current project, optionally filtered by status.</p>
 <p>Results are returned in reverse chronological order so latest queries are first.</p>
 <p>Note that queries are returned in <cite>partial</cite> state which means they might not be up to date. <cite>query.refresh()</cite>
@@ -261,9 +261,10 @@ can be called to force a refresh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>status</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter queries by status. e.g. <cite>DONE</cite> <cite>RUNNING</cite> <cite>FAILED</cite></p></li>
-<li><p><strong>user_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Show queries for another user (only available to admin)</p></li>
+<li><p><strong>status</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Filter queries by status. e.g. <cite>DONE</cite> <cite>RUNNING</cite> <cite>FAILED</cite>.</p></li>
+<li><p><strong>user_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Show queries for another user (only available to admin).</p></li>
 <li><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Limit the number of queries returned.</p></li>
+<li><p><strong>all</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]) – Fetch all queries in all projects (only available to admin).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -746,7 +747,7 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2020-01-20.<br/>
+      Last updated on 2020-02-26.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

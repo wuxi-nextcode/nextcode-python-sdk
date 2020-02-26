@@ -176,6 +176,8 @@ class Service(BaseService):
         """
         Run a workflow job
 
+        This is a low-level implementation on top of the workflow service's POST /jobs endpoint.
+
         :param pipeline_name: Name of the pipeline to run
         :param project_name: Name of the project to run this job on, defaults to GOR_API_PROJECT in environment
         :param params: Dictionary of parameters to forward to the job
