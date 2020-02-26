@@ -36,6 +36,7 @@ Contents
    notebook
    apidoc
    development
+   local_workflows
 
 Indices and tables
 -------------------

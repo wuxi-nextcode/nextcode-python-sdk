@@ -139,7 +139,9 @@ def run_workflow(request):
                 request.cls.result_dir = prev_dir
                 return
             # previous directory doesn't exists.  Remove the key and continue with the run.
-            print_status("WARN: '%s' doesn't exist anymore.  Rerunning workflow." % prev_dir)
+            print_status(
+                "WARN: '%s' doesn't exist anymore.  Rerunning workflow." % prev_dir
+            )
             request.config.cache.set(last_run_key, None)
         else:
             print_status("Previous file dir not found. Starting a new run.")
