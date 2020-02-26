@@ -147,7 +147,7 @@ class KeycloakSession:
         try:
             resp = requests.get(realm_url)
         except requests.exceptions.ConnectionError:
-            raise ServerError(f"Keycloak server {auth_server} is not reachable")
+            raise ServerError(f"Keycloak server {realm_url} is not reachable")
         if resp.status_code == requests.codes.not_found:
             raise AuthServerError(
                 f"Realm '{self.realm}' was not found on keycloak server {auth_server}"

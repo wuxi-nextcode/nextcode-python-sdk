@@ -256,7 +256,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">realm_url</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keycloak server </span><span class="si">{auth_server}</span><span class="s2"> is not reachable&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keycloak server </span><span class="si">{realm_url}</span><span class="s2"> is not reachable&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span>
                 <span class="n">f</span><span class="s2">&quot;Realm &#39;</span><span class="si">{self.realm}</span><span class="s2">&#39; was not found on keycloak server </span><span class="si">{auth_server}</span><span class="s2">&quot;</span>
