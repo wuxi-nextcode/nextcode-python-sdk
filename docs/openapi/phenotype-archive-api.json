@@ -1,0 +1,559 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Phenotype Catalog",
+    "description": "Phenotype Catalog Api",
+    "version": "1.4.6"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/projects/{project_key}/phenotypes/": {
+      "get": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-index",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Used for pagination. Default 100",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "description": "Used for pagination. Default 0",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "with_all_tags",
+            "description": "Comma separated list of tags.  Will return only phenotypes with all tags listed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "A list of all the phenotypes in the project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phenotype"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "List all Phenotypes in project.",
+        "x-controller": "phenotypes",
+        "x-action": "index"
+      }
+    },
+    "/projects/{project_key}/phenotypes/{name}": {
+      "post": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-create",
+        "parameters": [
+          {
+            "name": "name",
+            "description": "the name of the phenotype",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "201": {
+            "description": "The newly created phenotype",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Phenotype"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new phenotype",
+        "x-controller": "phenotypes",
+        "x-action": "create",
+        "requestBody": {
+          "description": "The phenotype data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Phenotype"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-show",
+        "parameters": [
+          {
+            "name": "name",
+            "description": "the name of the phenotype",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the internal name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "The requested phenotype",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Phenotype"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "summary": "Get a specific Phenotype",
+        "x-controller": "phenotypes",
+        "x-action": "show"
+      },
+      "patch": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-update",
+        "parameters": [
+          {
+            "name": "name",
+            "description": "the name of the phenotype",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Phenotype"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "summary": "Update the values in the phenotype that the user can change after the fact.",
+        "x-controller": "phenotypes",
+        "x-action": "update",
+        "requestBody": {
+          "description": "The phenotype data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Phenotype"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-destroy",
+        "parameters": [
+          {
+            "name": "name",
+            "description": "the name of the phenotype",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "summary": "Delete phenotype and all it's data",
+        "x-controller": "phenotypes",
+        "x-action": "destroy"
+      }
+    },
+    "/projects/{project_key}/phenotypes/{name}/upload": {
+      "post": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-upload",
+        "parameters": [
+          {
+            "name": "name",
+            "description": "the name of the phenotype",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhenotypeVersion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "summary": "Upload phenotype data .",
+        "x-controller": "phenotypes",
+        "x-action": "upload",
+        "requestBody": {
+          "description": "Phenotype data to upload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhenotypeData"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{project_key}/phenotypes/download": {
+      "get": {
+        "tags": [
+          "Phenotypes"
+        ],
+        "operationId": "Phenotypes-download",
+        "parameters": [
+          {
+            "name": "phenotypes",
+            "description": "Comma separated list of phenotype names.\nOrder of columns is maintained.",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pns",
+            "description": "Optional comma separated list of pn values to get data for.\nIf not specified, all pn's that have values in any of the phenotypes are returned",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Download phenotype data as TSV table (Mime type text/tab-separated-values).\nFirst column contains PNs, other columns are values for the phenotypes",
+        "x-controller": "phenotypes",
+        "x-action": "download"
+      }
+    },
+    "/tags/": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "operationId": "Tags-index",
+        "parameters": [
+
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "List all available tags.",
+        "x-controller": "tags",
+        "x-action": "index"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Phenotypes",
+      "description": "Some descr"
+    },
+    {
+      "name": "Tags",
+      "description": "Some descr for tags"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Phenotype": {
+        "type": "object",
+        "properties": {
+          "project_key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "The name of the project"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-_]*$",
+            "description": "the name of the phenotype"
+          },
+          "description": {
+            "type": "string"
+          },
+          "result_type": {
+            "type": "string",
+            "enum": [
+              "SET",
+              "QT",
+              "CATEGORY"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "tag_list": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhenotypeVersion"
+            }
+          }
+        },
+        "required": [
+          "project_key",
+          "name",
+          "description",
+          "result_type"
+        ]
+      },
+      "PhenotypeVersion": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "description": "Incremental version number"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of entries in phenotype version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time of upload"
+          },
+          "created_by": {
+            "type": "string",
+            "description": "User that did upload"
+          }
+        },
+        "required": [
+          "version",
+          "count"
+        ]
+      },
+      "PhenotypeData": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string_or_number"
+              }
+            }
+          }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]*$"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ]
+}
