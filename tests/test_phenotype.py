@@ -11,6 +11,8 @@ from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 dt = datetime.datetime.utcnow().isoformat()
 
 PHENOTYPE_URL = "https://test.wuxinextcode.com/api/phenotype-catalog"
+PROJECTS_URL = PHENOTYPE_URL + "/projects"
+
 ROOT_RESP = {
     "build_info": {
         "branch": "master",
@@ -22,10 +24,15 @@ ROOT_RESP = {
         "root": PHENOTYPE_URL,
         "health": PHENOTYPE_URL + "/health",
         "documentation": PHENOTYPE_URL + "/documentation",
+        "projects": PROJECTS_URL,
+        "tags": PHENOTYPE_URL + "/tags",
     },
     "service_name": "phenotype-catalog",
 }
 
+
+PROJECT = "test-project"
+PHENOTYPE_NAME = "test-pheno"
 PHENOTYPE_RESP = {
     "project_key": "string",
     "name": "string",
@@ -43,10 +50,23 @@ PHENOTYPE_RESP = {
             "created_by": "string",
         }
     ],
+    "links": {
+        "self": f"{PROJECTS_URL}/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
+        "upload": f"{PROJECTS_URL}/{PROJECT}/phenotypes/{PHENOTYPE_NAME}/upload",
+    },
 }
 
-PROJECT = "test-project"
-PHENOTYPE_NAME = "test-pheno"
+
+PROJECT_RESP = {
+    "name": PROJECT,
+    "links": {
+        "self": PROJECTS_URL + f"/{PROJECT}",
+        "phenotypes": f"{PROJECTS_URL}/{PROJECT}/phenotypes",
+        "download": PROJECTS_URL + f"/{PROJECT}/phenotypes/download",
+    },
+}
+
+PROJECTS_RESP = {"projects": [PROJECT_RESP]}
 
 
 class PhenotypeTest(BaseTestCase):
@@ -58,6 +78,7 @@ class PhenotypeTest(BaseTestCase):
     def get_service(self):
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, PHENOTYPE_URL, json=ROOT_RESP)
+        responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
 
         client = Client(api_key=REFRESH_TOKEN)
         svc = client.service("phenotype")
@@ -90,7 +111,7 @@ class PhenotypeTest(BaseTestCase):
             responses.GET, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
         phenotypes = self.svc.get_phenotypes(PROJECT)
-        self.assertEqual(phenotypes, [PHENOTYPE_RESP])
+        self.assertEqual([p.data for p in phenotypes], [PHENOTYPE_RESP])
 
         ret = {"phenotype": PHENOTYPE_RESP}
         responses.add(
@@ -99,7 +120,7 @@ class PhenotypeTest(BaseTestCase):
             json=ret,
         )
         phenotype = self.svc.get_phenotype(PROJECT, PHENOTYPE_NAME)
-        self.assertEqual(phenotype, PHENOTYPE_RESP)
+        self.assertEqual(phenotype.data, PHENOTYPE_RESP)
 
     @responses.activate
     def test_create_phenotype(self):
@@ -109,7 +130,7 @@ class PhenotypeTest(BaseTestCase):
             responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
         phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
-        self.assertEqual(phenotype, PHENOTYPE_RESP)
+        self.assertEqual(phenotype.data, PHENOTYPE_RESP)
 
         with self.assertRaises(PhenotypeError) as ctx:
             self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, "invalid")
@@ -124,18 +145,35 @@ class PhenotypeTest(BaseTestCase):
             responses.DELETE,
             PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
         )
-        phenotype = self.svc.delete_phenotype(PROJECT, PHENOTYPE_NAME)
+        result_type = "SET"
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+
+        phenotype.delete()
 
     @responses.activate
     def test_upload(self):
+        result_type = "SET"
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+
         ret = {"a": "b"}
         responses.add(
             responses.POST,
             PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}/upload",
             json=ret,
         )
-        result = self.svc.upload(PROJECT, PHENOTYPE_NAME, ["something"])
+        result = phenotype.upload(["something"])
         self.assertEqual(ret, result)
+
+        with self.assertRaises(TypeError):
+            _ = phenotype.upload("invalid")
 
     @responses.activate
     def test_download(self):
@@ -149,3 +187,24 @@ class PhenotypeTest(BaseTestCase):
         )
         result = self.svc.download(PROJECT, ["something"])
         self.assertEqual(ret, result)
+
+    @responses.activate
+    def test_attributes(self):
+        result_type = "SET"
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+
+        for k, v in PHENOTYPE_RESP.items():
+            attr_val = getattr(phenotype, k)
+            if k.endswith("_at"):
+                self.assertTrue(isinstance(attr_val, datetime.datetime))
+            else:
+                self.assertEqual(v, attr_val)
+
+        with self.assertRaises(AttributeError):
+            _ = phenotype.not_exists
+
+        self.assertTrue(repr(phenotype).startswith("<"))
