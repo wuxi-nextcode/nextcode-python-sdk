@@ -3,7 +3,7 @@
   "info": {
     "title": "Phenotype Catalog",
     "description": "Phenotype Catalog Api",
-    "version": "1.4.6"
+    "version": "2.0.0\n"
   },
   "servers": [
     {
@@ -61,9 +61,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Phenotype"
+                  "type": "object",
+                  "properties": {
+                    "phenotypes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Phenotype"
+                      }
+                    }
                   }
                 }
               }
@@ -113,7 +118,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Phenotype"
+                  "type": "object",
+                  "properties": {
+                    "phenotype": {
+                      "$ref": "#/components/schemas/Phenotype"
+                    }
+                  }
                 }
               }
             }
@@ -164,7 +174,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Phenotype"
+                  "type": "object",
+                  "properties": {
+                    "phenotype": {
+                      "$ref": "#/components/schemas/Phenotype"
+                    }
+                  }
                 }
               }
             }
@@ -211,7 +226,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Phenotype"
+                  "type": "object",
+                  "properties": {
+                    "phenotype": {
+                      "$ref": "#/components/schemas/Phenotype"
+                    }
+                  }
                 }
               }
             }
@@ -307,7 +327,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PhenotypeVersion"
+                  "type": "object",
+                  "properties": {
+                    "phenotype_version": {
+                      "$ref": "#/components/schemas/PhenotypeVersion"
+                    }
+                  }
                 }
               }
             }
@@ -385,6 +410,40 @@
         "x-action": "download"
       }
     },
+    "/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "Projects-show",
+        "parameters": [
+
+        ],
+        "responses": {
+          "default": {
+            "description": "Project information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Get single project",
+        "x-controller": "projects",
+        "x-action": "show"
+      }
+    },
     "/tags/": {
       "get": {
         "tags": [
@@ -400,9 +459,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Tag"
+                  "type": "object",
+                  "properties": {
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tag"
+                      }
+                    }
                   }
                 }
               }
@@ -421,7 +485,11 @@
   "tags": [
     {
       "name": "Phenotypes",
-      "description": "Some descr"
+      "description": ""
+    },
+    {
+      "name": "Projects",
+      "description": ""
     },
     {
       "name": "Tags",
@@ -471,6 +539,9 @@
               "type": "string"
             }
           },
+          "links": {
+            "type": "object"
+          },
           "versions": {
             "type": "array",
             "items": {
@@ -504,6 +575,9 @@
           "created_by": {
             "type": "string",
             "description": "User that did upload"
+          },
+          "links": {
+            "type": "object"
           }
         },
         "required": [
