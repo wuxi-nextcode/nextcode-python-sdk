@@ -198,7 +198,7 @@ class ServiceSession(requests.Session):
             )
             r = requests.get(self.url_base, timeout=3.0, headers=self.headers)
 
-        if r.headers["Content-Type"] != "application/json":
+        if "application/json" not in r.headers["Content-Type"]:
             raise ServerError(
                 "Unexpected response: %s" % r.text, url=self.url_base
             ) from None

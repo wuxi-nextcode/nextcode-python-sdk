@@ -20,3 +20,7 @@ https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-py
 Pipelines Service
 -----------------
 https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/pipelines-service.json
+
+Phenotype Archive
+-----------------
+https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/phenotype-archive-api.json
