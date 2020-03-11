@@ -81,6 +81,7 @@
 <li><a class="reference internal" href="#service-class">Service class</a></li>
 <li><a class="reference internal" href="#workflow-job">Workflow Job</a></li>
 <li><a class="reference internal" href="#pytest-plugin">Pytest plugin</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -525,6 +526,22 @@ workflow job object.</p>
 <h2>Pytest plugin<a class="headerlink" href="#pytest-plugin" title="Permalink to this headline">¶</a></h2>
 <p>This is a pytest plugin that is used by workflow CI jobs for automatically testing against a live server.</p>
 </div>
+<span class="target" id="module-nextcode.services.workflow.exceptions"></span><div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Custom exceptions raised by the workflow service.</p>
+<dl class="exception">
+<dt id="nextcode.services.workflow.exceptions.JobError">
+<em class="property">exception </em><code class="sig-prename descclassname">nextcode.services.workflow.exceptions.</code><code class="sig-name descname">JobError</code><span class="sig-paren">(</span><em class="sig-param">message</em>, <em class="sig-param">job_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/exceptions.html#JobError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="nextcode.services.workflow.exceptions.JobError.with_traceback">
+<code class="sig-name descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -547,7 +564,7 @@ workflow job object.</p>
     </p>
     <p>
         &copy; Copyright 2019, Wuxi Nextcode.<br/>
-      Last updated on 2020-03-10.<br/>
+      Last updated on 2020-03-11.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

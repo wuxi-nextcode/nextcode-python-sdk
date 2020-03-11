@@ -33,5 +33,6 @@ Available Services
    api_query
    api_workflow
    api_pipelines
+   api_phenotype
    api_exceptions
    api_basic

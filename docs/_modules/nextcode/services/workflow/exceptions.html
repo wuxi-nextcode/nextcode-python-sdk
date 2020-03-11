@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.exceptions &#8212; nextcode-python-sdk 0.6.0
+    <title>nextcode.services.workflow.exceptions &#8212; nextcode-python-sdk 0.6.0
  documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -106,33 +106,21 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for nextcode.services.query.exceptions</h1><div class="highlight"><pre>
+  <h1>Source code for nextcode.services.workflow.exceptions</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Exceptions</span>
 <span class="sd">~~~~~~~~~~</span>
 
-<span class="sd">Custom exceptions raised by the query service.</span>
+<span class="sd">Custom exceptions raised by the workflow service.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
 
-<div class="viewcode-block" id="TemplateError"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.TemplateError">[docs]</a><span class="k">class</span> <span class="nc">TemplateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="QueryError"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.QueryError">[docs]</a><span class="k">class</span> <span class="nc">QueryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span> <span class="o">=</span> <span class="n">query_id</span></div>
-
-
-<div class="viewcode-block" id="MissingRelations"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.exceptions.MissingRelations">[docs]</a><span class="k">class</span> <span class="nc">MissingRelations</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">relations</span> <span class="o">=</span> <span class="n">relations</span>
-
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;MissingRelations: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relations</span><span class="p">))</span></div>
+<div class="viewcode-block" id="JobError"><a class="viewcode-back" href="../../../../api_workflow.html#nextcode.services.workflow.exceptions.JobError">[docs]</a><span class="k">class</span> <span class="nc">JobError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span> <span class="o">=</span> <span class="n">job_id</span></div>
 </pre></div>
 
     </div>

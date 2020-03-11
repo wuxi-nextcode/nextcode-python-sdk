@@ -24,6 +24,12 @@ SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
 
 class Service(BaseService):
+    """
+    A connection to the phenotype catalog service.
+
+    To view available projects use the `svc.projects` dict
+    """
+
     def __init__(self, client: Client, *args, **kwargs) -> None:
         super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
         resp = self.session.get(self.session.url_from_endpoint("projects"))
