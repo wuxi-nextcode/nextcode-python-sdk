@@ -81,7 +81,7 @@ class PhenotypeTest(BaseTestCase):
         responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
 
         client = Client(api_key=REFRESH_TOKEN)
-        svc = client.service("phenotype")
+        svc = client.service("phenotype", project=PROJECT)
         return svc
 
     @responses.activate
@@ -110,7 +110,7 @@ class PhenotypeTest(BaseTestCase):
         responses.add(
             responses.GET, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
-        phenotypes = self.svc.get_phenotypes(PROJECT)
+        phenotypes = self.svc.get_phenotypes()
         self.assertEqual([p.data for p in phenotypes], [PHENOTYPE_RESP])
 
         ret = {"phenotype": PHENOTYPE_RESP}
@@ -119,7 +119,7 @@ class PhenotypeTest(BaseTestCase):
             PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
             json=ret,
         )
-        phenotype = self.svc.get_phenotype(PROJECT, PHENOTYPE_NAME)
+        phenotype = self.svc.get_phenotype(PHENOTYPE_NAME)
         self.assertEqual(phenotype.data, PHENOTYPE_RESP)
 
     @responses.activate
@@ -129,11 +129,11 @@ class PhenotypeTest(BaseTestCase):
         responses.add(
             responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
-        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
         self.assertEqual(phenotype.data, PHENOTYPE_RESP)
 
         with self.assertRaises(PhenotypeError) as ctx:
-            self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, "invalid")
+            self.svc.create_phenotype(PHENOTYPE_NAME, "invalid")
         self.assertIn("not supported", repr(ctx.exception))
 
         # TODO: Add tests for server errors
@@ -150,7 +150,7 @@ class PhenotypeTest(BaseTestCase):
         responses.add(
             responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
-        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
 
         phenotype.delete()
 
@@ -161,7 +161,7 @@ class PhenotypeTest(BaseTestCase):
         responses.add(
             responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
-        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
 
         ret = {"a": "b"}
         responses.add(
@@ -185,7 +185,7 @@ class PhenotypeTest(BaseTestCase):
             PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/download",
             body=ret,
         )
-        result = self.svc.download(PROJECT, ["something"])
+        result = self.svc.download(["something"])
         self.assertEqual(ret, result)
 
     @responses.activate
@@ -195,7 +195,7 @@ class PhenotypeTest(BaseTestCase):
         responses.add(
             responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
         )
-        phenotype = self.svc.create_phenotype(PROJECT, PHENOTYPE_NAME, result_type)
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
 
         for k, v in PHENOTYPE_RESP.items():
             attr_val = getattr(phenotype, k)
@@ -208,3 +208,32 @@ class PhenotypeTest(BaseTestCase):
             _ = phenotype.not_exists
 
         self.assertTrue(repr(phenotype).startswith("<"))
+
+    @responses.activate
+    def test_tags(self):
+        result_type = "SET"
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
+
+        responses.add(
+            responses.PATCH,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
+            json=ret,
+        )
+
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.GET,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
+            json=ret,
+        )
+
+        phenotype.add_tag("test")
+        with self.assertRaises(PhenotypeError):
+            phenotype.delete_tag("test")
+        phenotype.data["tag_list"].append("test")
+        phenotype.delete_tag("test")
+        phenotype.set_tags(["test", "test2"])

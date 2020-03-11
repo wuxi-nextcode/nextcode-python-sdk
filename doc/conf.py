@@ -18,7 +18,7 @@ import sphinx_bootstrap_theme
 # -- Project information -----------------------------------------------------
 
 project = "nextcode-python-sdk"
-copyright = "2019, Wuxi Nextcode"
+copyright = "2020, Wuxi Nextcode"
 author = "Wuxi Nextcode"
 
 import os

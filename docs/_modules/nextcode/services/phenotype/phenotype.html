@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.phenotype.phenotype &#8212; nextcode-python-sdk 0.6.0
- documentation</title>
+    <title>nextcode.services.phenotype.phenotype &#8212; nextcode-python-sdk 0.6.1 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -38,8 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.0
-</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -139,8 +137,19 @@
 <span class="sd">    serverside response and are therefore not documented directly here.</span>
 <span class="sd">    Please refer to the API Documentation for the phenotype catalog service.</span>
 
-<span class="sd">    To intraspect the data you can also call `phenotype.data.keys()`. Each key</span>
+<span class="sd">    In addition to the ones documented here, this object has at least these attributes:</span>
+
+<span class="sd">    * name - Phenotype name</span>
+<span class="sd">    * description - Textual description of this phenotype</span>
+<span class="sd">    * result_type - Type of result. Cannot be changed. One of SET, QT, CATEGORY</span>
+<span class="sd">    * created_at - Timestamp when the phenotype was first created</span>
+<span class="sd">    * updated_at - Timestamp when the phenotype was last updated</span>
+<span class="sd">    * created_by - Username who created the phenotype</span>
+<span class="sd">    * versions - List of data versions available in this phenotype</span>
+
+<span class="sd">    To intraspect the data you can call `phenotype.data.keys()`. Each key</span>
 <span class="sd">    in the `data` dict is exposed as an attribute with intelligent type casting.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ServiceSession</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
@@ -164,6 +173,14 @@
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;Phenotype </span><span class="si">{self.name}</span><span class="s2"> in project </span><span class="si">{self.project_key}</span><span class="s2">&gt;&quot;</span>
 
+<div class="viewcode-block" id="Phenotype.refresh"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refresh the local cache</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;phenotype&quot;</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="Phenotype.delete"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a phenotype, including all data from a project</span>
@@ -177,7 +194,7 @@
 <span class="sd">        Upload phenotype data</span>
 
 <span class="sd">        The data is expected to be a list of lists.</span>
-<span class="sd">        e.g. `phenotype.upload([[&#39;a&#39;], [&#39;b&#39;]]).</span>
+<span class="sd">        e.g. `phenotype.upload([[&#39;a&#39;], [&#39;b&#39;]])`.</span>
 <span class="sd">        The `result_type` of the phenotype dictates</span>
 <span class="sd">        if each sublist should contain one or two items.</span>
 
@@ -189,7 +206,65 @@
 
         <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Phenotype.update_description"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.update_description">[docs]</a>    <span class="k">def</span> <span class="nf">update_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the phenotype with a new description</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">}</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Phenotype.set_tags"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.set_tags">[docs]</a>    <span class="k">def</span> <span class="nf">set_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the tag list for this phenotype, overriding all previous tags</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Phenotype.get_tags"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve all tags for this phenotype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span></div>
+
+<div class="viewcode-block" id="Phenotype.add_tag"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.add_tag">[docs]</a>    <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new tag to this phenotype.</span>
+
+<span class="sd">        :raises: `PhenotypeError` if the tag is already set on this phenotype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Tag </span><span class="si">{tag}</span><span class="s2"> already exists on this phenotype&quot;</span><span class="p">)</span>
+
+        <span class="n">tags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Phenotype.delete_tag"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.phenotype.Phenotype.delete_tag">[docs]</a>    <span class="k">def</span> <span class="nf">delete_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a tag from the phenotype.</span>
+
+<span class="sd">        :raises: `PhenotypeError` if the tag does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tags</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Tag </span><span class="si">{tag}</span><span class="s2"> does not exist on this phenotype&quot;</span><span class="p">)</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div></div>
 </pre></div>
 
     </div>
@@ -206,7 +281,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2019, Wuxi Nextcode.<br/>
+        &copy; Copyright 2020, Wuxi Nextcode.<br/>
       Last updated on 2020-03-11.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
