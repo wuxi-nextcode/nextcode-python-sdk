@@ -16,6 +16,7 @@ from ...services import BaseService
 from ...exceptions import ServerError
 from .exceptions import PhenotypeError
 from .phenotype import Phenotype
+from .phenotype_matrix import PhenotypeMatrix
 
 SERVICE_PATH = "api/phenotype-catalog"
 
@@ -172,3 +173,6 @@ class Service(BaseService):
             url, data={"phenotypes": ",".join([str(p) for p in phenotypes])}
         )
         return resp.content.decode()
+
+    def get_phenotype_matrix(self, base: str) -> PhenotypeMatrix:
+        return PhenotypeMatrix(self, base)
