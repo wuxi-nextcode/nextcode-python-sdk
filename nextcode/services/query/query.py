@@ -19,7 +19,7 @@ from dateutil.parser import parse
 from io import StringIO
 
 from .exceptions import QueryError
-from .utils import jupyter_available
+from ...utils import jupyter_available
 
 SERVICE_PATH = "/api/query"
 

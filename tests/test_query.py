@@ -13,10 +13,9 @@ import tempfile
 
 from nextcode import config, Client
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
-from nextcode.utils import decode_token
+from nextcode.utils import decode_token, jupyter_available
 from nextcode.client import Client
 from nextcode.services.query import Service
-from nextcode.services.query.utils import jupyter_available
 from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP
 from nextcode.services.query.exceptions import (
     QueryError,
