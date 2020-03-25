@@ -78,6 +78,7 @@
 <li><a class="reference internal" href="#">Phenotype Service</a><ul>
 <li><a class="reference internal" href="#service-class">Service class</a></li>
 <li><a class="reference internal" href="#phenotype">Phenotype</a></li>
+<li><a class="reference internal" href="#phenotype-matrix">Phenotype Matrix</a></li>
 <li><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
@@ -363,6 +364,91 @@ if each sublist should contain one or two items.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><cite>ServerError</cite> if there was a problem uploading</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-nextcode.services.phenotype.phenotype_matrix"></span><div class="section" id="phenotype-matrix">
+<h2>Phenotype Matrix<a class="headerlink" href="#phenotype-matrix" title="Permalink to this headline">¶</a></h2>
+<p>A builder that allows the user to set up a
+request for a phenotype matrix.</p>
+<dl class="class">
+<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix">
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.phenotype.phenotype_matrix.</code><code class="sig-name descname">PhenotypeMatrix</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">base</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>A builder to create a phenotype matrix request.</p>
+<p>You start by using add_phenotype() or add_phenotypes()
+to add a list of phenotypes and then call get_data()
+to retrieve the phenotype matrix from the server.</p>
+<dl class="method">
+<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype">
+<code class="sig-name descname">add_phenotype</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">missing_value=None</em>, <em class="sig-param">label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new phenotype to the matrix request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Phenotype name</p></li>
+<li><p><strong>missing_value</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The string to substitute for a missing value in the data</p></li>
+<li><p><strong>label</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional label to apply to the phenotype</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes">
+<code class="sig-name descname">add_phenotypes</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">missing_value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of phenotypes to the matrix request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of phenotype names</p></li>
+<li><p><strong>missing_value</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The string to substitute for a missing value in the data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data">
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">dataframe=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a phenotype matrix from the server.</p>
+<p>Can be called after phenotypes have been added to the request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If set, return results as a pandas dataframe (default True)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the request is not ready or pandas is not installed.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><cite>ServerError</cite> if phenotypes are not found on the server</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype">
+<code class="sig-name descname">remove_phenotype</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.remove_phenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a phenotype from the matrix request.</p>
+<p>Does not fail if the phenotype is not present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Phenotype name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
