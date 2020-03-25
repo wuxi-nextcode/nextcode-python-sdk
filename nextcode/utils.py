@@ -11,6 +11,7 @@ import requests
 from requests import codes
 import binascii
 import os
+from importlib.util import find_spec
 
 from .exceptions import ServerError, InvalidToken
 
@@ -119,3 +120,14 @@ def host_from_url(host):
 
 def random_string(num: int = 8) -> str:
     return binascii.hexlify(os.urandom(100)).decode("ascii")[:num]
+
+
+def jupyter_available() -> bool:
+    """
+    Check if jupyter dependencies are available without importing these heavy libraries.
+    """
+    pandas_spec = find_spec("pandas")
+    ipython_spec = find_spec("IPython")
+    if pandas_spec is not None and ipython_spec is not None:
+        return True
+    return False

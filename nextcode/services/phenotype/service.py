@@ -16,6 +16,7 @@ from ...services import BaseService
 from ...exceptions import ServerError
 from .exceptions import PhenotypeError
 from .phenotype import Phenotype
+from .phenotype_matrix import PhenotypeMatrix
 
 SERVICE_PATH = "api/phenotype-catalog"
 
@@ -150,25 +151,5 @@ class Service(BaseService):
         data = resp.json()["phenotype"]
         return Phenotype(self.session, data)
 
-    def download(self, phenotypes: List) -> List:
-        """
-        Download phenotype data for the project
-
-        Download phenotype data as TSV table (Mime type text/tab-separated-values).
-        First column contains PNs, other columns are values for the phenotypes
-
-        :param phenotypes: List of phenotypes to search for
-        :raises: `PhenotypeError` if the project does not exist
-        :raises: `ServerError`
-        """
-        if not self.project:
-            raise PhenotypeError("Project does not exist.")
-
-        if isinstance(phenotypes, str):
-            phenotypes = [phenotypes]
-        url = self.links["download"]
-
-        resp = self.session.get(
-            url, data={"phenotypes": ",".join([str(p) for p in phenotypes])}
-        )
-        return resp.content.decode()
+    def get_phenotype_matrix(self, base: str) -> PhenotypeMatrix:
+        return PhenotypeMatrix(self, base)

@@ -63,6 +63,7 @@ PROJECT_RESP = {
         "self": PROJECTS_URL + f"/{PROJECT}",
         "phenotypes": f"{PROJECTS_URL}/{PROJECT}/phenotypes",
         "download": PROJECTS_URL + f"/{PROJECT}/phenotypes/download",
+        "get_phenotype_matrix": PROJECTS_URL + f"/{PROJECT}/get_phenotype_matrix",
     },
 }
 
@@ -176,19 +177,6 @@ class PhenotypeTest(BaseTestCase):
             _ = phenotype.upload("invalid")
 
     @responses.activate
-    def test_download(self):
-        phenotypes = ["a", "b"]
-        phenotypes_txt = ",".join(phenotypes)
-        ret = "a\nb\rc\td"
-        responses.add(
-            responses.GET,
-            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/download",
-            body=ret,
-        )
-        result = self.svc.download(["something"])
-        self.assertEqual(ret, result)
-
-    @responses.activate
     def test_attributes(self):
         result_type = "SET"
         ret = {"phenotype": PHENOTYPE_RESP}
@@ -237,3 +225,24 @@ class PhenotypeTest(BaseTestCase):
         phenotype.data["tag_list"].append("test")
         phenotype.delete_tag("test")
         phenotype.set_tags(["test", "test2"])
+
+    @responses.activate
+    def test_phenotype_matrix(self):
+        matrix = self.svc.get_phenotype_matrix(base="test_base")
+        matrix.add_phenotype("pheno1", missing_value="missing1", label="label")
+        self.assertIn("pheno1", matrix.phenotypes)
+        matrix.remove_phenotype("pheno1")
+        matrix.remove_phenotype("unknown")
+        self.assertEqual(matrix.phenotypes, {})
+        matrix.add_phenotypes(["pheno2", "pheno3"], missing_value="missing23")
+        self.assertIn("pheno2", matrix.phenotypes)
+        self.assertIn("pheno3", matrix.phenotypes)
+
+        ret = "pn\tblu\nc\td"
+        responses.add(
+            responses.POST,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/get_phenotype_matrix",
+            body=ret,
+        )
+        df = matrix.get_data()
+        self.assertIn("blu", df.to_string())

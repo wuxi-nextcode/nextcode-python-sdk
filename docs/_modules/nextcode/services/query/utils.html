@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.utils &#8212; nextcode-python-sdk 0.6.1 documentation</title>
+    <title>nextcode.services.query.utils &#8212; nextcode-python-sdk 0.6.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -112,7 +112,6 @@
 <span class="sd">Utility methods used by the query service.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">importlib.util</span> <span class="k">import</span> <span class="n">find_spec</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 
 
@@ -128,17 +127,6 @@
     <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
     <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="jupyter_available"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.utils.jupyter_available">[docs]</a><span class="k">def</span> <span class="nf">jupyter_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if jupyter dependencies are available without importing these heavy libraries.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pandas_spec</span> <span class="o">=</span> <span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span>
-    <span class="n">ipython_spec</span> <span class="o">=</span> <span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;IPython&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">pandas_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ipython_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
     </div>
@@ -156,7 +144,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-03-11.<br/>
+      Last updated on 2020-03-25.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

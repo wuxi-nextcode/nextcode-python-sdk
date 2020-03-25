@@ -9,7 +9,7 @@ Use `%env LOG_QUERY=1` in Jupyter to see details.
 
 from ...exceptions import ServerError, InvalidToken
 from .exceptions import MissingRelations, QueryError
-from .utils import jupyter_available
+from ...utils import jupyter_available
 from typing import Dict, List, Optional, Union
 import nextcode
 import hashlib

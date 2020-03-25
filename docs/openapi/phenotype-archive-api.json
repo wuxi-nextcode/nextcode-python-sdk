@@ -3,7 +3,7 @@
   "info": {
     "title": "Phenotype Catalog",
     "description": "Phenotype Catalog Api",
-    "version": "2.0.0\n"
+    "version": "2.0.4"
   },
   "servers": [
     {
@@ -415,9 +415,54 @@
         "tags": [
           "Projects"
         ],
-        "operationId": "Projects-show",
+        "operationId": "Projects-index",
         "parameters": [
 
+        ],
+        "responses": {
+          "default": {
+            "description": "A list of all projects in the catalog visible to user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "List all Projects available in catalog.",
+        "x-controller": "projects",
+        "x-action": "index"
+      }
+    },
+    "/projects/{project_key}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "Projects-show",
+        "parameters": [
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "default": {
@@ -442,6 +487,43 @@
         "summary": "Get single project",
         "x-controller": "projects",
         "x-action": "show"
+      }
+    },
+    "/projects/{project_key}/get_phenotype_matrix": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "Projects-get_phenotype_matrix",
+        "parameters": [
+          {
+            "name": "project_key",
+            "description": "the name of the project",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Get phenotype matrix as TSV table (Mime type text/tab-separated-values).\nFirst column contains PNs, other columns are values for the phenotypes",
+        "x-controller": "projects",
+        "x-action": "get_phenotype_matrix",
+        "requestBody": {
+          "description": "The matrix definition",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhenotypeMatrixRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/tags/": {
@@ -598,6 +680,66 @@
             }
           }
         }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "The name of the project"
+          },
+          "links": {
+            "type": "object",
+            "description": "Dictionary of links"
+          }
+        },
+        "required": [
+          "name",
+          "links"
+        ]
+      },
+      "PhenotypeMatrixRequest": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-_]*$",
+            "description": "The name of the base set that defines the matrix.  If not set, a union of  pn's present in the phenotypes is used"
+          },
+          "phenotypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhenotypeMatrixEntry"
+            },
+            "description": "List of phenotypes to define matrix."
+          }
+        },
+        "required": [
+          "phenotypes"
+        ]
+      },
+      "PhenotypeMatrixEntry": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-_]*$",
+            "description": "The name of the phenotype"
+          },
+          "label": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-_]*$",
+            "description": "Optional column label. Default is name of phenotype"
+          },
+          "missing_value": {
+            "type": "string",
+            "description": "Optional value to use if phenotype has no value.  Defau"
+          }
+        },
+        "required": [
+          "name"
+        ]
       },
       "Tag": {
         "type": "object",
