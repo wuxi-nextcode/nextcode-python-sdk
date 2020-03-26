@@ -38,7 +38,12 @@ class Service(BaseService):
         :return: A single project
         """
         projects = self.__get_all_projects()
-        project_url = [x['links']['self'] for x in projects if x["project_id"] == project_id][0]
+        # TODO: Unwind this horrible mess. Ég sver það, Nonni leyfir mér aldrei að skrifa kóða aftur.
+        project = [x['links']['self'] for x in projects if x["project_id"] == project_id]
+        if not project:
+            raise Exception(f"Project with project_id {project_id} not found.")
+        else:
+            project_url = project[0]
         resp = self.session.get(project_url)
         project_info = resp.json()
         return project_info
