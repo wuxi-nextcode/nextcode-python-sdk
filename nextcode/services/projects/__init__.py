@@ -29,6 +29,11 @@ class Service(BaseService):
         """
         return self.__get_all_projects()
 
+    def add_project(self, project_config: dict) -> Dict:
+        project_endpoint = self.session.url_from_endpoint("projects")
+        resp = self.session.post(project_endpoint, json=project_config)
+        return resp.json()
+
     def get_project_by_id(self, project_id: int) -> Dict:
         """
         Returns the projects that have been created on the current server
@@ -55,6 +60,7 @@ class Service(BaseService):
         :return: List of projects
         """
         project_url = self.session.url_from_endpoint("projects")
+
         return self.session.get(project_url).json()
 
     def get_users_for_project(self, project_id):
@@ -70,13 +76,19 @@ class Service(BaseService):
         user.raise_for_status()
         return user
 
-    def grant_user_access_to_project(self, project_id, user_id, policy_type):
-        grant_endpoint = self.get_project_by_id(project_id)['links']['users']  # Yeah, I suck :P
+    def grant_user_access_to_project(self, project_id, username, policy_type):
 
-        data = {
-            "user_id": user_id,
-            "policy_type": policy_type
-        }
-        grant = self.session.post(grant_endpoint, json=data)
-        grant.raise_for_status()
-        return grant
+        grant_endpoint = self.get_project_by_id(project_id)['links']['users']  # Yeah, I suck :P
+        users_endpoint = self.session.url_from_endpoint("users")
+        # TODO: The service should accept usernames
+        user_id = 0
+        users = self.session.get(f"{users_endpoint}")
+        for x in users.json():
+            if x['user_name'] == username or x['user_id'] == username:
+                data = {
+                    "user_id":  x['user_id'],
+                    "policy_type": policy_type
+                }
+                grant = self.session.post(grant_endpoint, json=data)
+                return grant
+        raise Exception("User %s not found." % username)
