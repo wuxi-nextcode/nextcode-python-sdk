@@ -151,5 +151,13 @@ class Service(BaseService):
         data = resp.json()["phenotype"]
         return Phenotype(self.session, data)
 
-    def get_phenotype_matrix(self, base: str) -> PhenotypeMatrix:
+    def get_phenotype_matrix(self, base: Optional[str] = None) -> PhenotypeMatrix:
+        """
+        Get a phenotype matrix object.
+
+        :param base: Optional name of base set
+        :return: PhenotypeMatrix builder object
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: `ServerError`
+        """
         return PhenotypeMatrix(self, base)

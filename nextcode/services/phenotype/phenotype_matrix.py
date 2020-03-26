@@ -32,7 +32,7 @@ class PhenotypeMatrix:
     to retrieve the phenotype matrix from the server.
     """
 
-    def __init__(self, service, base: str):
+    def __init__(self, service, base: str = None):
         self.service = service
         self.base = base
         self.phenotypes: Dict[str, Dict[str, Optional[str]]] = {}
@@ -91,7 +91,7 @@ class PhenotypeMatrix:
         :raises: `PhenotypeError` if the request is not ready or pandas is not installed.
         :raises: `ServerError` if phenotypes are not found on the server
         """
-        if not self.base or not self.phenotypes:
+        if not self.phenotypes:
             raise PhenotypeError(
                 "Matrix request has not been initialized. Use add_phenotype(s) to begin."
             )
