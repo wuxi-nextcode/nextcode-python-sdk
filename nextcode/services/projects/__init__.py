@@ -27,7 +27,7 @@ class Service(BaseService):
 
         :return: List of projects
         """
-        return [x['links']['self'] for x in self.__get_all_projects()]
+        return self.__get_all_projects()
 
     def get_project_by_id(self, project_id: int) -> Dict:
         """
@@ -52,5 +52,26 @@ class Service(BaseService):
         project_url = self.session.url_from_endpoint("projects")
         return self.session.get(project_url).json()
 
+    def get_users_for_project(self, project_id):
+        users_endpoint = self.get_project_by_id(project_id)['links']['users']  # Yeah, I suck :P
+        data = dict(project_id=project_id)
+        resp = self.session.get(users_endpoint, data=data)
+        resp.raise_for_status()
+        return resp
 
+    def get_user(self, user_id):
+        users_endpoint = self.session.url_from_endpoint("users")
+        user = self.session.get(f"{users_endpoint}{user_id}")
+        user.raise_for_status()
+        return user
 
+    def grant_user_access_to_project(self, project_id, user_id, policy_type):
+        grant_endpoint = self.get_project_by_id(project_id)['links']['users']  # Yeah, I suck :P
+
+        data = {
+            "user_id": user_id,
+            "policy_type": policy_type
+        }
+        grant = self.session.post(grant_endpoint, json=data)
+        grant.raise_for_status()
+        return grant
