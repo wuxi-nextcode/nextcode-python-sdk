@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 0.6.2 documentation</title>
+    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 0.6.3 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -258,8 +258,16 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;phenotype&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Phenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_phenotype_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PhenotypeMatrix</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">PhenotypeMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Service.get_phenotype_matrix"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotype_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotype_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PhenotypeMatrix</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a phenotype matrix object.</span>
+
+<span class="sd">        :param base: Optional name of base set</span>
+<span class="sd">        :return: PhenotypeMatrix builder object</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: `ServerError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PhenotypeMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
@@ -277,7 +285,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-03-25.<br/>
+      Last updated on 2020-04-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

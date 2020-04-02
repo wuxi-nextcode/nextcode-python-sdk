@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Phenotype Service &#8212; nextcode-python-sdk 0.6.2 documentation</title>
+    <title>Phenotype Service &#8212; nextcode-python-sdk 0.6.3 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.6.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -190,6 +190,29 @@ method will work and the project will be created implicitly.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>List of phenotypes as per api spec</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><cite>ServerError</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nextcode.services.phenotype.service.Service.get_phenotype_matrix">
+<code class="sig-name descname">get_phenotype_matrix</code><span class="sig-paren">(</span><em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotype_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotype_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a phenotype matrix object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional name of base set</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">PhenotypeMatrix</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>PhenotypeMatrix builder object</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
@@ -377,7 +400,7 @@ if each sublist should contain one or two items.</p>
 request for a phenotype matrix.</p>
 <dl class="class">
 <dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.phenotype.phenotype_matrix.</code><code class="sig-name descname">PhenotypeMatrix</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">base</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.phenotype.phenotype_matrix.</code><code class="sig-name descname">PhenotypeMatrix</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>A builder to create a phenotype matrix request.</p>
 <p>You start by using add_phenotype() or add_phenotypes()
 to add a list of phenotypes and then call get_data()
@@ -494,7 +517,7 @@ set self.__traceback__ to tb and return self.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-03-25.<br/>
+      Last updated on 2020-04-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>
