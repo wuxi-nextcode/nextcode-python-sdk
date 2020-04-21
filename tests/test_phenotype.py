@@ -123,6 +123,17 @@ class PhenotypeTest(BaseTestCase):
         phenotype = self.svc.get_phenotype(PHENOTYPE_NAME)
         self.assertEqual(phenotype.data, PHENOTYPE_RESP)
 
+        responses.add(
+            responses.GET,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/not_exists",
+            json={"code": 404},
+            status=404
+        )
+        with self.assertRaises(PhenotypeError) as ctx:
+            _ = self.svc.get_phenotype("not_exists")
+        self.assertIn("Phenotype not found", repr(ctx.exception))
+
+
     @responses.activate
     def test_create_phenotype(self):
         result_type = "SET"

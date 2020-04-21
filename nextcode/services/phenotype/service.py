@@ -146,7 +146,13 @@ class Service(BaseService):
             raise PhenotypeError("Project does not exist.")
 
         url = urljoin(self.links["phenotypes"], name)
-        resp = self.session.get(url)
+        try:
+            resp = self.session.get(url)
+        except ServerError as ex:
+            if ex.response and ex.response["code"] == codes.not_found:
+                raise PhenotypeError("Phenotype not found") from None
+            else:
+                raise
 
         data = resp.json()["phenotype"]
         return Phenotype(self.session, data)
