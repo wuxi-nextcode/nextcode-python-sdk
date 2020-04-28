@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.pipelines &#8212; nextcode-python-sdk 0.6.3 documentation</title>
+    <title>nextcode.services.pipelines &#8212; nextcode-python-sdk 0.7.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.3</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -117,6 +117,11 @@
 <span class="kn">from</span> <span class="nn">...client</span> <span class="k">import</span> <span class="n">Client</span>
 <span class="kn">from</span> <span class="nn">...services</span> <span class="k">import</span> <span class="n">BaseService</span>
 
+<span class="n">RUNNING_STATUSES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span> <span class="s2">&quot;LAUNCHING&quot;</span><span class="p">,</span> <span class="s2">&quot;INITIALIZING&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">]</span>
+<span class="n">FAILED_STATUSES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FAILED&quot;</span><span class="p">,</span> <span class="s2">&quot;TERMINATED&quot;</span><span class="p">]</span>
+<span class="n">FINISHED_STATUSES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="s2">&quot;CANCELLED&quot;</span><span class="p">]</span>
+<span class="n">ALL_STATUSES</span> <span class="o">=</span> <span class="n">RUNNING_STATUSES</span> <span class="o">+</span> <span class="n">FAILED_STATUSES</span> <span class="o">+</span> <span class="n">FINISHED_STATUSES</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;ALL&quot;</span><span class="p">]</span>
+
 <span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s2">&quot;pipelines-service&quot;</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
@@ -142,7 +147,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-04-02.<br/>
+      Last updated on 2020-04-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

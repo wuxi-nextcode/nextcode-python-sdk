@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 0.6.3 documentation</title>
+    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 0.7.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.6.3</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -253,7 +253,13 @@
             <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Project does not exist.&quot;</span><span class="p">)</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Phenotype not found&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;phenotype&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Phenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
@@ -285,7 +291,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-04-02.<br/>
+      Last updated on 2020-04-28.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

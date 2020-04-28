@@ -13,7 +13,7 @@ import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
 
-from . import RUNNING_STATUSES, FINISHED_STATUES, FAILED_STATUES
+from . import RUNNING_STATUSES, FINISHED_STATUSES, FAILED_STATUSES
 from .exceptions import JobError
 from ...exceptions import ServerError
 from ...session import ServiceSession
@@ -63,7 +63,7 @@ class WorkflowJob:
         """
         if self.status in RUNNING_STATUSES:
             self.refresh()
-        return self.status in FINISHED_STATUES
+        return self.status in FINISHED_STATUSES
 
     @property
     def running(self) -> bool:
@@ -81,7 +81,7 @@ class WorkflowJob:
         """
         if self.status in RUNNING_STATUSES:
             self.refresh()
-        return self.status in FAILED_STATUES
+        return self.status in FAILED_STATUSES
 
     @property
     def done(self) -> bool:
