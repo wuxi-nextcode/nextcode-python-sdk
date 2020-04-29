@@ -45,6 +45,7 @@ class Service(BaseService):
             "projects": self.session.url_from_endpoint("projects"),
             "users": self.session.url_from_endpoint("users"),
         }
+        self.minio_url = self.session.root_info["app_info"]["minio_url"]
         if project_name:
             self._init_project(project_name)
 
@@ -96,25 +97,32 @@ class Service(BaseService):
     def get_credentials(self):
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
-        resp = self.session.get(credentials_url)
+        try:
+            resp = self.session.get(credentials_url)
+        except ServerError as e:
+            raise ProjectError(str(e)) from None
         credentials = resp.json()
         return credentials
 
-    def set_credentials(self, aws_secret_access_key: str):
+    def set_credentials(self, aws_secret_access_key: Optional[str] = None) -> Dict:
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
-        resp = self.session.put(
-            credentials_url, json={"aws_secret_access_key": aws_secret_access_key}
-        )
+        try:
+            resp = self.session.put(
+                credentials_url, json={"aws_secret_access_key": aws_secret_access_key}
+            )
+        except ServerError as e:
+            raise ProjectError(str(e)) from None
+
         credentials = resp.json()
         return credentials
 
-    def delete_credentials(self):
+    def delete_credentials(self) -> None:
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
         resp = self.session.delete(credentials_url)
 
-    def get_users(self):
+    def get_users(self) -> List[Dict]:
         # TODO: admin
         self._check_project()
         users_link = self.links["users"]
