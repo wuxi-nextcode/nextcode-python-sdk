@@ -46,6 +46,7 @@ class Service(BaseService):
             "users": self.session.url_from_endpoint("users"),
         }
         self.minio_url = self.session.root_info["app_info"]["minio_url"]
+        self.credentials = self.get_credentials(create=True)
         if project_name:
             self._init_project(project_name)
 
@@ -94,23 +95,28 @@ class Service(BaseService):
         user = resp.json()[0]
         return user
 
-    def get_credentials(self):
+    def get_credentials(self, create: bool = False) -> Dict:
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
         try:
             resp = self.session.get(credentials_url)
+            credentials = resp.json()
         except ServerError as e:
-            raise ProjectError(str(e)) from None
-        credentials = resp.json()
+            if not create:
+                raise ProjectError(str(e)) from None
+            else:
+                credentials = self.set_credentials()
         return credentials
 
-    def set_credentials(self, aws_secret_access_key: Optional[str] = None) -> Dict:
+    def set_credentials(self, minio_access_key: Optional[str] = None) -> Dict:
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
         try:
-            resp = self.session.put(
-                credentials_url, json={"aws_secret_access_key": aws_secret_access_key}
-            )
+            data: Dict = {}
+            if minio_access_key:
+                data = {"minio_access_key": minio_access_key}
+
+            resp = self.session.put(credentials_url, json=data)
         except ServerError as e:
             raise ProjectError(str(e)) from None
 
