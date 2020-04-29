@@ -84,7 +84,7 @@ class Service(BaseService):
         return ret[0]
 
     def get_my_project_access(self):
-        user = self.get_user_in_project(self.current_user.get("email"))
+        user = self.get_user_in_project(self.current_user.get("user_name"))
         if not user:
             raise ProjectError(f"You are not a member of project {self.project_name}")
         ret = user["policies"]
