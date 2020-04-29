@@ -100,6 +100,20 @@ class Service(BaseService):
         credentials = resp.json()
         return credentials
 
+    def set_credentials(self, aws_secret_access_key: str):
+        user = self.get_my_user()
+        credentials_url = user["links"]["credentials"]
+        resp = self.session.put(
+            credentials_url, json={"aws_secret_access_key": aws_secret_access_key}
+        )
+        credentials = resp.json()
+        return credentials
+
+    def delete_credentials(self):
+        user = self.get_my_user()
+        credentials_url = user["links"]["credentials"]
+        resp = self.session.delete(credentials_url)
+
     def get_users(self):
         # TODO: admin
         self._check_project()
@@ -118,15 +132,21 @@ class Service(BaseService):
             raise ProjectError(str(se)) from None
         return users.json()
 
-    def remove_user(self, user_name):
+    def delete_user(self, user_name):
         # TODO: admin
         self._check_project()
-        pass
+        url = self.urls["users"]
+        data = {"user_name": user_name}
+        resp = self.session.get(url, params=data)
+        user = resp.json()[0]
+        if not user:
+            raise ProjectError("User not found")
+        self.session.delete(user["links"]["self"])
 
     def delete_project(self):
         self._check_project()
         # TODO: admin
-        pass
+        raise NotImplementedError("Not yet implemented")
 
     def get_bucket(self):
         self._check_project()
