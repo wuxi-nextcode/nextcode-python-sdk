@@ -59,14 +59,36 @@ class Service(BaseService):
         self.links = self.project.get("links", {})
         log.info(f"Service initialized with project {self.project_name}")
 
-    def _check_project(self):
+    def _check_project(self, check_admin: Optional[bool] = False) -> List:
         """
-        Raise an exception if there is no project specified
+        Raise an exception if there is no project specified or if the user
+        is not a member of the project
 
+        :param check_admin: Only check if the current user is an admin
         :raises: QueryError
         """
         if not self.project:
             raise ProjectError("No project specified")
+        if check_admin:
+            if self.session.root_info["current_user"]["admin"]:
+                return
+        self.get_my_project_access()
+
+    def get_user_in_project(self, user_name):
+        url = self.links["users"]
+        data = {"user_name": user_name}
+        resp = self.session.get(url, params=data)
+        ret = resp.json()
+        if not ret:
+            return None
+        return ret[0]
+
+    def get_my_project_access(self):
+        user = self.get_user_in_project(self.current_user.get("email"))
+        if not user:
+            raise ProjectError(f"You are not a member of project {self.project_name}")
+        ret = user["policies"]
+        return ret
 
     def get_all_projects(self) -> List:
         """
@@ -126,18 +148,18 @@ class Service(BaseService):
     def delete_credentials(self) -> None:
         user = self.get_my_user()
         credentials_url = user["links"]["credentials"]
-        resp = self.session.delete(credentials_url)
+        _ = self.session.delete(credentials_url)
 
-    def get_users(self) -> List[Dict]:
+    def get_users_in_project(self) -> List[Dict]:
         # TODO: admin
-        self._check_project()
+        self._check_project(check_admin=True)
         users_link = self.links["users"]
         users = self.session.get(users_link)
         return users.json()
 
-    def add_user(self, user_name, policies):
+    def add_user_to_project(self, user_name, policies):
         # TODO: admin
-        self._check_project()
+        self._check_project(check_admin=True)
         users_link = self.links["users"]
         data = {"user_name": user_name, "policies": policies}
         try:
@@ -146,9 +168,16 @@ class Service(BaseService):
             raise ProjectError(str(se)) from None
         return users.json()
 
-    def delete_user(self, user_name):
+    def remove_user_from_project(self, user_name):
         # TODO: admin
-        self._check_project()
+        self._check_project(check_admin=True)
+        user = self.get_user_in_project(user_name)
+        if not user:
+            raise ProjectError(f"User {user_name} not found or you do not have access")
+        self.session.delete(user["links"]["self"])
+
+    def obliterate_user(self, user_name):
+        # TODO: admin
         url = self.urls["users"]
         data = {"user_name": user_name}
         resp = self.session.get(url, params=data)
@@ -162,12 +191,12 @@ class Service(BaseService):
         # TODO: admin
         raise NotImplementedError("Not yet implemented")
 
-    def get_bucket(self):
+    def get_project_bucket(self):
         self._check_project()
         credentials = self.get_credentials()
         s3 = boto3.resource(
             "s3",
-            endpoint_url="https://platform-projects.wuxinextcodedev.com",  #!! TODO
+            endpoint_url=self.minio_url,
             aws_access_key_id=credentials["aws_access_key_id"],
             aws_secret_access_key=credentials["aws_secret_access_key"],
             config=BotoConfig(signature_version="s3v4"),
@@ -177,7 +206,7 @@ class Service(BaseService):
 
     def list(self, prefix=""):
         self._check_project()
-        bucket = self.get_bucket()
+        bucket = self.get_project_bucket()
         result = bucket.meta.client.list_objects(
             Bucket=bucket.name, Delimiter="/", Prefix=prefix
         )
@@ -194,7 +223,7 @@ class Service(BaseService):
         """
         """
         self._check_project()
-        bucket = self.get_bucket()
+        bucket = self.get_project_bucket()
         path = os.path.expanduser(path)
         if path.endswith("/") or os.path.isdir(path):
             filename = key.split("/")[-1]
@@ -204,7 +233,7 @@ class Service(BaseService):
 
     def upload(self, filename, key):
         self._check_project()
-        bucket = self.get_bucket()
+        bucket = self.get_project_bucket()
         path = os.path.expanduser(filename)
         if key.endswith("/"):
             key += os.path.basename(filename)
