@@ -12,6 +12,7 @@ from ...services import BaseService
 from ...client import Client
 from ...exceptions import NotFound, ServerError
 from .exceptions import ProjectError
+from ...utils import jupyter_available
 
 import boto3
 from botocore.client import Config as BotoConfig
@@ -19,9 +20,18 @@ from botocore.client import Config as BotoConfig
 import logging
 
 SERVICE_PATH = "api/project"
-
+DEFAULT_POLICIES = ["researcher"]
 
 log = logging.getLogger(__name__)
+
+def fmt_size(num, suffix='B'):
+    if num == "":
+        return ""
+    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+        if abs(num) < 1024.0:
+            return "%3.0f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.0f%s%s" % (num, 'Yi', suffix)
 
 
 class Service(BaseService):
@@ -157,7 +167,7 @@ class Service(BaseService):
         users = self.session.get(users_link)
         return users.json()
 
-    def add_user_to_project(self, user_name, policies):
+    def add_user_to_project(self, user_name, policies = DEFAULT_POLICIES):
         # TODO: admin
         self._check_project(check_admin=True)
         users_link = self.links["users"]
@@ -204,19 +214,38 @@ class Service(BaseService):
         bucket = s3.Bucket(self.project_name)  # pylint: disable=E1101
         return bucket
 
-    def list(self, prefix=""):
+    def list(self, prefix: str = "", raw: bool = False):
         self._check_project()
         bucket = self.get_project_bucket()
         result = bucket.meta.client.list_objects(
             Bucket=bucket.name, Delimiter="/", Prefix=prefix
         )
-        ret = {"folders": [], "files": []}
+        ret = []
         if "CommonPrefixes" in result:
             for o in result["CommonPrefixes"]:
-                ret["folders"].append(o["Prefix"])
+                ret.append({"type": "prefix", "size": "", "modified": "", "name": o["Prefix"]})
         if "Contents" in result:
             for o in result["Contents"]:
-                ret["files"].append(o["Key"])
+                ret.append({"type": "file", "size": o.get("Size"), "modified": o.get("LastModified"), "name": o["Key"]})
+        if raw:
+            return ret
+
+        if not jupyter_available():
+            raise ProjectError("Pandas library is not installed and a dataframe cannot be returned")
+        import pandas as pd
+
+        print(f"Contents of {prefix or '/'}")
+        for r in ret:
+            r["size"] = fmt_size(r["size"])
+            try:
+                r["modified"] = r["modified"].strftime("%M %d %H:%M")
+            except Exception:
+                pass
+            if r["type"] == "file":
+                r["name"] = r["name"].split("/")[-1]
+            else:
+                r["name"] = r["name"].split("/")[-2] + "/"
+        ret = pd.DataFrame(ret)
         return ret
 
     def download(self, key, path):
@@ -228,17 +257,30 @@ class Service(BaseService):
         if path.endswith("/") or os.path.isdir(path):
             filename = key.split("/")[-1]
             path = os.path.join(path, filename)
-        log.info(f"Downloading {key} from project {self.project_name} to {path}")
+        log_string = f"Downloading {key} from project {self.project_name} to {path}"
+        log.info(log_string)
         bucket.download_file(key, path)
 
     def upload(self, filename, key):
         self._check_project()
         bucket = self.get_project_bucket()
         path = os.path.expanduser(filename)
-        if key.endswith("/"):
+        # special case the root folder
+        if key in (".", "/"):
+            key = ""
+        if not key or key.endswith("/"):
             key += os.path.basename(filename)
-        log.info(f"Uploading {path} to {key} in project {self.project_name}")
+        if key.startswith("/"):
+            key = key[1:]
+        # already_exists = not not self.list(key, raw=True)
+        # if already_exists and not key.startswith("user_data/"):
+        #     raise ProjectError(f"File {key} already exists on server. You can only override files in user_data/")
+        log_string = f"Uploading {path} to {key} in project {self.project_name}"
+        log.info(log_string)
         try:
             bucket.upload_file(path, key)
         except Exception as e:
             raise e from None
+
+    def delete(self, key):
+        pass
