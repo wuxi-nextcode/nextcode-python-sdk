@@ -234,11 +234,10 @@ class Service(BaseService):
             raise ProjectError("Pandas library is not installed and a dataframe cannot be returned")
         import pandas as pd
 
-        print(f"Contents of {prefix or '/'}")
         for r in ret:
             r["size"] = fmt_size(r["size"])
             try:
-                r["modified"] = r["modified"].strftime("%M %d %H:%M")
+                r["modified"] = r["modified"].strftime("%B %d %H:%M")
             except Exception:
                 pass
             if r["type"] == "file":
