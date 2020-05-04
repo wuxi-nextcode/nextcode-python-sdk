@@ -111,8 +111,8 @@ class Service(BaseService):
                 return
         self.get_my_project_access()
 
-    def get_user_in_project(self, user_name):
-        url = self.links["users"]
+    def get_user_in_project(self, project, user_name):
+        url = project["links"]["users"]
         data = {"user_name": user_name}
         resp = self.session.get(url, params=data)
         ret = resp.json()
@@ -121,7 +121,9 @@ class Service(BaseService):
         return ret[0]
 
     def get_my_project_access(self):
-        user = self.get_user_in_project(self.current_user.get("user_name"))
+        user = self.get_user_in_project(
+            self.project, self.current_user.get("user_name")
+        )
         if not user:
             raise ProjectError(f"You are not a member of project {self.project_name}")
         ret = user["policies"]
@@ -194,13 +196,28 @@ class Service(BaseService):
         users = self.session.get(users_link)
         return users.json()
 
-    def add_user_to_project(self, user_name=None, policies=DEFAULT_POLICIES):
+    def add_user_to_project(
+        self,
+        project_name: Optional[str] = None,
+        user_name: Optional[str] = None,
+        policies: List[str] = DEFAULT_POLICIES,
+    ):
         if not self.is_admin():
             raise ProjectError("Only user with admin role can add users to project")
-        self._check_project(check_admin=True)
+        if project_name:
+            resp = self.session.get(
+                self.urls["projects"], params={"project_name": project_name}
+            )
+            if resp.json():
+                project = resp.json()[0]
+            else:
+                raise ProjectError(f"Project {project_name} does not exist")
+        else:
+            self._check_project(check_admin=True)
+            project = self.project
         if not user_name:
             user_name = self.current_user["user_name"]
-        users_link = self.links["users"]
+        users_link = project["links"]["users"]
         data = {"user_name": user_name, "policies": policies}
         try:
             users = self.session.post(users_link, json=data)
@@ -208,13 +225,26 @@ class Service(BaseService):
             raise ProjectError(str(se)) from None
         return users.json()
 
-    def remove_user_from_project(self, user_name):
+    def remove_user_from_project(
+        self, project_name: Optional[str] = None, user_name: Optional[str] = None
+    ):
         if not self.is_admin():
             raise ProjectError(
                 "Only user with admin role can remove users from project"
             )
-        self._check_project(check_admin=True)
-        user = self.get_user_in_project(user_name)
+        if project_name:
+            resp = self.session.get(
+                self.urls["projects"], params={"project_name": project_name}
+            )
+            if resp.json():
+                project = resp.json()[0]
+            else:
+                raise ProjectError(f"Project {project_name} does not exist")
+        else:
+            self._check_project(check_admin=True)
+            project = self.project
+
+        user = self.get_user_in_project(project, user_name)
         if not user:
             raise ProjectError(f"User {user_name} not found or you do not have access")
         self.session.delete(user["links"]["self"])
