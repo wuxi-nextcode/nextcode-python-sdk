@@ -78,7 +78,7 @@ class Service(BaseService):
         """
         return self.session.root_info.get("current_user", {}).get("admin", False)
 
-    def create_project(self, project_name: Optional[str] = None):
+    def create_project(self, project_name: Optional[str] = None) -> Dict:
         """
         Create a new project in the project service.
 
@@ -89,9 +89,12 @@ class Service(BaseService):
         if not project_name:
             project_name = self.project_name
         log.info("Creating project {project_name}")
-        return self.session.post(
+        resp = self.session.post(
             self.urls["projects"], json={"project_name": project_name}
         )
+        ret = resp.json()
+        self._init_project(project_name)
+        return ret
 
     def _check_project(self, check_admin: Optional[bool] = False) -> List:
         """
@@ -191,9 +194,12 @@ class Service(BaseService):
         users = self.session.get(users_link)
         return users.json()
 
-    def add_user_to_project(self, user_name, policies=DEFAULT_POLICIES):
-        # TODO: admin
+    def add_user_to_project(self, user_name=None, policies=DEFAULT_POLICIES):
+        if not self.is_admin():
+            raise ProjectError("Only user with admin role can add users to project")
         self._check_project(check_admin=True)
+        if not user_name:
+            user_name = self.current_user["email"]
         users_link = self.links["users"]
         data = {"user_name": user_name, "policies": policies}
         try:
@@ -203,7 +209,10 @@ class Service(BaseService):
         return users.json()
 
     def remove_user_from_project(self, user_name):
-        # TODO: admin
+        if not self.is_admin():
+            raise ProjectError(
+                "Only user with admin role can remove users from project"
+            )
         self._check_project(check_admin=True)
         user = self.get_user_in_project(user_name)
         if not user:
@@ -211,7 +220,8 @@ class Service(BaseService):
         self.session.delete(user["links"]["self"])
 
     def obliterate_user(self, user_name):
-        # TODO: admin
+        if not self.is_admin():
+            raise ProjectError("Only user with admin role can delete users")
         url = self.urls["users"]
         data = {"user_name": user_name}
         resp = self.session.get(url, params=data)
