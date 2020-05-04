@@ -134,7 +134,7 @@ class Service(BaseService):
         ret = resp.json()
         return ret
 
-    def _get_project(self, project_name):
+    def _get_project(self, project_name: str) -> Dict:
         data = {"project_name": project_name}
         resp = self.session.get(self.urls["projects"], params=data)
         ret = resp.json()
@@ -145,11 +145,10 @@ class Service(BaseService):
             return ret
         return ret[0]
 
-    def get_my_user(self):
-        url = self.urls["users"]
-        data = {"user_name": self.current_user.get("email")}
-        resp = self.session.get(url, params=data)
-        user = resp.json()[0]
+    def get_my_user(self) -> Dict:
+        url = self.current_user["link"]
+        resp = self.session.get(url)
+        user = resp.json()
         return user
 
     def get_credentials(self, create: bool = False) -> Dict:
