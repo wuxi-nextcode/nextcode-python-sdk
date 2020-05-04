@@ -24,14 +24,15 @@ DEFAULT_POLICIES = ["researcher"]
 
 log = logging.getLogger(__name__)
 
-def fmt_size(num, suffix='B'):
+
+def fmt_size(num, suffix="B"):
     if num == "":
         return ""
-    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
         if abs(num) < 1024.0:
             return "%3.0f%s%s" % (num, unit, suffix)
         num /= 1024.0
-    return "%.0f%s%s" % (num, 'Yi', suffix)
+    return "%.0f%s%s" % (num, "Yi", suffix)
 
 
 class Service(BaseService):
@@ -65,9 +66,32 @@ class Service(BaseService):
         Initialize the project from the server
         """
         self.project_name = project_name
-        self.project = self.get_project(project_name)
-        self.links = self.project.get("links", {})
-        log.info(f"Service initialized with project {self.project_name}")
+        self.project = self._get_project(project_name)
+        self.links = {}
+        if self.project:
+            self.links = self.project.get("links", {})
+            log.info(f"Service initialized with project {self.project_name}")
+
+    def is_admin(self):
+        """
+        Is the current user a project-service admin
+        """
+        return self.session.root_info.get("current_user", {}).get("admin", False)
+
+    def create_project(self, project_name: Optional[str] = None):
+        """
+        Create a new project in the project service.
+
+        :param project_name: The name of the project. If omitted, the current project is assumed
+        """
+        if not self.is_admin():
+            raise ProjectError("You lack the required role to create projects")
+        if not project_name:
+            project_name = self.project_name
+        log.info("Creating project {project_name}")
+        return self.session.post(
+            self.urls["projects"], json={"project_name": project_name}
+        )
 
     def _check_project(self, check_admin: Optional[bool] = False) -> List:
         """
@@ -80,7 +104,7 @@ class Service(BaseService):
         if not self.project:
             raise ProjectError("No project specified")
         if check_admin:
-            if self.session.root_info["current_user"]["admin"]:
+            if self.is_admin():
                 return
         self.get_my_project_access()
 
@@ -110,14 +134,15 @@ class Service(BaseService):
         ret = resp.json()
         return ret
 
-    def get_project(self, project_name):
+    def _get_project(self, project_name):
         data = {"project_name": project_name}
         resp = self.session.get(self.urls["projects"], params=data)
         ret = resp.json()
         if not ret:
-            raise NotFound(
+            log.warning(
                 f"Project {project_name} was not found or you do not have access"
             )
+            return ret
         return ret[0]
 
     def get_my_user(self):
@@ -167,7 +192,7 @@ class Service(BaseService):
         users = self.session.get(users_link)
         return users.json()
 
-    def add_user_to_project(self, user_name, policies = DEFAULT_POLICIES):
+    def add_user_to_project(self, user_name, policies=DEFAULT_POLICIES):
         # TODO: admin
         self._check_project(check_admin=True)
         users_link = self.links["users"]
@@ -223,21 +248,32 @@ class Service(BaseService):
         ret = []
         if "CommonPrefixes" in result:
             for o in result["CommonPrefixes"]:
-                ret.append({"type": "prefix", "size": "", "modified": "", "name": o["Prefix"]})
+                ret.append(
+                    {"type": "prefix", "size": "", "modified": "", "name": o["Prefix"]}
+                )
         if "Contents" in result:
             for o in result["Contents"]:
-                ret.append({"type": "file", "size": o.get("Size"), "modified": o.get("LastModified"), "name": o["Key"]})
+                ret.append(
+                    {
+                        "type": "file",
+                        "size": o.get("Size"),
+                        "modified": o.get("LastModified"),
+                        "name": o["Key"],
+                    }
+                )
         if raw:
             return ret
 
         if not jupyter_available():
-            raise ProjectError("Pandas library is not installed and a dataframe cannot be returned")
+            raise ProjectError(
+                "Pandas library is not installed and a dataframe cannot be returned"
+            )
         import pandas as pd
 
         for r in ret:
             r["size"] = fmt_size(r["size"])
             try:
-                r["modified"] = r["modified"].strftime("%B %d %H:%M")
+                r["modified"] = r["modified"].strftime("%b %d %H:%M")
             except Exception:
                 pass
             if r["type"] == "file":
