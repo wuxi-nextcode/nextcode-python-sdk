@@ -199,7 +199,7 @@ class Service(BaseService):
             raise ProjectError("Only user with admin role can add users to project")
         self._check_project(check_admin=True)
         if not user_name:
-            user_name = self.current_user["email"]
+            user_name = self.current_user["user_name"]
         users_link = self.links["users"]
         data = {"user_name": user_name, "policies": policies}
         try:
