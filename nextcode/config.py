@@ -12,6 +12,7 @@ import json
 import time
 from pathlib import Path
 from typing import Dict, Tuple, Sequence, Optional
+import shutil
 
 from .utils import root_url_from_api_key
 from .exceptions import InvalidProfile
@@ -64,6 +65,14 @@ def save_cache(name: str, contents: Dict) -> None:
         log.info("Dumped contents into cache %s", cache_file)
     except Exception:
         log.exception("Could not save cache %s", cache_file)
+
+
+def clear_cache() -> None:
+    cache_folder = root_config_folder.joinpath("cache")
+    try:
+        shutil.rmtree(cache_folder)
+    except FileNotFoundError:
+        pass
 
 
 class Config:
