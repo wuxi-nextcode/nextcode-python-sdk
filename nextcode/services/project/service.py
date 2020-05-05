@@ -278,7 +278,7 @@ class Service(BaseService):
         bucket = s3.Bucket(self.project_name)  # pylint: disable=E1101
         return bucket
 
-    def list(self, prefix: str = "", raw: bool = False):
+    def list(self, prefix: str = "", raw: bool = False) -> Optional[list]:
         self._check_project()
         bucket = self.get_project_bucket()
         result = bucket.meta.client.list_objects(
@@ -308,6 +308,7 @@ class Service(BaseService):
                 "Pandas library is not installed and a dataframe cannot be returned"
             )
         import pandas as pd
+        from IPython.display import display
 
         for r in ret:
             r["size"] = fmt_size(r["size"])
@@ -319,14 +320,27 @@ class Service(BaseService):
                 r["name"] = r["name"].split("/")[-1]
             else:
                 r["name"] = r["name"].split("/")[-2] + "/"
-        ret = pd.DataFrame(ret)
-        return ret
+        df = pd.DataFrame(ret)
 
-    def download(self, key, path):
+        with pd.option_context(
+            "display.max_rows",
+            None,
+            "display.max_colwidth",
+            0,
+            "display.colheader_justify",
+            "left",
+        ):
+            print(f"Contents of {prefix}:")
+            print(df.to_string(index=False))
+        return None
+
+    def download(self, key: str, path: Optional[str] = None):
         """
         """
         self._check_project()
         bucket = self.get_project_bucket()
+        if not path:
+            path = "."
         path = os.path.expanduser(path)
         if path.endswith("/") or os.path.isdir(path):
             filename = key.split("/")[-1]
@@ -334,6 +348,7 @@ class Service(BaseService):
         log_string = f"Downloading {key} from project {self.project_name} to {path}"
         log.info(log_string)
         bucket.download_file(key, path)
+        return path
 
     def upload(self, filename, key):
         self._check_project()
@@ -355,6 +370,7 @@ class Service(BaseService):
             bucket.upload_file(path, key)
         except Exception as e:
             raise e from None
+        return key
 
     def delete(self, key):
         pass
