@@ -42,9 +42,8 @@ class JupyterTest(BaseTestCase):
     @responses.activate
     def test_replace_vars(self):
         setup_responses()
-        with self.assertRaises(Exception) as ex:
-            self.magics.replace_vars("hello $not_found;")
-        self.assertIn("Variable 'not_found' not found", str(ex.exception))
+        ret = self.magics.replace_vars("hello $not_found;")
+        self.assertIn("$not_found", ret)
         self.magics.shell.user_ns = {"found": 1}
         string = self.magics.replace_vars("hello $found;")
         self.assertEqual("hello 1;", string)

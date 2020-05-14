@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.7.14 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.7.15 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.14</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -478,6 +478,15 @@ This object is returned from query methods in the ‘query’ service.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nextcode.services.query.query.Query.download_results">
+<code class="sig-name descname">download_results</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">page_size=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.download_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.download_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download the entire results for the query to a local file
+By default this will stream the results into the file in a single
+http call. This can be changed to paging by passing in page_size
+:param page_size: Number of lines per page (default all)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="nextcode.services.query.query.Query.failed">
 <em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#nextcode.services.query.query.Query.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query in a failed state</p>
@@ -738,7 +747,7 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-05.<br/>
+      Last updated on 2020-05-14.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

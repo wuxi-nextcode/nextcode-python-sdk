@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.session &#8212; nextcode-python-sdk 0.7.14 documentation</title>
+    <title>nextcode.session &#8212; nextcode-python-sdk 0.7.15 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.14</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -229,6 +229,8 @@
 
         <span class="c1"># method: GET</span>
         <span class="n">old_content_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;headers&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;get&quot;</span><span class="p">:</span>
             <span class="c1"># ! Temporary hack: Remove the application/json content-type header for GET&#39;s</span>
@@ -293,17 +295,20 @@
             <span class="c1"># ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/</span>
             <span class="c1">#   and https://[xxx]-cluster.wuxinextcode.com/</span>
             <span class="n">lst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">old_url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span>
-            <span class="k">if</span> <span class="s2">&quot;-cluster&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">old_url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span>
+                <span class="k">if</span> <span class="s2">&quot;-cluster&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-cluster.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Service not found on server </span><span class="si">%s</span><span class="s2">. Trying alternative URL </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">old_url_base</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-cluster.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;Service not found on server </span><span class="si">%s</span><span class="s2">. Trying alternative URL </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">old_url_base</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s2">&quot;application/json&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span>
@@ -350,7 +355,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-05.<br/>
+      Last updated on 2020-05-14.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

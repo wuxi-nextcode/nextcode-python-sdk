@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.7.14 documentation</title>
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.7.15 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.14</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -212,12 +212,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle variable substitution in a gor string to interact with local state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([a-zA-Z0-9_]+)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([^0-9][a-zA-Z0-9_]+)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">string</span>
         <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
         <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">replacement_vars</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found in notebook&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span>
+                <span class="k">continue</span>
             <span class="n">var</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">])</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;$</span><span class="si">{var_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
@@ -267,6 +268,7 @@
             <span class="n">gor_string</span> <span class="o">=</span> <span class="n">line</span>
             <span class="n">return_var</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">persist</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">download_filename</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
             <span class="n">qry</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="c1"># if this is a multiline statement</span>
@@ -276,7 +278,9 @@
                     <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;&lt;&quot;</span><span class="p">)</span>
                     <span class="n">var</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                     <span class="c1"># if the variable looks like it might be a filename, persist it, otherwise assign to a local var</span>
-                    <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">var</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;file:&quot;</span><span class="p">):</span>
+                        <span class="n">download_filename</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+                    <span class="k">elif</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">var</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
                         <span class="n">persist</span> <span class="o">=</span> <span class="n">var</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">return_var</span> <span class="o">=</span> <span class="n">var</span>
@@ -327,19 +331,24 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">persist</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">MAX_ROWS</span> <span class="o">=</span> <span class="mi">1000000</span>
-            <span class="k">if</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">MAX_ROWS</span><span class="p">:</span>
-                <span class="n">print_error</span><span class="p">(</span>
-                    <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> returned </span><span class="si">{}</span><span class="s2"> rows but magic commands are capped at </span><span class="si">{}</span><span class="s2"> rows.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">MAX_ROWS</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">MAX_ROWS</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">return_var</span><span class="p">:</span>
-                <span class="n">user_ns</span><span class="p">[</span><span class="n">return_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span>
+            <span class="k">if</span> <span class="n">download_filename</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">download_results</span><span class="p">(</span><span class="n">download_filename</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Results have been downloaded to </span><span class="si">{ret}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">ret</span>
+                <span class="n">MAX_ROWS</span> <span class="o">=</span> <span class="mi">1000000</span>
+                <span class="k">if</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">MAX_ROWS</span><span class="p">:</span>
+                    <span class="n">print_error</span><span class="p">(</span>
+                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> returned </span><span class="si">{}</span><span class="s2"> rows but magic commands are capped at </span><span class="si">{}</span><span class="s2"> rows.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">MAX_ROWS</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">MAX_ROWS</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">return_var</span><span class="p">:</span>
+                    <span class="n">user_ns</span><span class="p">[</span><span class="n">return_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">ret</span>
         <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">qry</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -497,7 +506,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-05.<br/>
+      Last updated on 2020-05-14.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

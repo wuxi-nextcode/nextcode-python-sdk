@@ -105,12 +105,13 @@ class GorMagics(Magics):
         """
         Handle variable substitution in a gor string to interact with local state.
         """
-        replacement_vars = re.findall("\\$([a-zA-Z0-9_]+)?", string)
+        replacement_vars = re.findall("\\$([^0-9][a-zA-Z0-9_]+)?", string)
         ret = string
         user_ns = self.shell.user_ns
         for var_name in replacement_vars:
             if var_name not in user_ns.keys():
-                raise Exception("Variable '%s' not found" % var_name) from None
+                print("Variable '%s' not found in notebook" % var_name)
+                continue
             var = str(user_ns[var_name])
             ret = ret.replace(f"${var_name}", var)
         return ret
@@ -160,6 +161,7 @@ class GorMagics(Magics):
             gor_string = line
             return_var = None
             persist = None
+            download_filename = None
             user_ns = self.shell.user_ns
             qry = None
             # if this is a multiline statement
@@ -169,7 +171,9 @@ class GorMagics(Magics):
                     parts = line.split("<<")
                     var = parts[0].strip()
                     # if the variable looks like it might be a filename, persist it, otherwise assign to a local var
-                    if "/" in var or "." in var:
+                    if var.startswith("file:"):
+                        download_filename = var[5:]
+                    elif "/" in var or "." in var:
                         persist = var
                     else:
                         return_var = var
@@ -220,19 +224,24 @@ class GorMagics(Magics):
             )
             if persist:
                 return None
-            MAX_ROWS = 1000000
-            if num_rows > MAX_ROWS:
-                print_error(
-                    "Query {} returned {} rows but magic commands are capped at {} rows.".format(
-                        qry.query_id, qry.line_count, MAX_ROWS
-                    )
-                )
-            ret = qry.dataframe(limit=MAX_ROWS)
-            if return_var:
-                user_ns[return_var] = ret
+            if download_filename:
+                ret = qry.download_results(download_filename)
+                print(f"Results have been downloaded to {ret}")
                 return None
             else:
-                return ret
+                MAX_ROWS = 1000000
+                if num_rows > MAX_ROWS:
+                    print_error(
+                        "Query {} returned {} rows but magic commands are capped at {} rows.".format(
+                            qry.query_id, qry.line_count, MAX_ROWS
+                        )
+                    )
+                ret = qry.dataframe(limit=MAX_ROWS)
+                if return_var:
+                    user_ns[return_var] = ret
+                    return None
+                else:
+                    return ret
         except KeyboardInterrupt:
             if qry:
                 try:

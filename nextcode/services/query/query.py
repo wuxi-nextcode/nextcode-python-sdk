@@ -15,6 +15,7 @@ import logging
 import time
 from typing import Dict, Tuple, Sequence, List, Optional, Union, Callable
 from dateutil.parser import parse
+import os
 
 from io import StringIO
 
@@ -25,7 +26,7 @@ SERVICE_PATH = "/api/query"
 
 RUNNING_STATUSES = ("PENDING", "RUNNING", "CANCELLING")
 FAILED_STATUSES = ("CANCELLING", "CANCELLED", "FAILED")
-RESULTS_PAGE_SIZE = 200000
+RESULTS_PAGE_SIZE = 1000000
 
 log = logging.getLogger(__name__)
 
@@ -182,6 +183,61 @@ class Query:
         self.init_from_resp(resp.json())
         return self
 
+    def download_results(self, filename, page_size=0):
+        """
+        Download the entire results for the query to a local file
+        By default this will stream the results into the file in a single
+        http call. This can be changed to paging by passing in page_size
+        :param page_size: Number of lines per page (default all)
+        """
+        filename = os.path.expanduser(filename)
+        start_time = time.time()
+        try:
+            streamresults_url = self.links["streamresults"]
+        except KeyError:
+            raise Exception(
+                "Server does not support result downloading via streaming"
+            ) from None
+        limit = page_size
+        offset = 0
+        num_bytes_total = 0
+        log.info("Downloading results via streaming with page size %s", page_size)
+        with open(filename, "wb") as f:
+            while 1:
+                url = streamresults_url + f"?limit={limit}&offset={offset}"
+                offset += limit
+                st = time.time()
+                num_bytes = 0
+                with self.session.get(
+                    url, headers={"Accept": "text/tab-separated-values"}, stream=True
+                ) as r:
+                    r.raise_for_status()
+                    i = 0
+                    t = time.time()
+                    for chunk in r.iter_content(chunk_size=100):
+                        num_bytes += len(chunk)
+                        if i % 1000 == 0:
+                            log.debug("chunk %s in %.2fsec", i, time.time() - t)
+                            t = time.time()
+                        f.write(chunk)
+                        i += 1
+                if not num_bytes or not limit:
+                    log.info("No more bytes to download")
+                    break
+                else:
+                    log.info(
+                        "Downloaded %s bytes in %.2fsec this time",
+                        num_bytes,
+                        time.time() - st,
+                    )
+                    num_bytes_total += num_bytes
+
+        diff = time.time() - start_time
+        log.info(
+            "Retrieved %s bytes from server in %.2f sec", num_bytes_total, diff,
+        )
+        return filename
+
     def get_results(
         self,
         limit: Optional[int] = None,
@@ -211,7 +267,7 @@ class Query:
             raise QueryError(f"Query {self.query_id} is {self.status}")
         if not self.available:
             raise QueryError(
-                "Query results for query {self.query_id} are not available"
+                f"Query results for query {self.query_id} are not available"
             )
         accept = "application/json+compact" if is_json else "text/tab-separated-values"
 
