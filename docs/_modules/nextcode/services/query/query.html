@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 0.7.15 documentation</title>
+    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 0.7.16 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.16</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -290,53 +290,42 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">init_from_resp</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Query.download_results"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.download_results">[docs]</a>    <span class="k">def</span> <span class="nf">download_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Query.download_results"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.download_results">[docs]</a>    <span class="k">def</span> <span class="nf">download_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Download the entire results for the query to a local file</span>
-<span class="sd">        By default this will stream the results into the file in a single</span>
-<span class="sd">        http call. This can be changed to paging by passing in page_size</span>
-<span class="sd">        :param page_size: Number of lines per page (default all)</span>
+<span class="sd">        Download the entire results for the query to a local file in a single call</span>
+<span class="sd">        via streaming.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">result_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
-        <span class="n">limit</span> <span class="o">=</span> <span class="n">page_size</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">num_bytes_total</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">result_url</span> <span class="o">=</span> <span class="n">result_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;streamresults&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;streamresults&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Server does not support result downloading via streaming&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
+        <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">=</span> <span class="n">result_url</span> <span class="o">+</span> <span class="n">f</span><span class="s2">&quot;?limit=</span><span class="si">{limit}</span><span class="s2">&amp;offset=</span><span class="si">{offset}</span><span class="s2">&quot;</span>
-                <span class="n">offset</span> <span class="o">+=</span> <span class="n">limit</span>
-                <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/tab-separated-values&quot;</span><span class="p">},</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span>
-                <span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
-                    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-                    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-                        <span class="n">num_bytes</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;chunk </span><span class="si">%s</span><span class="s2"> in </span><span class="si">%.2f</span><span class="s2">sec&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
-                            <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-                        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">num_bytes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">limit</span><span class="p">:</span>
-                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No more bytes to download&quot;</span><span class="p">)</span>
-                    <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="s2">&quot;Downloaded </span><span class="si">%s</span><span class="s2"> bytes in </span><span class="si">%.2f</span><span class="s2">sec this time&quot;</span><span class="p">,</span>
-                        <span class="n">num_bytes</span><span class="p">,</span>
-                        <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="n">num_bytes_total</span> <span class="o">+=</span> <span class="n">num_bytes</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/tab-separated-values&quot;</span><span class="p">},</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting to stream results...&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">)):</span>
+                    <span class="n">num_bytes</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
+                    <span class="k">if</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">mb</span> <span class="o">=</span> <span class="n">num_bytes</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+                        <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s2">&quot;Downloaded </span><span class="si">%.2f</span><span class="s2"> MB in </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span> <span class="n">mb</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">num_bytes</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Retrieved </span><span class="si">%s</span><span class="s2"> bytes from server in </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span> <span class="n">num_bytes_total</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span>
+            <span class="s2">&quot;Downloaded </span><span class="si">%.2f</span><span class="s2"> MB from server in </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span><span class="p">,</span> <span class="n">mb</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">filename</span></div>
 
@@ -399,12 +388,11 @@
             <span class="p">}</span>
             <span class="n">skip_header</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="c1"># url = url.replace(&quot;/result&quot;, &quot;/streamresults&quot;)    , &quot;Accept-Encoding&quot;: &quot;gzip&quot;</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="n">accept</span><span class="p">})</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
             <span class="n">num_rows_received</span> <span class="o">+=</span> <span class="n">num_rows_to_fetch_this_time</span>
             <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;Fetched </span><span class="si">%s</span><span class="s2"> rows this time in </span><span class="si">%.1f</span><span class="s2">sec. Received </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2"> rows&quot;</span><span class="p">,</span>
                 <span class="n">num_rows_to_fetch_this_time</span><span class="p">,</span>
                 <span class="n">diff</span><span class="p">,</span>

@@ -183,58 +183,42 @@ class Query:
         self.init_from_resp(resp.json())
         return self
 
-    def download_results(self, filename, page_size=0):
+    def download_results(self, filename):
         """
-        Download the entire results for the query to a local file
-        By default this will stream the results into the file in a single
-        http call. This can be changed to paging by passing in page_size
-        :param page_size: Number of lines per page (default all)
+        Download the entire results for the query to a local file in a single call
+        via streaming.
         """
         filename = os.path.expanduser(filename)
         start_time = time.time()
         try:
-            streamresults_url = self.links["streamresults"]
+            url = self.links["streamresults"]
         except KeyError:
             raise Exception(
                 "Server does not support result downloading via streaming"
             ) from None
-        limit = page_size
-        offset = 0
-        num_bytes_total = 0
-        log.info("Downloading results via streaming with page size %s", page_size)
+        num_bytes = 0
+        i = 0
         with open(filename, "wb") as f:
-            while 1:
-                url = streamresults_url + f"?limit={limit}&offset={offset}"
-                offset += limit
-                st = time.time()
-                num_bytes = 0
-                with self.session.get(
-                    url, headers={"Accept": "text/tab-separated-values"}, stream=True
-                ) as r:
-                    r.raise_for_status()
-                    i = 0
-                    t = time.time()
-                    for chunk in r.iter_content(chunk_size=100):
-                        num_bytes += len(chunk)
-                        if i % 1000 == 0:
-                            log.debug("chunk %s in %.2fsec", i, time.time() - t)
-                            t = time.time()
-                        f.write(chunk)
-                        i += 1
-                if not num_bytes or not limit:
-                    log.info("No more bytes to download")
-                    break
-                else:
-                    log.info(
-                        "Downloaded %s bytes in %.2fsec this time",
-                        num_bytes,
-                        time.time() - st,
-                    )
-                    num_bytes_total += num_bytes
+            with self.session.get(
+                url, headers={"Accept": "text/tab-separated-values"}, stream=True
+            ) as r:
+                r.raise_for_status()
+                log.info("Starting to stream results...")
+                for i, chunk in enumerate(r.iter_content(chunk_size=8192)):
+                    num_bytes += len(chunk)
+                    f.write(chunk)
 
+                    if i and i % 2000 == 0:
+                        mb = num_bytes / 1024 / 1024
+                        diff = time.time() - start_time
+                        log.debug(
+                            "Downloaded %.2f MB in %.2f sec", mb, diff,
+                        )
+
+        mb = num_bytes / 1024 / 1024
         diff = time.time() - start_time
         log.info(
-            "Retrieved %s bytes from server in %.2f sec", num_bytes_total, diff,
+            "Downloaded %.2f MB from server in %.2f sec", mb, diff,
         )
         return filename
 
