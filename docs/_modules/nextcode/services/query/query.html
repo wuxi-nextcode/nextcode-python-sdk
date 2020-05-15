@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 0.7.17 documentation</title>
+    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 0.7.18 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.17</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.18</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -138,7 +138,9 @@
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_log_download_progress</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">total_lines</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">force_info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_log_download_progress</span><span class="p">(</span>
+    <span class="n">num_bytes</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">total_lines</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">force_info</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper for logging out download progress</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -331,11 +333,15 @@
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">_log_download_progress</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">total_lines</span><span class="p">,</span> <span class="n">start_time</span><span class="p">)</span>
+                        <span class="n">_log_download_progress</span><span class="p">(</span>
+                            <span class="n">num_bytes</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">total_lines</span><span class="p">,</span> <span class="n">start_time</span>
+                        <span class="p">)</span>
 
         <span class="n">_log_download_progress</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">total_lines</span><span class="p">,</span> <span class="n">start_time</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_lines</span> <span class="o">&lt;</span> <span class="n">total_lines</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Downloaded </span><span class="si">{num_lines}</span><span class="s2"> lines but </span><span class="si">{total_lines}</span><span class="s2"> lines expected&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Downloaded </span><span class="si">{num_lines}</span><span class="s2"> lines but </span><span class="si">{total_lines}</span><span class="s2"> lines expected&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">filename</span></div>
 
 <div class="viewcode-block" id="Query.get_results"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span>
