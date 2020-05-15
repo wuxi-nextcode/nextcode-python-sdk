@@ -75,7 +75,7 @@ class ServiceSession(requests.Session):
             "Accept": "application/json",
             "User-Agent": self.user_agent,
         }
-        if not environ.get("NEXTCODE_DISABLE_GZIP"):
+        if environ.get("NEXTCODE_ENABLE_GZIP"):
             self.headers["Accept-Encoding"] = "gzip"
 
         if not self._load():
