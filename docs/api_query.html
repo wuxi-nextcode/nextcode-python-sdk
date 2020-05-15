@@ -481,7 +481,9 @@ This object is returned from query methods in the ‘query’ service.</p>
 <dt id="nextcode.services.query.query.Query.download_results">
 <code class="sig-name descname">download_results</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.download_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.download_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download the entire results for the query to a local file in a single call
-via streaming.</p>
+via streaming.
+:param filename: Local filename to save results to
+:raises: QueryError if data is missing.</p>
 </dd></dl>
 
 <dl class="method">

@@ -327,7 +327,7 @@
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="n">num_rows</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span> <span class="ow">or</span> <span class="mi">0</span>
             <span class="n">print_details</span><span class="p">(</span>
-                <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> returned </span><span class="si">{}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> generated </span><span class="si">{}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">num_rows</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
                 <span class="p">)</span>
             <span class="p">)</span>

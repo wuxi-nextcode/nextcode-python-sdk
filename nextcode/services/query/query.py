@@ -31,6 +31,18 @@ RESULTS_PAGE_SIZE = 1000000
 log = logging.getLogger(__name__)
 
 
+def _log_download_progress(
+    num_bytes, num_lines, total_lines, start_time, force_info=False
+):
+    """
+    Helper for logging out download progress
+    """
+    mb = num_bytes / 1024 / 1024
+    diff = time.time() - start_time
+    msg = f"Downloaded {num_lines}/{total_lines} lines ({mb:.2f} MB) in {diff:.2f} sec"
+    log.info(msg)
+
+
 class Query:
     """
     A local proxy representing a serverside Gor Query.
@@ -159,7 +171,7 @@ class Query:
             period = min(period + 0.5, 10.0)
         if self.status == "DONE":
             log.info(
-                "Query %s completed in %.2f sec and returned %s rows",
+                "Query %s completed in %.2f sec and generated %s rows",
                 self.query_id,
                 duration,
                 self.line_count,
@@ -187,6 +199,8 @@ class Query:
         """
         Download the entire results for the query to a local file in a single call
         via streaming.
+        :param filename: Local filename to save results to
+        :raises: QueryError if data is missing.
         """
         filename = os.path.expanduser(filename)
         start_time = time.time()
@@ -197,29 +211,30 @@ class Query:
                 "Server does not support result downloading via streaming"
             ) from None
         num_bytes = 0
-        i = 0
+        num_lines = 0
+        total_lines = 0
         with open(filename, "wb") as f:
             with self.session.get(
                 url, headers={"Accept": "text/tab-separated-values"}, stream=True
             ) as r:
                 r.raise_for_status()
-                log.info("Starting to stream results...")
+                total_lines = int(r.headers.get("Line-Count", -1))
+                log.info(f"Starting to stream {total_lines} lines...")
                 for i, chunk in enumerate(r.iter_content(chunk_size=8192)):
                     num_bytes += len(chunk)
+                    num_lines += chunk.count(b"\n")
                     f.write(chunk)
 
-                    if i and i % 2000 == 0:
-                        mb = num_bytes / 1024 / 1024
-                        diff = time.time() - start_time
-                        log.debug(
-                            "Downloaded %.2f MB in %.2f sec", mb, diff,
+                    if i and i % 1000 == 0:
+                        _log_download_progress(
+                            num_bytes, num_lines, total_lines, start_time
                         )
 
-        mb = num_bytes / 1024 / 1024
-        diff = time.time() - start_time
-        log.info(
-            "Downloaded %.2f MB from server in %.2f sec", mb, diff,
-        )
+        _log_download_progress(num_bytes, num_lines, total_lines, start_time)
+        if num_lines < total_lines:
+            raise QueryError(
+                f"Downloaded {num_lines} lines but {total_lines} lines expected"
+            )
         return filename
 
     def get_results(

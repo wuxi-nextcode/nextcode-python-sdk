@@ -220,7 +220,7 @@ class GorMagics(Magics):
                 return None
             num_rows = qry.line_count or 0
             print_details(
-                "Query {} returned {} rows in {:.2f} sec".format(
+                "Query {} generated {} rows in {:.2f} sec".format(
                     qry.query_id, num_rows, time.time() - st
                 )
             )
