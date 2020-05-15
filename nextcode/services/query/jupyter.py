@@ -109,6 +109,8 @@ class GorMagics(Magics):
         ret = string
         user_ns = self.shell.user_ns
         for var_name in replacement_vars:
+            if not var_name:
+                continue
             if var_name not in user_ns.keys():
                 print("Variable '%s' not found in notebook" % var_name)
                 continue

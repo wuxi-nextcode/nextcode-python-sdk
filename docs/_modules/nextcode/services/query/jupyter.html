@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.7.16 documentation</title>
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.7.17 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.7.16</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.17</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -216,6 +216,8 @@
         <span class="n">ret</span> <span class="o">=</span> <span class="n">string</span>
         <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
         <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">replacement_vars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">var_name</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found in notebook&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span>
                 <span class="k">continue</span>
@@ -506,7 +508,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-14.<br/>
+      Last updated on 2020-05-15.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>
