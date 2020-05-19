@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.8.0 documentation</title>
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.8.1 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.8.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.8.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -125,6 +125,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -139,6 +140,10 @@
         <span class="n">line_magic</span><span class="p">,</span>
         <span class="n">line_cell_magic</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="k">import</span> <span class="n">IntProgress</span>
+    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span>
+    <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="k">import</span> <span class="n">tqdm</span><span class="p">,</span> <span class="n">trange</span>
+
 <span class="k">else</span><span class="p">:</span>
 
     <span class="n">Magics</span> <span class="o">=</span> <span class="nb">object</span>
@@ -297,19 +302,16 @@
                 <span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                     <span class="n">gor_string</span><span class="p">,</span> <span class="n">relations</span><span class="o">=</span><span class="n">relations</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span>
                 <span class="p">)</span>
-            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="n">period</span> <span class="o">=</span> <span class="mf">0.2</span>
+            <span class="n">poll_time</span> <span class="o">=</span> <span class="mf">1.0</span>
             <span class="k">while</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">qry</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">max_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">poll_period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
-                <span class="k">except</span> <span class="n">QueryError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
-                        <span class="n">print_details</span><span class="p">(</span>
-                            <span class="n">f</span><span class="s2">&quot;Query </span><span class="si">{qry.query_id}</span><span class="s2"> has status </span><span class="si">{qry.status}</span><span class="s2"> after {(time.time()-start_time):.0f} seconds. Still waiting...&quot;</span>
-                        <span class="p">)</span>
-                        <span class="n">period</span> <span class="o">=</span> <span class="mf">10.0</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">+</span> <span class="n">poll_time</span><span class="p">:</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span><span class="p">)</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">diff</span><span class="p">))</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Query has been running for </span><span class="si">{diff}</span><span class="s2">...</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="n">poll_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">poll_time</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -326,15 +328,27 @@
                     <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="n">num_rows</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span> <span class="ow">or</span> <span class="mi">0</span>
-            <span class="n">print_details</span><span class="p">(</span>
-                <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> generated </span><span class="si">{}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> generated </span><span class="si">{:,}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">num_rows</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">persist</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
+
             <span class="k">if</span> <span class="n">download_filename</span><span class="p">:</span>
-                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">download_results</span><span class="p">(</span><span class="n">download_filename</span><span class="p">)</span>
+                <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="k">import</span> <span class="n">IntProgress</span>
+                <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span>
+                <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="k">import</span> <span class="n">tqdm</span><span class="p">,</span> <span class="n">trange</span>
+
+                <span class="n">line_count</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;line_count&quot;</span><span class="p">]</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">line_count</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;Downloading&quot;</span><span class="p">)</span>
+
+                <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">num_lines</span><span class="p">):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">num_lines</span><span class="p">)</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">download_results</span><span class="p">(</span><span class="n">download_filename</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Results have been downloaded to </span><span class="si">{ret}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
@@ -508,7 +522,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-15.<br/>
+      Last updated on 2020-05-19.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

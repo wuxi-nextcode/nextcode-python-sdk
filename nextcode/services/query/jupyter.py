@@ -18,6 +18,7 @@ import logging
 import re
 import sys
 import os
+import datetime
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,10 @@ if jupyter_available():
         line_magic,
         line_cell_magic,
     )  # type: ignore
+    from ipywidgets import IntProgress
+    from IPython.display import display
+    from tqdm.auto import tqdm, trange
+
 else:
 
     Magics = object
@@ -190,19 +195,16 @@ class GorMagics(Magics):
                 qry = svc.execute(
                     gor_string, relations=relations, nowait=True, persist=persist
                 )
-            start_time = time.time()
-            period = 0.2
+            poll_time = 1.0
             while qry.running is True:
-                try:
-                    qry.wait(max_seconds=10, poll_period=period)
-                except QueryError as ex:
-                    if qry.running:
-                        print_details(
-                            f"Query {qry.query_id} has status {qry.status} after {(time.time()-start_time):.0f} seconds. Still waiting..."
-                        )
-                        period = 10.0
-                    else:
-                        raise
+                t = time.time()
+                while time.time() < t + poll_time:
+                    diff = int(time.time() - st)
+                    diff = str(datetime.timedelta(seconds=diff))
+                    sys.stdout.write(f"Query has been running for {diff}...\r")
+                    sys.stdout.flush()
+                    time.sleep(1.0)
+                poll_time = min(poll_time + 1.0, 10.0)
 
             if qry.status != "DONE":
                 try:
@@ -219,15 +221,27 @@ class GorMagics(Magics):
                     )
                 return None
             num_rows = qry.line_count or 0
-            print_details(
-                "Query {} generated {} rows in {:.2f} sec".format(
+            print(
+                "Query {} generated {:,} rows in {:.2f} sec".format(
                     qry.query_id, num_rows, time.time() - st
                 )
             )
             if persist:
                 return None
+
             if download_filename:
-                ret = qry.download_results(download_filename)
+                from ipywidgets import IntProgress
+                from IPython.display import display
+                from tqdm.auto import tqdm, trange
+
+                line_count = qry.stats["line_count"]
+                f = tqdm(total=line_count, desc=f"Downloading")
+
+                def callback(num_lines):
+                    f.update(num_lines)
+
+                ret = qry.download_results(download_filename, callback=callback)
+                f.close()
                 print(f"Results have been downloaded to {ret}")
                 return None
             else:

@@ -12,3 +12,5 @@ mypy
 pandas
 codecov
 ipython
+ipywidgets
+tqdm
