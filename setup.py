@@ -79,7 +79,9 @@ setup(
         "boto3",
         "pytest",
     ],
-    extras_require={"jupyter": ["pandas", "ipython", "termcolor"]},
+    extras_require={
+        "jupyter": ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets"]
+    },
     include_package_data=True,
     entry_points={},
     classifiers=[

@@ -32,15 +32,24 @@ log = logging.getLogger(__name__)
 
 
 def _log_download_progress(
-    num_bytes, num_lines, total_lines, start_time, force_info=False
+    num_chunk,
+    num_bytes,
+    num_lines,
+    total_received_lines,
+    total_expected_lines,
+    start_time,
+    callback=None,
 ):
     """
-    Helper for logging out download progress
+    Helper for logging out download progress and notifying a listener or delta lines
     """
     mb = num_bytes / 1024 / 1024
+    if callback:
+        callback(num_lines)
     diff = time.time() - start_time
-    msg = f"Downloaded {num_lines}/{total_lines} lines ({mb:.2f} MB) in {diff:.2f} sec"
-    log.info(msg)
+    if num_chunk is not None and num_chunk % 1000 == 0:
+        msg = f"Downloaded {total_received_lines}/{total_expected_lines} lines ({mb:.2f} MB) in {diff:.2f} sec"
+        log.info(msg)
 
 
 class Query:
@@ -195,7 +204,7 @@ class Query:
         self.init_from_resp(resp.json())
         return self
 
-    def download_results(self, filename):
+    def download_results(self, filename, callback=None):
         """
         Download the entire results for the query to a local file in a single call
         via streaming.
@@ -212,28 +221,43 @@ class Query:
             ) from None
         num_bytes = 0
         num_lines = 0
-        total_lines = 0
+        total_expected_lines = 0
         with open(filename, "wb") as f:
             with self.session.get(
                 url, headers={"Accept": "text/tab-separated-values"}, stream=True
             ) as r:
                 r.raise_for_status()
-                total_lines = int(r.headers.get("Line-Count", -1))
-                log.info(f"Starting to stream {total_lines} lines...")
+                total_expected_lines = int(r.headers.get("Line-Count", -1))
+                log.info(f"Starting to stream {total_expected_lines} lines...")
+                total_received_lines = 0
                 for i, chunk in enumerate(r.iter_content(chunk_size=8192)):
                     num_bytes += len(chunk)
-                    num_lines += chunk.count(b"\n")
+                    num_lines = chunk.count(b"\n")
+                    total_received_lines += num_lines
                     f.write(chunk)
 
-                    if i and i % 1000 == 0:
-                        _log_download_progress(
-                            num_bytes, num_lines, total_lines, start_time
-                        )
+                    _log_download_progress(
+                        i,
+                        num_bytes,
+                        num_lines,
+                        total_received_lines,
+                        total_expected_lines,
+                        start_time,
+                        callback,
+                    )
 
-        _log_download_progress(num_bytes, num_lines, total_lines, start_time)
-        if num_lines < total_lines:
+        _log_download_progress(
+            0,
+            num_bytes,
+            num_lines,
+            total_received_lines,
+            total_expected_lines,
+            start_time,
+            callback,
+        )
+        if total_received_lines < total_expected_lines:
             raise QueryError(
-                f"Downloaded {num_lines} lines but {total_lines} lines expected"
+                f"Downloaded {total_received_lines} lines but {total_expected_lines} lines expected"
             )
         return filename
 
