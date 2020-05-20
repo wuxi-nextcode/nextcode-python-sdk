@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>nextcode.keycloak &#8212; nextcode-python-sdk 0.8.2 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 <meta charset='utf-8'>
@@ -112,16 +112,16 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlsplit</span>
-<span class="kn">from</span> <span class="nn">posixpath</span> <span class="k">import</span> <span class="n">join</span> <span class="k">as</span> <span class="n">urljoin</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlsplit</span>
+<span class="kn">from</span> <span class="nn">posixpath</span> <span class="kn">import</span> <span class="n">join</span> <span class="k">as</span> <span class="n">urljoin</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">requests</span> <span class="k">import</span> <span class="n">codes</span>
+<span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">codes</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">webbrowser</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ServerError</span><span class="p">,</span> <span class="n">NotFound</span><span class="p">,</span> <span class="n">AuthServerError</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">host_from_url</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ServerError</span><span class="p">,</span> <span class="n">NotFound</span><span class="p">,</span> <span class="n">AuthServerError</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">host_from_url</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -165,7 +165,7 @@
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User </span><span class="si">{user_name}</span><span class="s2"> was unable to log in: </span><span class="si">{ex}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2"> was unable to log in: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="auth_popup"><a class="viewcode-back" href="../../api_basic.html#nextcode.keycloak.auth_popup">[docs]</a><span class="k">def</span> <span class="nf">auth_popup</span><span class="p">(</span><span class="n">root_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -187,13 +187,13 @@
     <span class="n">headers_form</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">}</span>
     <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
         <span class="n">url</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;username=</span><span class="si">{username}</span><span class="s2">&amp;password=</span><span class="si">{password}</span><span class="s2">&amp;grant_type=password&amp;client_id=admin-cli&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;username=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&amp;password=</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&amp;grant_type=password&amp;client_id=admin-cli&quot;</span><span class="p">,</span>
         <span class="n">headers</span><span class="o">=</span><span class="n">headers_form</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
         <span class="n">desc</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;error_description&quot;</span><span class="p">]</span>
         <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;Could not authenticate </span><span class="si">{username}</span><span class="s2"> user against </span><span class="si">{url}</span><span class="s2">: </span><span class="si">{desc}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Could not authenticate </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> user against </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="n">access_token</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
@@ -219,7 +219,7 @@
 <span class="sd">    :param client_id: Client to log admin into. Default: api-key-client</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">root_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
@@ -229,7 +229,7 @@
     <span class="p">):</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">password</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KEYCLOAK_PASSWORD&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User </span><span class="si">{username}</span><span class="s2"> needs an admin password&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> needs an admin password&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_url</span> <span class="o">=</span> <span class="n">host_from_url</span><span class="p">(</span><span class="n">root_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">realm</span> <span class="o">=</span> <span class="n">realm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth_server</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_auth_server</span><span class="p">()</span>
@@ -254,21 +254,21 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">realm_url</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keycloak server </span><span class="si">{realm_url}</span><span class="s2"> is not reachable&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keycloak server </span><span class="si">{</span><span class="n">realm_url</span><span class="si">}</span><span class="s2"> is not reachable&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;Realm &#39;</span><span class="si">{self.realm}</span><span class="s2">&#39; was not found on keycloak server </span><span class="si">{auth_server}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Realm &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="si">}</span><span class="s2">&#39; was not found on keycloak server </span><span class="si">{</span><span class="n">auth_server</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">auth_server</span>
 
     <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-        <span class="n">users_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users?username=</span><span class="si">{user_name}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">users_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users?username=</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">users_url</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">users</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">user_name</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">users</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User &#39;</span><span class="si">{user_name}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">get_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
@@ -310,7 +310,7 @@
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">exist_ok</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User &#39;</span><span class="si">{user_name}</span><span class="s2">&#39; already exists.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39; already exists.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">user_id</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
 
@@ -355,9 +355,9 @@
         <span class="k">if</span> <span class="n">role_name</span> <span class="ow">in</span> <span class="n">user_roles</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">exist_ok</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User &#39;</span><span class="si">{user_name}</span><span class="s2">&#39; already has role &#39;</span><span class="si">{role_name}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39; already has role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users/</span><span class="si">{user_id}</span><span class="s2">/role-mappings/realm/available&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings/realm/available&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">available_roles</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
@@ -368,10 +368,10 @@
                 <span class="k">break</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{role_name}</span><span class="s2">&#39; is not available for user &#39;</span><span class="si">{user_name}</span><span class="s2">&#39;&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39; is not available for user &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users/</span><span class="si">{user_id}</span><span class="s2">/role-mappings/realm&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings/realm&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">[</span><span class="n">role</span><span class="p">])</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -385,7 +385,7 @@
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
         <span class="n">role_name</span> <span class="o">=</span> <span class="n">role_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users/</span><span class="si">{user_id}</span><span class="s2">/role-mappings&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">roles</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;realmMappings&quot;</span><span class="p">]</span>
@@ -395,7 +395,7 @@
                 <span class="n">role</span> <span class="o">=</span> <span class="n">r</span>
                 <span class="k">break</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;User &#39;</span><span class="si">{user_id}</span><span class="s2">&#39; does not have role &#39;</span><span class="si">{role_name}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&#39; does not have role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="s2">&quot;users/</span><span class="si">%s</span><span class="s2">/role-mappings/realm&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">[</span><span class="n">role</span><span class="p">])</span>
@@ -419,7 +419,7 @@
     <span class="k">def</span> <span class="nf">set_user_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users/</span><span class="si">{user_id}</span><span class="s2">/reset-password&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/reset-password&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;temporary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">new_password</span><span class="p">}</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
@@ -429,7 +429,7 @@
 
     <span class="k">def</span> <span class="nf">get_available_roles_for_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;users/</span><span class="si">{user_id}</span><span class="s2">/role-mappings/realm/available&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings/realm/available&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">available_roles</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
@@ -444,7 +444,7 @@
         <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">conflict</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">exist_ok</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{role_name}</span><span class="s2">&#39; already exists&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39; already exists&quot;</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -460,8 +460,8 @@
     <span class="k">def</span> <span class="nf">delete_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">role</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_roles</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role_name</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{role_name}</span><span class="s2">&#39; does not exist&quot;</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;roles-by-id/</span><span class="si">{role[&#39;id&#39;]}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39; does not exist&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;roles-by-id/</span><span class="si">{</span><span class="n">role</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span></div>
 </pre></div>
@@ -481,8 +481,8 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-19.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+      Last updated on 2020-05-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
     </p>
   </div>
 </footer>

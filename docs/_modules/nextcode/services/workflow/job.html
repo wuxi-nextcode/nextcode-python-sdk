@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>nextcode.services.workflow.job &#8212; nextcode-python-sdk 0.8.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
 <meta charset='utf-8'>
@@ -118,12 +118,12 @@
 <span class="kn">import</span> <span class="nn">dateutil</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">RUNNING_STATUSES</span><span class="p">,</span> <span class="n">FINISHED_STATUSES</span><span class="p">,</span> <span class="n">FAILED_STATUSES</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">JobError</span>
-<span class="kn">from</span> <span class="nn">...exceptions</span> <span class="k">import</span> <span class="n">ServerError</span>
-<span class="kn">from</span> <span class="nn">...session</span> <span class="k">import</span> <span class="n">ServiceSession</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">RUNNING_STATUSES</span><span class="p">,</span> <span class="n">FINISHED_STATUSES</span><span class="p">,</span> <span class="n">FAILED_STATUSES</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">JobError</span>
+<span class="kn">from</span> <span class="nn">...exceptions</span> <span class="kn">import</span> <span class="n">ServerError</span>
+<span class="kn">from</span> <span class="nn">...session</span> <span class="kn">import</span> <span class="n">ServiceSession</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -136,13 +136,13 @@
 <span class="sd">    automatically refresh from server until the job is finished (or failed)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ServiceSession</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ServiceSession</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">job</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="p">[</span><span class="s2">&quot;job_id&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -256,7 +256,7 @@
                         <span class="n">duration</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
-                        <span class="n">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{duration:.0f}</span><span class="s2">s and executor pod is missing. View logs or inspect job for failures.&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s and executor pod is missing. View logs or inspect job for failures.&quot;</span>
                     <span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">executor_pod</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">][</span><span class="s2">&quot;container_statuses&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;state&quot;</span><span class="p">][</span>
                     <span class="s2">&quot;running&quot;</span>
@@ -266,12 +266,12 @@
                         <span class="n">duration</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
-                        <span class="n">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{duration:.0f}</span><span class="s2">s and executor pod is not in running state. View logs or inspect job for failures.&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Job is still pending after </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s and executor pod is not in running state. View logs or inspect job for failures.&quot;</span>
                     <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">is_running</span> <span class="ow">and</span> <span class="n">max_seconds</span> <span class="ow">and</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="n">max_seconds</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">JobError</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s2">&quot;Job </span><span class="si">{self.job_id}</span><span class="s2"> has exceeded wait time </span><span class="si">{max_seconds}</span><span class="s2">s and we will not wait any longer. It is currently </span><span class="si">{self.status}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Job </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">job_id</span><span class="si">}</span><span class="s2"> has exceeded wait time </span><span class="si">{</span><span class="n">max_seconds</span><span class="si">}</span><span class="s2">s and we will not wait any longer. It is currently </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
 
             <span class="n">period</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">period</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
@@ -388,13 +388,13 @@
                 <span class="n">url</span> <span class="o">=</span> <span class="n">v</span>
                 <span class="k">break</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Log Group &#39;</span><span class="si">{log_group}</span><span class="s2">&#39; is not available.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log Group &#39;</span><span class="si">{</span><span class="n">log_group</span><span class="si">}</span><span class="s2">&#39; is not available.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">log_filter</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">+=</span> <span class="s2">&quot;?filter=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">log_filter</span>
         <span class="n">logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
         <span class="k">return</span> <span class="n">logs</span></div>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -420,8 +420,8 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-19.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+      Last updated on 2020-05-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
     </p>
   </div>
 </footer>
