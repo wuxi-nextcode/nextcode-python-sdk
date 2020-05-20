@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Example Jupyter Notebook\n",
+    "# Building queries with the Python SDK\n",
     "In the following notebook, we will show how to build complex queries in GOR using the Python SDK to connect to our instance. First, as always, we load the gor magic extension to be able to use the `%gor` and `%%gor` syntax.\n",
     "This notebook assumes you are familiar with the gor syntax."
    ]
@@ -15,9 +15,8 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "# Install the python sdk and other python libraries here\n",
-    "! pip install nextcode-sdk[jupyter] -U > /dev/null\n",
-    "! pip install matplotlib -U > /dev/null"
+    "# Install the python sdk, if needed\n",
+    "! pip install nextcode-sdk[jupyter] -U > /dev/null"
    ]
   },
   {
@@ -30,21 +29,22 @@
      "output_type": "stream",
      "text": [
       " Gor magic extension has been loaded. You can now use '%gor' and '%%gor' in this notebook\n",
-      " * Python SDK Version: 0.3.22\n",
-      " * Query API Version: 1.9.4\n",
-      " * GOR Version: 9.5-SNAPSHOT (git SHA c4ca0fce323ab019ee24e5bee58ed3ccec8d4c2a)\n",
+      " * Python SDK Version: 0.8.1\n",
+      " * Query API Version: 1.10.0\n",
+      " * GOR Version: 2.6.0 (git SHA 622555a)\n",
       " * Root Endpoint: https://platform.wuxinextcodedev.com/api/query/\n",
-      " * Current User: jonb@wuxinextcode.com\n"
+      " * Current User: jonb@wuxinextcode.com\n",
+      " * Current Project: ukbb_hg38 (%env GOR_API_PROJECT=xxx)\n",
+      "env: LOG_QUERY=1\n"
      ]
     }
    ],
    "source": [
-    "# import libraries and initialize magic extension\n",
-    "import pandas as pd\n",
-    "import matplotlib.pyplot as plt\n",
-    "\n",
+    "# load the magic extension and imports\n",
     "%reload_ext nextcode\n",
-    "#%env LOG_QUERY=1 # set this to get information about queries"
+    "import nextcode\n",
+    "import pandas as pd\n",
+    "%env LOG_QUERY=1"
    ]
   },
   {
@@ -59,6 +59,13 @@
    "execution_count": 3,
    "metadata": {},
    "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Query 19503 generated 2 rows in 0.84 sec\n"
+     ]
+    },
     {
      "data": {
       "text/html": [
@@ -134,9 +141,36 @@
    "cell_type": "code",
    "execution_count": 4,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Query 19504 generated 2 rows in 0.73 sec\n"
+     ]
+    }
+   ],
    "source": [
     "var = %gor nor #dbsnp# | top 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  Chrom    pos reference allele        rsids\n",
+      "0  chr1  10020        AA      A  rs775809821\n",
+      "1  chr1  10039         A      C  rs978760828\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(var)"
    ]
   },
   {
@@ -149,771 +183,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Chrom</th>\n",
-       "      <th>pos</th>\n",
-       "      <th>reference</th>\n",
-       "      <th>allele</th>\n",
-       "      <th>rsids</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>10020</td>\n",
-       "      <td>AA</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs775809821</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>10039</td>\n",
-       "      <td>A</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs978760828</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "  Chrom    pos reference allele        rsids\n",
-       "0  chr1  10020        AA      A  rs775809821\n",
-       "1  chr1  10039         A      C  rs978760828"
-      ]
-     },
-     "execution_count": 5,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "%%gor\n",
-    "  def #top# = 2;\n",
-    "  gor #dbsnp#\n",
-    "   | top #top#;"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Multi-line gor expression which stores results in local variable\n",
-    "To load results from a multi-line gor expression into a variable you can use the special `<<` operator"
-   ]
-  },
-  {
-   "cell_type": "code",
    "execution_count": 6,
    "metadata": {},
-   "outputs": [],
-   "source": [
-    "%%gor new_results <<\n",
-    "def #tops# = 10;\n",
-    "gor #dbsnp# | top #tops#;"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 7,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "RangeIndex(start=0, stop=10, step=1)"
-      ]
-     },
-     "execution_count": 7,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "new_results.index"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Store results in the user_data folder\n",
-    "Instead of fetching the data to the jupyter server you can also use the << operator to store files in the user_data folder within the project on NFS."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 8,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "%%gor user_data/outfile.gorz <<\n",
-    "  pgor #dbsnp#\n",
-    "   | top 1000;"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "outfile.gorz (345.1KiB)\n"
-     ]
-    }
-   ],
-   "source": [
-    "# verify that the file is there by executing gorls\n",
-    "%gorls user_data outfile.gorz"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 10,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Chrom</th>\n",
-       "      <th>bpStart</th>\n",
-       "      <th>bpStop</th>\n",
-       "      <th>allCount</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>0</td>\n",
-       "      <td>248956422</td>\n",
-       "      <td>2000</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr10</td>\n",
-       "      <td>0</td>\n",
-       "      <td>133797422</td>\n",
-       "      <td>2000</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "   Chrom  bpStart     bpStop  allCount\n",
-       "0   chr1        0  248956422      2000\n",
-       "1  chr10        0  133797422      2000"
-      ]
-     },
-     "execution_count": 10,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "# now you can gor this file and bring the results into a local dataframe\n",
-    "%gor user_data/outfile.gorz | GROUP chrom -count | top 2"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Gor expression which references a local variable\n",
-    "Local variables can be references using the `$xxx` syntax. This will expand the variable inline and is meant to be used for simple strings and numbers"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 11,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "n = 5"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 12,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Chrom</th>\n",
-       "      <th>pos</th>\n",
-       "      <th>reference</th>\n",
-       "      <th>allele</th>\n",
-       "      <th>rsids</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69045</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1360507296</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69063</td>\n",
-       "      <td>T</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs1260343719</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69072</td>\n",
-       "      <td>G</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1379296286</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "  Chrom    pos reference allele         rsids\n",
-       "0  chr1  69045         A      G  rs1360507296\n",
-       "1  chr1  69063         T      C  rs1260343719\n",
-       "2  chr1  69071         C      A  rs1314111151\n",
-       "3  chr1  69071         C      G  rs1314111151\n",
-       "4  chr1  69072         G      A  rs1379296286"
-      ]
-     },
-     "execution_count": 12,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "%%gor\n",
-    "  gor -p chr1:69000-70000 #dbsnp#\n",
-    "   | TOP $n;"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Gor expression with defs and create statements"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 13,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Chrom</th>\n",
-       "      <th>pos</th>\n",
-       "      <th>reference</th>\n",
-       "      <th>allele</th>\n",
-       "      <th>rsids</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69045</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1360507296</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69063</td>\n",
-       "      <td>T</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs1260343719</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69072</td>\n",
-       "      <td>G</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1379296286</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "  Chrom    pos reference allele         rsids\n",
-       "0  chr1  69045         A      G  rs1360507296\n",
-       "1  chr1  69063         T      C  rs1260343719\n",
-       "2  chr1  69071         C      A  rs1314111151\n",
-       "3  chr1  69071         C      G  rs1314111151\n",
-       "4  chr1  69072         G      A  rs1379296286"
-      ]
-     },
-     "execution_count": 13,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "%%gor\n",
-    "def #number# = $n;\n",
-    "def #VEP_single# = UKBB/freezes/2019_0325/plink_wes/vep_single.gorz;\n",
-    "def #myfavouritefood# = pizza;\n",
-    "\n",
-    "create mydbsnp = gor -p chr1:69000-70000 #dbsnp#\n",
-    "                  | TOP #number#;\n",
-    "\n",
-    "gor [mydbsnp];"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Compound expressions\n",
-    "Using the local variables you can construct compount expressions, allowing you to split up long gor scripts."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 14,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "defs = \"\"\"\n",
-    "def #myfirstdef# = 2;\n",
-    "def #myseconddef# = 2;\n",
-    "\n",
-    "\"\"\"\n",
-    "creates = \"\"\"\n",
-    "create mydbsnp = gor -p chr1:69000-70000 #dbsnp#\n",
-    "                  | TOP #myfirstdef#;\n",
-    "\"\"\""
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 15,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Chrom</th>\n",
-       "      <th>pos</th>\n",
-       "      <th>reference</th>\n",
-       "      <th>allele</th>\n",
-       "      <th>rsids</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69045</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1360507296</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69063</td>\n",
-       "      <td>T</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs1260343719</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "  Chrom    pos reference allele         rsids\n",
-       "0  chr1  69045         A      G  rs1360507296\n",
-       "1  chr1  69063         T      C  rs1260343719"
-      ]
-     },
-     "execution_count": 15,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "%%gor\n",
-    " $defs\n",
-    " $creates\n",
-    "\n",
-    " gor [mydbsnp];"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Virtual relations\n",
-    "You can load pandas dataframes into the query with the special `[var:xxx]` syntax."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 16,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "allpns = pd.read_csv('data/allpns.tsv', delimiter='\\t')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 17,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>PN</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>1000786</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>1629813</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>5137728</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1001070</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>2489370</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "        PN\n",
-       "0  1000786\n",
-       "1  1629813\n",
-       "2  5137728\n",
-       "3  1001070\n",
-       "4  2489370"
-      ]
-     },
-     "execution_count": 17,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "%%gor\n",
-    "  create bla = gor #dbsnp#\n",
-    "   | top 10;\n",
-    "  nor [var:allpns]\n",
-    "   | top 5;"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Cancelling queries\n",
-    "Try executing this long-running query and then click the stop button"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 18,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "Query has been cancelled\n"
-     ]
-    }
-   ],
-   "source": [
-    "results = %gor gor #dbsnp# | GROUP chrom -count"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Graphing results\n",
-    "Since the primitive that is returned from magic gor commands is just a pandas dataframe we won't go into detail here on how to graph results since there is plenty of material available on the web.\n",
-    "\n",
-    "Let's however give one brief example. Here we count the number of rows per chromosome from the *dbsnp* table and want to display it as a bar chart.\n",
-    "\n",
-    "We start by running the query which is quite heavy since *dbnsp* is large but we only need to do this once. This query will run for 1-2 minutes, grab a cup of coffee."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 19,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "%%gor df <<\n",
-    "pgor #dbsnp#\n",
-    "    | GROUP chrom -count\n",
-    "    | select 1,4"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 20,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# add a new column that coverts chrom names to have leading 0 for lexical sorting. chr1 -> chr01, etc.\n",
-    "vals = []\n",
-    "for v in df.Chrom:\n",
-    "    vals.append(v if not v[-1].isdigit() else \"chr{:02d}\".format(int(v.split(\"chr\")[1])))\n",
-    "df['sort_col'] = vals\n",
-    "df.sort_values(\"sort_col\", inplace=True)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 21,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "image/png": "iVBORw0KGgoAAAANSUhEUgAABHcAAAEkCAYAAACljd3lAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADh0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4xLjIsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy8li6FKAAAgAElEQVR4nO3de7Tld13f/9c7FxJCAsQwBtsAE/lFIBDIZcQABiNYf5GESF0/rj8sRtuUCkJrq41Fl9olbZSKAgVdARG0ECwIAYmisCABCiFMMCEJCUEwwKCEIcrdAEne/WPvCcPknDl7ktmXz/B4rHXWnLP3Pt/znD1n9v7u9/5eqrsDAAAAwJj2W3YAAAAAAHec4Q4AAADAwAx3AAAAAAZmuAMAAAAwMMMdAAAAgIEZ7gAAAAAMbG7Dnap6ZVV9rqqumuG2v1NVl08/rquqL8yrCwAAAGBfUt09nwVXPTrJV5L8UXc/ZA++7+eSnNDdPz2XMAAAAIB9yNy23Onudyf5h50vq6r7V9XbquqyqnpPVT1wjW99apLz59UFAAAAsC85YME/77wkz+zuj1XVDyR5WZLH7Liyqu6X5Ogk71xwFwAAAMCQFjbcqapDkzwyyeurasfFB+1ys6ckeUN337KoLgAAAICRLXLLnf2SfKG7j9/NbZ6S5FkL6gEAAAAY3sJOhd7dX0ryt1X1xCSpiYftuH56/J3Dk7x/UU0AAAAAo5vnqdDPz2RQ84Cq2lZVP5Pk/0/yM1V1RZKrk/z4Tt/ylCSv63mdvgsAAABgHzS3U6EDAAAAMH8L2y0LAAAAgL3PcAcAAABgYHM5W9a97nWv3rx58zwWDQAAAPAd6bLLLvt8d2/a9fK5DHc2b96crVu3zmPRAAAAAN+RquqTa11utywAAACAgRnuAAAAAAzMcAcAAABgYHM55g4AAABAknzzm9/Mtm3bctNNNy07ZRgHH3xwjjrqqBx44IEz3d5wBwAAAJibbdu25bDDDsvmzZtTVcvOWXndnRtvvDHbtm3L0UcfPdP32C0LAAAAmJubbropRxxxhMHOjKoqRxxxxB5t6WS4AwAAAMyVwc6e2dP7y3AHAAAA+I60efPmfP7zn0+SHHroobddft111+Vxj3tcjjnmmJx44ol50pOelBtuuGGv/uwLLrggH/nIR/bKshxzZw9tPufCuS37+nNPn9uyAQAAYBXs7dfVe/u19E033ZTTTz89L3zhC/P4xz8+SXLRRRdl+/btOfLII/faz7ngggtyxhln5Nhjj73Ty7LlDgAAALDPe8ITnpCTTjopD37wg3Peeeete7vXvva1ecQjHnHbYCdJTj311DzkIQ/JTTfdlLPOOivHHXdcTjjhhLzrXe9KkrzqVa/Ks5/97Ntuf8YZZ+Siiy5KMtki6HnPe14e9rCH5eSTT84NN9yQ973vfXnLW96SX/iFX8jxxx+fj3/843fq7zbTcKeq7llVb6iqa6vqmqp6xJ36qQAAAAAL9MpXvjKXXXZZtm7dmhe/+MW58cYb17zdVVddlZNOOmnN61760pemqnLllVfm/PPPzzOe8YwND3z81a9+NSeffHKuuOKKPPrRj87LX/7yPPKRj8yZZ56ZF7zgBbn88stz//vf/0793WbdcudFSd7W3Q9M8rAk19ypnwoAAACwQC9+8Ytv23rm05/+dD72sY/t8TLe+9735ulPf3qS5IEPfGDud7/75brrrtvt99zlLnfJGWeckSQ56aSTcv311+/xz93Ihsfcqap7JHl0kp9Kku7+RpJv7PUSAAAAgDm46KKL8o53vCPvf//7c8ghh+TUU09dd4ubBz/4wbn44ov3aPkHHHBAbr311tu+3nnZBx544G1nv9p///1z880334G/we7NsuXO0Um2J/nDqvrrqnpFVd1tr5cAAAAAzMEXv/jFHH744TnkkENy7bXX5pJLLln3tk972tPyvve9Lxde+K0DP7/73e/OVVddlVNOOSWvec1rkkzOqPWpT30qD3jAA7J58+ZcfvnlufXWW/PpT386l1566YZNhx12WL785S/f+b9cZhvuHJDkxCS/190nJPlqknN2vVFVnV1VW6tq6/bt2/dKHAAAAMCdddppp+Xmm2/Ogx70oJxzzjk5+eST173tXe9617z1rW/NS17ykhxzzDE59thj87KXvSybNm3Kz/7sz+bWW2/Ncccdlyc/+cl51atelYMOOiiPetSjcvTRR+fYY4/Nc57znJx44okbNj3lKU/JC17wgpxwwgl3+oDK1d27v0HVvZNc0t2bp1+fkuSc7l73XGNbtmzprVu33qmwVeVU6AAAADC7a665Jg960IOWnTGcte63qrqsu7fsetsNt9zp7s8m+XRVPWB60WOTfGRv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nsmWiM9N8r6q+tL048tV9aUlt63n0d39P3YMdpKkuy/v7kdmuu68arr7lCTXLvv1yMoOd6abln60dnMqtFWjef5G6000L8JovYnmJfv1ZQfcAaM1j9abaF6E0XoTzYswWm+yos01ObPlmzPZpenqqtr5DID/bTlV69ul96pV703Ga+7u/br7sOnH3Xf6OKy7777svrV097b13rjt7pcvo2kWq7CevOrHKzk8kwemSzM5OFGS1Tzl9U40z99ovYnmRRitN9E8N7X7sy4euciWWY3WPFpvonkRRutNNC/CaL3JmM1J/k2Sk3qns/dW1ebuflFW81iPo/UmAzZPt8i/ulfwDG/r6cnZWT9aVfft7k8tu2cPLHU9edWHO7+y7IA7QPP8jdabaF6E0XoTzfM04lkXR2serTfRvAij9SaaF2G03mTM5tHO3jtabzJgs0HJQi11PXmlhzu92qe4XpPm+RutN9G8CKP1JprnbMSzLo7WPFpvonkRRutNNC/CaL3JmM2jnb13tN5kzObEoGQhlr2evNJny6qqn8jkNGjfnckktJL0qu4fmGhehNF6E82LMFpvohkA2HtqsLP3jtabjNmcJFX1Q2tdvuxhxL5m2evJqz7c+Zskj+/ua5bdMivN8zdab6J5EUbrTTTP24j7mI/WPFpvonkRRutNNC/CaL2J5kUYrTcZs3lEyx6U3BHLXk9e2bNlTd0wwguIXWiev9F6E82LMFpvonmuVuGsBXtqtObRehPNizBab6J5EUbrTTQvwmi9yZjNVfUTVfWxqvpirf6p0Hf4rSRndvc9esXP8LWTpa4nr+Qxd6ZTuiTZWlV/kuSCJF/fcX13v3EpYbuhef5G6000L8JovYnmBRtxH/PRmkfrTTQvwmi9ieZFGK030bwIo/Um4zX/VgbZ8nonw7yhuCrrySu5W1ZV/eH0087tjzre3f3TC07akOb5G6030bwIo/UmmhdpxH3MR2serTfRvAij9SaaF2G03kTzIozWm4zXXFX/p7sfteyOWew0KPmhJPfOAG8orsp68koOd3aoqlcneW53f2H69eFJfntVX0QkmhdhtN5E8yKM1ptoBgBgfgxKFmvZ68mrfsydh+64Y5Kku/8xyQlL7JmF5vkbrTfRvAij9Saa527EfcxHax6tN9G8CKP1JpoXYbTeRPMijNabDNX8+OnHYUm+luRHd7rsjCV2rau7z+rus5Lsn+Q/7PT1zy85bRZLXU9eyWPu7GS/qjp8eqekqr4rmudhtObRehPNizBab6J5EUbcx3y05tF6E82LMFpvonkRRutNNC/CaL3JIM3Toci6W5Qss20GtxuUVNXKvqE4tdT15FVeIU8mv3Dvr6rXT79+YpLnL7FnFprnb7TeRPMijNabaF6EYQ7Gt5PRmkfrTTQvwmi9ieZFGK030bwIo/Um4zUblCzGUteTV/qYO0lSVccmecz0y3d290eW2TMLzfM3Wm+ieRFG6000z8ug+5gP1Txab6J5EUbrTTQvwmi9iXoQo2MAAAMcSURBVOZFGK03GbM5SarqiiSn7jIoubi7j1tu2fqq6l8l+S9Jvm1Q0t1/vLyqjS1zPXnlhzsAsKdqwIPxjdY8Wm+ieRFG6000L8JovYnmRRitNxmzOTEo+U5huAPAPmu9fcxXdeUrGa95tN5E8yKM1ptoXoTRehPNizBabzJss0HJPm7V91kDgDtjxH3MR2serTfRvAij9SaaF2G03kTzIozWmwzYPB3mGOjsw1b9VOgAcGfsN303LckwB+MbrXm03kTzIozWm2hehNF6E82LMFpvMmYz+zi/gADsy0Y7u1cyXvNovYnmRRitN9G8CKP1JpoXYbTeZMxm9nGOuQPAPm3EfcxHax6tN9G8CKP1JpoXYbTeRPMijNabjNnMvs1wBwAAAGBgjrkDAAAAMDDDHQAAAICBOaAyADC8qrp3kt9N8v1JvpDkhiQXJDmzu89YZhsAwLzZcgcAGFpVVZI3Jbmou+/f3Scl+aUkR874/fvPsw8AYN4MdwCA0f1wkm929+/vuKC7r0jyniSHVtUbquraqnrNdBCUqrq+qn6zqj6U5IlVdXxVXVJVH66qN1XV4dPbXVRVv1NVW6vqmqr6/qp6Y1V9rKp+Yxl/WQCAXRnuAACje0iSy9a57oQk/z7JsUm+N8mjdrruxu4+sbtfl+SPkvzn7n5okiuT/OpOt/tGd29J8vtJ3pzkWdOf+VNVdcRe/ZsAANwBhjsAwL7s0u7e1t23Jrk8yeadrvuTJKmqeyS5Z3dfPL381UkevdPt3jL988okV3f333f315N8Isl95hkPADALwx0AYHRXJzlpneu+vtPnt+TbTybx1RmXv2MZt+6yvFvj5BQAwAow3AEARvfOJAdV1dk7LqiqhyY5ZZZv7u4vJvnHqtpx+59McvFuvgUAYKV4twkAGFp3d1X9yyS/W1X/OclNSa7P5FTos3pGkt+vqkMy2d3qrL0eCgAwJ9Xdy24AAAAA4A6yWxYAAADAwAx3AAAAAAZmuAMAAAAwMMMdAAAAgIEZ7gAAAAAMzHAHAAAAYGCGOwAAAAADM9wBAAAAGNj/Ba+cK+EZh1gcAAAAAElFTkSuQmCC\n",
-      "text/plain": [
-       "<Figure size 1440x288 with 1 Axes>"
-      ]
-     },
-     "metadata": {
-      "needs_background": "light"
-     },
-     "output_type": "display_data"
-    }
-   ],
-   "source": [
-    "plt.rcParams[\"figure.figsize\"] = (20,4)\n",
-    "df.plot(kind=\"bar\", x=\"Chrom\", y=\"allCount\")\n",
-    "plt.show()"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Using the SDK without magic syntax\n",
-    "The `%` and `%%` is simply syntactic sugar for executing queries through the python sdk. You can use the sdk directly as well and that is probably the preferred method for serious analysis."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Initializing the SDK\n",
-    "The SDK usually needs to be initialized with an API key and a project. However, in Wuxi notebooks this has already been done for you."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 22,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "#%env GOR_API_KEY=[jwt token]\n",
-    "#%env GOR_API_PROJECT=[project name]\n",
-    "import nextcode\n",
-    "import pandas as pd\n",
-    "# get a handle on a query service proxy\n",
-    "svc = nextcode.get_service(\"query\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Running basic queries"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 23,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Query 2896 is DONE. Runtime was 39 ms and it produced 2 rows.\n",
-      "The query that was run: gor #dbsnp# | top 2;\n"
+      "Query 19505 generated 2 rows in 0.77 sec\n"
      ]
     },
     {
@@ -971,150 +248,161 @@
        "1  chr1  10039         A      C  rs978760828"
       ]
      },
-     "execution_count": 23,
+     "execution_count": 6,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "qry = svc.execute(\"gor #dbsnp# | top 2;\")\n",
-    "print(f\"Query {qry.query_id} is {qry.status}. Runtime was {qry.duration} ms and it produced {qry.line_count} rows.\")\n",
-    "print(f\"The query that was run: {qry.query}\")\n",
-    "from pprint import pprint\n",
-    "df = qry.dataframe()\n",
-    "df"
+    "%%gor\n",
+    "  def #top# = 2;\n",
+    "  gor #dbsnp#\n",
+    "   | top #top#;"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Analysing failed queries\n",
-    "\n",
-    "If you run a query through the SDK an exception will not be raised if the query fails. You will need to check for it explicitly. You can use the helper attribute 'failed' for control flow.\n",
-    "\n",
-    "If a query failed then `status_message` will be set and shows a short error message. You can view more detailed information in the `query.error` dictionary."
+    "#### Multi-line gor expression which stores results in local variable\n",
+    "To load results from a multi-line gor expression into a variable you can use the special `<<` operator"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 27,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "Query failed with error: Resource not found for iterator: #unknowndef# #unknowndef#\n",
-      "\n",
-      "Additional information available from qry.error[]: ['command', 'commandIndex', 'commandName', 'commandSource', 'description', 'errorType', 'gorMessage', 'message', 'requestId', 'stackTrace', 'type', 'uri']\n"
-     ]
-    }
-   ],
-   "source": [
-    "qry = svc.execute(\"gor #unknowndef# | top 2;\")\n",
-    "if qry.failed:\n",
-    "    import sys\n",
-    "    print(f\"Query failed with error: {qry.status_message}\\n\", file=sys.stderr)\n",
-    "    print(f\"Additional information available from qry.error[]: {list(qry.error.keys())}\", file=sys.stderr)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Using virtual relations"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 28,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "   hello  world\n",
-      "0      1      2\n",
-      "   hello  world\n",
-      "0      1      2\n",
-      "   hello  world\n",
-      "0      1      2\n"
+      "Query 19506 generated 10 rows in 0.86 sec\n"
      ]
     }
    ],
    "source": [
-    "import pandas as pd\n",
-    "import nextcode\n",
-    "svc = nextcode.get_service(\"query\")\n",
-    "\n",
-    "# use a dataframe as a virtual relation\n",
-    "df = pd.DataFrame(columns=[\"hello\", \"world\"], data=[[1, 2]])\n",
-    "qry = svc.execute(\"gor [test]\", test=df)\n",
-    "print(qry.dataframe())\n",
-    "\n",
-    "# use a tsv string as a virtual relation\n",
-    "tsv = \"\"\"hello\\tworld\\n1\\t2\"\"\"\n",
-    "qry = svc.execute(\"gor [test]\", test=tsv)\n",
-    "print(qry.dataframe())\n",
-    "\n",
-    "# if your virtual relation uses special characters (:) in variable name\n",
-    "qry = svc.execute(\"gor [var:test]\", relations=[{\"name\": \"var:test\", \"data\": df}])\n",
-    "print(qry.dataframe())"
+    "%%gor new_results <<\n",
+    "def #tops# = 10;\n",
+    "gor #dbsnp# | top #tops#;"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RangeIndex(start=0, stop=10, step=1)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "new_results.index"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### Using the Query Builder\n",
-    "The jupyter modules comes with a query builder which is a helper class for writing queries. Here is an example of how that might be used.\n",
-    "\n",
-    "This is functionally equal to the *compound expressions* example above. "
+    "#### Store results in the user_data folder\n",
+    "Instead of fetching the data to the jupyter server you can also use the | write gor command to store files in the user_data folder within the project on NFS."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 29,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "def #myfirstdef# = 2;\n",
-      "def #myseconddef# = 2;\n",
-      "\n",
-      "create [mydbsnp] = gor -p chr1:69000-70000 #dbsnp#;\n",
-      "\n",
-      "gor [mydbsnp]\n"
+      "Query 19507 generated 0 rows in 0.86 sec\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "Empty DataFrame\n",
+       "Columns: []\n",
+       "Index: []"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "%%gor\n",
+    "  pgor #dbsnp#\n",
+    "   | top 1000\n",
+    "   | write user_data/outfile.gorz;"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "outfile.gorz (10.2KiB)\n"
      ]
     }
    ],
    "source": [
-    "from nextcode.services.query.jupyter import QueryBuilder\n",
-    "bld = QueryBuilder()\n",
-    "bld.creates[\"mydbsnp\"] = \"gor -p chr1:69000-70000 #dbsnp#\"\n",
-    "bld.defs[\"#myfirstdef#\"] = 2\n",
-    "bld.defs[\"#myseconddef#\"] = 2\n",
-    "print(bld.render(\"gor [mydbsnp]\"))"
+    "# verify that the file is there by executing gorls\n",
+    "%gorls user_data outfile.gorz"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 30,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "qry = bld.execute(\"gor [mydbsnp]\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 31,
+   "execution_count": 11,
    "metadata": {},
    "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Query 19509 generated 1 rows in 0.73 sec\n"
+     ]
+    },
     {
      "data": {
       "text/html": [
@@ -1137,130 +425,86 @@
        "    <tr style=\"text-align: right;\">\n",
        "      <th></th>\n",
        "      <th>Chrom</th>\n",
-       "      <th>pos</th>\n",
-       "      <th>reference</th>\n",
-       "      <th>allele</th>\n",
-       "      <th>rsids</th>\n",
+       "      <th>bpStart</th>\n",
+       "      <th>bpStop</th>\n",
+       "      <th>allCount</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
        "      <th>0</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69045</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1360507296</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69063</td>\n",
-       "      <td>T</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs1260343719</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69071</td>\n",
-       "      <td>C</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1314111151</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69072</td>\n",
-       "      <td>G</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1379296286</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>...</th>\n",
-       "      <td>...</td>\n",
-       "      <td>...</td>\n",
-       "      <td>...</td>\n",
-       "      <td>...</td>\n",
-       "      <td>...</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>243</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69968</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1365205342</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>244</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69986</td>\n",
-       "      <td>C</td>\n",
-       "      <td>A</td>\n",
-       "      <td>rs1198102769</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>245</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69989</td>\n",
-       "      <td>A</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs1246160656</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>246</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69989</td>\n",
-       "      <td>A</td>\n",
-       "      <td>G</td>\n",
-       "      <td>rs1246160656</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>247</th>\n",
-       "      <td>chr1</td>\n",
-       "      <td>69995</td>\n",
-       "      <td>G</td>\n",
-       "      <td>C</td>\n",
-       "      <td>rs778633020</td>\n",
+       "      <td>chr7</td>\n",
+       "      <td>0</td>\n",
+       "      <td>159345973</td>\n",
+       "      <td>1000</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
-       "<p>248 rows × 5 columns</p>\n",
        "</div>"
       ],
       "text/plain": [
-       "    Chrom    pos reference allele         rsids\n",
-       "0    chr1  69045         A      G  rs1360507296\n",
-       "1    chr1  69063         T      C  rs1260343719\n",
-       "2    chr1  69071         C      A  rs1314111151\n",
-       "3    chr1  69071         C      G  rs1314111151\n",
-       "4    chr1  69072         G      A  rs1379296286\n",
-       "..    ...    ...       ...    ...           ...\n",
-       "243  chr1  69968         A      G  rs1365205342\n",
-       "244  chr1  69986         C      A  rs1198102769\n",
-       "245  chr1  69989         A      C  rs1246160656\n",
-       "246  chr1  69989         A      G  rs1246160656\n",
-       "247  chr1  69995         G      C   rs778633020\n",
-       "\n",
-       "[248 rows x 5 columns]"
+       "  Chrom  bpStart     bpStop  allCount\n",
+       "0  chr7        0  159345973      1000"
       ]
      },
-     "execution_count": 31,
+     "execution_count": 11,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "qry.dataframe()"
+    "# now you can gor this file and bring the results into a local dataframe\n",
+    "%gor user_data/outfile.gorz | GROUP chrom -count | top 2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Download results to a local file\n",
+    "When the results are very large and you want to be able to use them locally without rerunning the query you can stream the results directly to a file with the << operator by specifying `file:`.\n",
+    "You can cancel the download at any time and have partial results in the output file."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "filename = \"dbsnp_2m.tsv\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%gor file:$filename <<\n",
+    "    gor #dbsnp# | top 2000000"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!wc -l $filename\n",
+    "!ls -lh $filename"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n"
    ]
   },
   {
@@ -1269,6 +513,253 @@
    "metadata": {},
    "outputs": [],
    "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Gor expression which references a local variable\n",
+    "Local variables can be references using the `$xxx` syntax. This will expand the variable inline and is meant to be used for simple strings and numbers"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "num = 5"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%gor\n",
+    "  gor -p chr1:69000-70000 #dbsnp#\n",
+    "   | TOP $num;"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Gor expression with defs and create statements"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%gor\n",
+    "def #number# = $num;\n",
+    "def #VEP_single# = UKBB/freezes/2019_0325/plink_wes/vep_single.gorz;\n",
+    "def #myfavouritefood# = pizza;\n",
+    "\n",
+    "create mydbsnp = gor -p chr1:69000-70000 #dbsnp#\n",
+    "                  | TOP #number#;\n",
+    "\n",
+    "gor [mydbsnp];"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Compound expressions\n",
+    "Using the local variables you can construct compount expressions, allowing you to split up long gor scripts."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "defs = \"\"\"\n",
+    "def #myfirstdef# = 2;\n",
+    "def #myseconddef# = 2;\n",
+    "\n",
+    "\"\"\"\n",
+    "creates = \"\"\"\n",
+    "create mydbsnp = gor -p chr1:69000-70000 #dbsnp#\n",
+    "                  | TOP #myfirstdef#;\n",
+    "\"\"\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%gor\n",
+    " $defs\n",
+    " $creates\n",
+    "\n",
+    " gor [mydbsnp];"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Virtual relations\n",
+    "You can load pandas dataframes into the query with the special `[var:xxx]` syntax."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "allpns = pd.read_csv('pnlist.tsv', delimiter='\\t')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%gor\n",
+    "  create bla = gor #dbsnp#\n",
+    "   | top 10;\n",
+    "  nor [var:allpns]\n",
+    "   | top 5;"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Cancelling queries\n",
+    "Try executing this long-running query and then click the stop button"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "results = %gor pgor #dbsnp# | GROUP chrom -count"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Using the SDK without magic syntax\n",
+    "The `%` and `%%` is simply syntactic sugar for executing queries through the python sdk. You can use the sdk directly as well and that is probably the preferred method for serious analysis."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Initializing the SDK\n",
+    "The SDK usually needs to be initialized with an API key and a project. However, in Wuxi notebooks this has already been done for you."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#%env GOR_API_KEY=[jwt token]\n",
+    "#%env GOR_API_PROJECT=[project name]\n",
+    "import nextcode\n",
+    "import pandas\n",
+    "# get a handle on a query service proxy\n",
+    "svc = nextcode.get_service(\"query\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Running basic queries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "qry = svc.execute(\"gor #dbsnp# | top 2;\")\n",
+    "print(f\"Query {qry.query_id} is {qry.status}. Runtime was {qry.duration} ms and it produced {qry.line_count} rows.\")\n",
+    "print(f\"The query that was run: {qry.query}\")\n",
+    "from pprint import pprint\n",
+    "df = qry.dataframe()\n",
+    "df"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Analysing failed queries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "qry = svc.execute(\"gor #unknowndef# | top 2;\")\n",
+    "if qry.status == \"FAILED\":\n",
+    "    import sys\n",
+    "    print(f\"Query failed with error: {qry.error['message']}\\n\", file=sys.stderr)\n",
+    "    print(f\"Additional information available from qry.error[]: {list(qry.error.keys())}\", file=sys.stderr)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Using virtual relations"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import nextcode\n",
+    "svc = nextcode.get_service(\"query\")\n",
+    "\n",
+    "# use a dataframe as a virtual relation\n",
+    "df = pd.DataFrame(columns=[\"hello\", \"world\"], data=[[1, 2]])\n",
+    "qry = svc.execute(\"gor [test]\", test=df)\n",
+    "print(qry.dataframe())\n",
+    "\n",
+    "# use a tsv string as a virtual relation\n",
+    "tsv = \"\"\"hello\\tworld\\n1\\t2\"\"\"\n",
+    "qry = svc.execute(\"gor [test]\", test=tsv)\n",
+    "print(qry.dataframe())\n",
+    "\n",
+    "# if your virtual relation uses special characters (:) in variable name\n",
+    "qry = svc.execute(\"gor [var:test]\", relations=[{\"name\": \"var:test\", \"data\": df}])\n",
+    "print(qry.dataframe())"
+   ]
   }
  ],
  "metadata": {
