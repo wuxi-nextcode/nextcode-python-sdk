@@ -156,7 +156,11 @@ class Service(BaseService):
             project_name,
             build_source="url",
             build_context=build_context,
+            profile=profile,
+            trace=trace,
             params=params,
+            details=details,
+            description=description,
         )
 
     def post_job(
