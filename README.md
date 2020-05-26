@@ -1,7 +1,7 @@
 [![Latest version on
 PyPi](https://badge.fury.io/py/nextcode-sdk.svg)](https://badge.fury.io/py/nextcode-sdk)
 [![Build Status](https://api.travis-ci.org/wuxi-nextcode/nextcode-python-sdk.svg?branch=master)](https://travis-ci.org/wuxi-nextcode/nextcode-python-sdk)
-[![codecov](https://codecov.io/gh/wuxi-nextcode/nextcode-python-sdk/branch/develop/graph/badge.svg)](https://codecov.io/gh/wuxi-nextcode/nextcode-python-sdk)
+[![codecov](https://codecov.io/gh/wuxi-nextcode/nextcode-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/wuxi-nextcode/nextcode-python-sdk)
 [![Supported Python
 versions](https://img.shields.io/pypi/pyversions/nextcode-sdk.svg)](https://pypi.org/project/nextcode-sdk/)
 [![Code style:
