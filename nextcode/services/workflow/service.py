@@ -172,6 +172,7 @@ class Service(BaseService):
         trace: bool = False,
         details: Optional[Dict] = None,
         description: Optional[str] = None,
+        executor_memory_mb: Optional[int] = None,
     ):
         """
         Run a workflow job
@@ -189,6 +190,7 @@ class Service(BaseService):
         :param trace: Instruct the job to run nextflow trace flags for debugging.
         :param details: Dictionary containing the initial values for 'details' in the job
         :param description: Human readable description of the job
+        :param executor_memory_mb: Override the memory limit of the nextflow executor
 
         """
         if not project_name:
@@ -198,7 +200,7 @@ class Service(BaseService):
                 "No project specified and GOR_API_PROJECT not set in environment"
             )
         log.debug(
-            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s",
+            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s",
             pipeline_name,
             project_name,
             params,
@@ -208,6 +210,7 @@ class Service(BaseService):
             build_context,
             profile,
             description,
+            executor_memory_mb,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -222,7 +225,8 @@ class Service(BaseService):
         }
         if build_source:
             data["build_source"] = build_source
-
+        if executor_memory_mb:
+            data["executor_memory_mb"] = executor_memory_mb
         if trace:
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}  # type: ignore
 
