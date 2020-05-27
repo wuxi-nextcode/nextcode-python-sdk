@@ -138,7 +138,7 @@ class KeycloakSession:
         if r.status_code == codes.not_found:
             if "-cluster" not in auth_server:
                 lst = self.root_url.split(".", 1)
-                auth_server = lst[0] + "-cluster" + lst[1]
+                auth_server = lst[0] + "-cluster." + lst[1]
             else:
                 auth_server = auth_server.replace("-cluster", "")
 

@@ -2,9 +2,11 @@ import responses
 from unittest import mock
 import datetime
 from copy import deepcopy
+import os
 
 from nextcode import Client
 from nextcode.exceptions import ServerError
+from nextcode.services.workflow import weblog
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 
 WORKFLOW_URL = "https://test.wuxinextcode.com/workflow"
@@ -264,3 +266,30 @@ class WorkflowTest(BaseTestCase):
         responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
         projects = self.svc.get_projects()
         self.assertEqual(projects, PROJECTS_RESP["projects"])
+
+
+class WeblogTest(BaseTestCase):
+    def setUp(self):
+        super(WeblogTest, self).setUp()
+        self.url = "http://test.local/"
+        os.environ["WEBLOG_URL"] = self.url
+        responses.add(responses.GET, self.url)
+        responses.add(responses.POST, self.url)
+
+    @responses.activate
+    def test_add_to_details(self):
+        weblog.add_to_details("key")
+
+    @responses.activate
+    def test_set_details(self):
+        weblog.set_details("key", "value")
+
+    @responses.activate
+    def test_set_status_message(self):
+        weblog.set_status_message("msg")
+
+    def test_noenviron(self):
+        os.environ["WEBLOG_URL"] = ""
+        weblog.add_to_details("key")
+        weblog.set_details("key", "value")
+        weblog.set_status_message("msg")
