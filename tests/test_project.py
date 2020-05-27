@@ -48,6 +48,8 @@ CREDENTIALS_RESP = {
     "user_id": 1,
     "user_name": "test@wuxinextcode.com",
     "links": {"credentials": CREDENTIALS_URL, "self": USER_URL},
+    "aws_access_key_id": "aws_access_key_id",
+    "aws_secret_access_key": "aws_secret_access_key",
 }
 
 
@@ -80,7 +82,6 @@ class ProjectTest(BaseTestCase):
         responses.add(
             responses.GET, PROJECTS_URL + "?project_name=testing", json=PROJECTS_RESP
         )
-        print(PROJECT_USERS_URL)
         responses.add(responses.GET, PROJECT_USERS_URL, json=[])
         _ = self.svc.create_project()
         _ = self.svc.get_users_in_project()
@@ -89,3 +90,75 @@ class ProjectTest(BaseTestCase):
         )
         with self.assertRaises(ProjectError):
             _ = self.svc.get_my_project_access()
+
+    @responses.activate
+    def test_get_all_projects(self):
+        responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
+        self.svc.get_all_projects()
+
+    @responses.activate
+    def test_get_project(self):
+        responses.add(responses.GET, PROJECTS_URL + "?project_name=blabla", json=[])
+        self.svc._get_project("blabla")
+
+    @responses.activate
+    def test_credentials(self):
+        responses.add(
+            responses.GET, USER_URL, json={"links": {"credentials": CREDENTIALS_URL}}
+        )
+        responses.add(responses.GET, CREDENTIALS_URL, json=CREDENTIALS_RESP)
+        responses.add(responses.PUT, CREDENTIALS_URL, json=CREDENTIALS_RESP)
+        responses.add(responses.DELETE, CREDENTIALS_URL)
+
+        self.svc.get_credentials()
+
+        self.svc.set_credentials("keykey")
+
+        self.svc.delete_credentials()
+
+    @responses.activate
+    def test_add_user_to_project(self):
+        responses.add(
+            responses.GET, PROJECTS_URL + "?project_name=testing", json=PROJECTS_RESP
+        )
+        responses.add(
+            responses.GET, USER_URL, json={"links": {"credentials": CREDENTIALS_URL}}
+        )
+        responses.add(responses.POST, PROJECT_USERS_URL, json={})
+        self.svc.add_user_to_project(project_name="testing", user_name="bla")
+        responses.add(
+            responses.GET,
+            PROJECT_USERS_URL,
+            json=[{"user_name": "bla", "links": {"self": PROJECT_USERS_URL + "/1"}}],
+        )
+        responses.add(responses.DELETE, PROJECT_USERS_URL + "/1")
+        self.svc.remove_user_from_project(project_name="testing", user_name="bla")
+
+    @responses.activate
+    def test_s3(self):
+        responses.add(
+            responses.GET,
+            PROJECT_USERS_URL,
+            json=[
+                {
+                    "user_name": "bla",
+                    "policies": [],
+                    "links": {"self": PROJECT_USERS_URL + "/1"},
+                }
+            ],
+        )
+        responses.add(responses.GET, USER_URL, json=USER_RESP)
+        responses.add(responses.GET, CREDENTIALS_URL, json=CREDENTIALS_RESP)
+        self.svc.get_project_bucket = mock.MagicMock()
+        mock_bucket = mock.MagicMock()
+        mock_list_objects = mock.MagicMock(
+            return_value={
+                "CommonPrefixes": [{"Prefix": "/bleeerg"}],
+                "Contents": [{"Size": 123456, "Key": "bleeerg/eoee"}],
+            }
+        )
+        mock_bucket.meta.client.list_objects = mock_list_objects
+        self.svc.get_project_bucket.return_value = mock_bucket
+        self.svc.list()
+        self.svc.upload("filename", "test")
+        self.svc.download("test")

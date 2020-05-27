@@ -7,6 +7,7 @@ import os
 from nextcode import Client
 from nextcode.exceptions import ServerError
 from nextcode.services.workflow import weblog
+from nextcode.services.workflow.exceptions import JobError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 
 WORKFLOW_URL = "https://test.wuxinextcode.com/workflow"
@@ -266,6 +267,36 @@ class WorkflowTest(BaseTestCase):
         responses.add(responses.GET, PROJECTS_URL, json=PROJECTS_RESP)
         projects = self.svc.get_projects()
         self.assertEqual(projects, PROJECTS_RESP["projects"])
+
+    @responses.activate
+    def test_wait(self):
+        responses.add(responses.POST, JOBS_URL, json=JOBS_RESP["jobs"][0])
+
+        pipeline_name = "pipeline_name"
+        project_name = "project_name"
+        params = {}
+        script = None
+        revision = None
+        build_source = "builtin"
+        build_context = None
+        profile = "test"
+
+        job = self.svc.post_job(
+            pipeline_name,
+            project_name,
+            params,
+            script,
+            revision,
+            build_source,
+            build_context,
+            profile,
+        )
+        job.status = "STARTED"
+        responses.add(responses.GET, JOB_URL, json=JOB_RESP)
+        with self.assertRaises(JobError):
+            job.wait(max_seconds=1)
+        _ = job.done
+        _ = job.failed
 
 
 class WeblogTest(BaseTestCase):
