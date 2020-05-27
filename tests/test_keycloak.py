@@ -9,7 +9,7 @@ from nextcode.keycloak import (
     auth_popup,
     KeycloakSession,
 )
-from nextcode.exceptions import AuthServerError
+from nextcode.exceptions import AuthServerError, ServerError
 
 ROOT_URL = "keycloak"
 REFRESH_TOKEN = "refresh_token"
@@ -110,7 +110,7 @@ class KeycloakTest(BaseTestCase):
             session.remove_user(user_name)
 
         with responses.RequestsMock() as rsps:
-            roles_response = {"realmMappings": []}
+            roles_response = {"realmMappings": [{"name": "bla"}]}
             rsps.add(
                 responses.GET,
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username={user_name}",
@@ -121,4 +121,151 @@ class KeycloakTest(BaseTestCase):
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
                 json.dumps(roles_response),
             )
+
+            rsps.add(
+                responses.DELETE,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm",
+                json.dumps([{"name": "bla"}]),
+            )
             session.get_user_roles(user_name)
+            session.add_role_to_user(user_name, "bla", exist_ok=True)
+            session.remove_role_from_user(user_name, "bla")
+
+        with responses.RequestsMock() as rsps:
+            roles_response = {"realmMappings": []}
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username={user_name}",
+                json.dumps(users_response),
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm/available",
+                json.dumps([{"name": "bla"}]),
+            )
+            rsps.add(
+                responses.POST,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm",
+                json.dumps([{"name": "bla"}]),
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                json.dumps(roles_response),
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username=user_name",
+                json.dumps(users_response),
+            )
+            session.add_role_to_user(user_name, "bla", exist_ok=True)
+            session.get_available_roles_for_user("user_name")
+
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                responses.GET,
+                "https://keycloak/auth/admin/realms/wuxinextcode.com/users?username=user_name",
+                "{}",
+            )
+            rsps.add(
+                responses.POST,
+                "https://keycloak/auth/admin/realms/wuxinextcode.com/users",
+                "{}",
+            )
+            with self.assertRaises(AuthServerError):
+                session.create_user(user_name, "password")
+
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                responses.GET,
+                "https://keycloak/auth/admin/realms/wuxinextcode.com/users?username=user_name",
+                json.dumps([{"username": "user_name", "id": 1}]),
+            )
+            rsps.add(
+                responses.DELETE,
+                "https://keycloak/auth/admin/realms/wuxinextcode.com/users/1",
+                json.dumps([{"username": "user_name", "id": 1}]),
+            )
+            session.delete_user(user_name)
+
+    @responses.activate
+    def test_get_auth_server(self):
+        ROOT_URL = "keycloak.wuxi.com"
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.GET, f"https://{ROOT_URL}/auth", status=404)
+            with self.assertRaises(ServerError):
+                session = KeycloakSession(ROOT_URL, password="password")
+
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.GET, f"https://{ROOT_URL}/auth", status=200)
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/realms/wuxinextcode.com",
+                status=200,
+            )
+            auth_response = {
+                "refresh_token": REFRESH_TOKEN,
+                "access_token": ACCESS_TOKEN,
+            }
+            rsps.add(
+                responses.POST,
+                f"https://{ROOT_URL}/auth/realms/master/protocol/openid-connect/token",
+                json.dumps(auth_response),
+            )
+            rsps.add(
+                responses.POST,
+                f"https://{ROOT_URL}/auth/realms/wuxinextcode.com/protocol/openid-connect/token",
+                json.dumps(auth_response),
+            )
+            users_response = [{"username": "user", "id": 1}]
+
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username=user",
+                json.dumps(users_response),
+            )
+            rsps.add(
+                responses.PUT,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/1/reset-password",
+                json.dumps(users_response),
+            )
+            session = KeycloakSession(ROOT_URL, password="password")
+
+            session.login_user("user", "pass")
+            session.set_user_password("user", "pass")
+
+    @responses.activate
+    def test_roles(self):
+        ROOT_URL = "keycloak.wuxi.com"
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.GET, f"https://{ROOT_URL}/auth", status=200)
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/realms/wuxinextcode.com",
+                status=200,
+            )
+            auth_response = {
+                "refresh_token": REFRESH_TOKEN,
+                "access_token": ACCESS_TOKEN,
+            }
+            rsps.add(
+                responses.POST,
+                f"https://{ROOT_URL}/auth/realms/master/protocol/openid-connect/token",
+                json.dumps(auth_response),
+            )
+            rsps.add(
+                responses.POST,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/roles",
+                "{}",
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/roles",
+                "{}",
+            )
+            session = KeycloakSession(ROOT_URL, password="password")
+
+            session.create_role("role")
+            session.get_roles()
+            with self.assertRaises(AuthServerError):
+                session.delete_role("role")

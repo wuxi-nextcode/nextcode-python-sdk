@@ -4,5 +4,6 @@ branch = True
 [report]
 omit = 
     **/pytest_plugin.py
+    nextcode/services/pipelines/*
 
 ignore_errors = True
