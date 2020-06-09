@@ -318,12 +318,21 @@ class Service(BaseService):
             gor_query.wait()
         return gor_query
 
-    def execute_template(self, template_name: str, nowait: bool = False, **kw) -> Query:
+    def execute_template(
+        self,
+        template_name: str,
+        nowait: bool = False,
+        persist: Optional[str] = None,
+        job_type: Optional[str] = None,
+        **kw,
+    ) -> Query:
         """
         Execute a gor template on the server.
 
         :param template_name: Full template name in the form [org]/[category]/[query]/[version]
         :param nowait: if True, return a Query object with PENDING status instead of waiting for query to finish
+        :param persist: File path in the project tree to persist the results to (must start with `user_data/`)
+        :param job_type: Optional job type for routing purposes
         :raises: :exc:`~ServerError`
 
         Optional keyword arguments are used for arguments into the template.
@@ -343,11 +352,13 @@ class Service(BaseService):
         args = {}
         for k, v in kw.items():
             args[k] = v
-        payload = {
+        payload: Dict[str, Union[str, Any]] = {
             "project": self.project,
             "args": args,
             "wait": QUERY_WAIT_SECONDS,
             "metadata": self.metadata,
+            "persist": persist,
+            "type": job_type or "default",
         }
         try:
             resp = self.session.post(execute_url, json=payload)

@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.8.4 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.8.5 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.8.4</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.8.5</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -232,13 +232,15 @@ to transition to a completed status. Therefore, most small queries will return i
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.execute_template">
-<code class="sig-name descname">execute_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">template_name</span></em>, <em class="sig-param"><span class="n">nowait</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">execute_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">template_name</span></em>, <em class="sig-param"><span class="n">nowait</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persist</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">job_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a gor template on the server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Full template name in the form [org]/[category]/[query]/[version]</p></li>
 <li><p><strong>nowait</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if True, return a Query object with PENDING status instead of waiting for query to finish</p></li>
+<li><p><strong>persist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – File path in the project tree to persist the results to (must start with <cite>user_data/</cite>)</p></li>
+<li><p><strong>job_type</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional job type for routing purposes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -747,7 +749,7 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-05-27.<br/>
+      Last updated on 2020-06-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
     </p>
   </div>
