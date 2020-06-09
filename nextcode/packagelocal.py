@@ -105,6 +105,7 @@ def _package_and_upload(
         write_filename = package_name + write_filename
         log_archive.write(f, arcname=write_filename)
     log_archive.close()
+
     if len(files) == 0:
         raise RuntimeError("No files found in '%s'" % project_path)
     s3_resource = boto3.resource("s3")
