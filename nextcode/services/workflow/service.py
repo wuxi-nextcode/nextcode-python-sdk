@@ -91,6 +91,7 @@ class Service(BaseService):
         project: Optional[str] = None,
         pipeline: Optional[str] = None,
         state: Optional[str] = None,
+        context: Optional[str] = None,
         limit: Optional[int] = 50,
     ) -> List[WorkflowJob]:
         """
@@ -100,7 +101,8 @@ class Service(BaseService):
         :param status: Current status of jobs
         :param project: Filter by project
         :param pipeline: Filter by pipeline name
-        :oaram state: Filter by state, each state encapsulates several statuses (running, finished)
+        :param state: Filter by state, each state encapsulates several statuses (running, finished)
+        :param context: Filter by context string
         :param limit: Maximum number of jobs to return
         """
         data: Dict = {"limit": limit}
@@ -114,6 +116,8 @@ class Service(BaseService):
             data["pipeline_name"] = pipeline
         if state:
             data["state"] = state
+        if context:
+            data["context"] = state
         st = time.time()
         resp = self.session.get(self.session.url_from_endpoint("jobs"), json=data)
         jobs = resp.json()["jobs"]
@@ -177,6 +181,7 @@ class Service(BaseService):
         details: Optional[Dict] = None,
         description: Optional[str] = None,
         executor_memory_mb: Optional[int] = None,
+        context: Optional[str] = None,
     ):
         """
         Run a workflow job
@@ -195,6 +200,7 @@ class Service(BaseService):
         :param details: Dictionary containing the initial values for 'details' in the job
         :param description: Human readable description of the job
         :param executor_memory_mb: Override the memory limit of the nextflow executor
+        :param context: Optional string to allow querying for custom information
 
         """
         if not project_name:
@@ -204,7 +210,7 @@ class Service(BaseService):
                 "No project specified and GOR_API_PROJECT not set in environment"
             )
         log.debug(
-            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s",
+            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s",
             pipeline_name,
             project_name,
             params,
@@ -215,6 +221,7 @@ class Service(BaseService):
             profile,
             description,
             executor_memory_mb,
+            context,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -226,6 +233,7 @@ class Service(BaseService):
             "profile": profile,
             "details": details,
             "description": description,
+            "context": context,
         }
         if build_source:
             data["build_source"] = build_source

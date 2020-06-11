@@ -250,8 +250,9 @@ class Service(BaseService):
 
         :raises: :exc:`~exceptions.ServerError`, :exc:`~exceptions.MissingRelations`
 
-        Optional keyword arguments in the form `name=data` are converted into virtual relations if relations
-        is not explicitly passed in.
+        Optional keyword arguments in the form `name=data` (where data is a tsv string) are converted into virtual relations if relations
+        is not explicitly passed in and added to the relations set by the relations parameter. If the relations parameter is set it
+        should be a list of dictionaries with {"name": "relation-name", "data": "<tsv string>"}
 
         Whether nowait is set or not, the serverside method will wait for a maximum of 2 seconds for the query
         to transition to a completed status. Therefore, most small queries will return in DONE status.
