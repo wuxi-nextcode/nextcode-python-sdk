@@ -117,7 +117,7 @@ class Service(BaseService):
         if state:
             data["state"] = state
         if context:
-            data["context"] = state
+            data["context"] = context
         st = time.time()
         resp = self.session.get(self.session.url_from_endpoint("jobs"), json=data)
         jobs = resp.json()["jobs"]
