@@ -436,3 +436,24 @@ class Service(BaseService):
                 pass
             queries.append(q)
         return queries
+
+    def wakeup(
+        self, job_type: Optional[str] = "default", user: Optional[str] = None
+    ) -> bool:
+        """
+        Wake up the server.
+
+        Inform the query service that we are about to perform some queries.
+
+        This gives the query service a chance to spawn some workers and be prepared for
+        queries in order to reduce wait times.
+        :param job_type: Optional job type for routing purposes
+        :param user: Optional user for tracking purposes (requires admin role)
+        :returns success: Was the request successful
+        """
+        data = {
+            "type": job_type,
+            "user": user,
+        }
+        resp = self.session.post(self.session.endpoints["wakeup"], json=data)
+        return resp.json()["success"]

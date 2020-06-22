@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Query Service &#8212; nextcode-python-sdk 0.8.9 documentation</title>
+    <title>Query Service &#8212; nextcode-python-sdk 0.8.10 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.8.9</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.8.10</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -411,6 +411,25 @@ can be called to force a refresh.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="nextcode.services.query.service.Service.wakeup">
+<code class="sig-name descname">wakeup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">job_type</span><span class="o">=</span><span class="default_value">'default'</span></em>, <em class="sig-param"><span class="n">user</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.wakeup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.wakeup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wake up the server.</p>
+<p>Inform the query service that we are about to perform some queries.</p>
+<p>This gives the query service a chance to spawn some workers and be prepared for
+queries in order to reduce wait times.
+:type job_type: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]
+:param job_type: Optional job type for routing purposes
+:type user: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]
+:param user: Optional user for tracking purposes (requires admin role)
+:returns success: Was the request successful</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -750,7 +769,7 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-06-18.<br/>
+      Last updated on 2020-06-22.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
     </p>
   </div>

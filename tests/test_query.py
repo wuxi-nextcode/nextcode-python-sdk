@@ -24,6 +24,7 @@ from nextcode.services.query.exceptions import (
 )
 
 ROOT_URL = "https://test.wuxinextcode.com/api/query"
+WAKEUP_URL = ROOT_URL + "/wakeup/"
 QUERIES_URL = ROOT_URL + "/query/"
 TEMPLATES_ORGANIZATIONS_URL = ROOT_URL + "/templates/"
 TEMPLATES_CATEGORIES_URL = TEMPLATES_ORGANIZATIONS_URL + "wxnc/"
@@ -40,7 +41,11 @@ TEMPLATES_TEMPLATES_RESP = {
 }
 
 ROOT_RESP = {
-    "endpoints": {"templates": TEMPLATES_ORGANIZATIONS_URL, "queries": QUERIES_URL},
+    "endpoints": {
+        "templates": TEMPLATES_ORGANIZATIONS_URL,
+        "queries": QUERIES_URL,
+        "wakeup": WAKEUP_URL,
+    },
     "current_user": {"email": "testuser"},
 }
 
@@ -502,3 +507,8 @@ class QueryTest(BaseTestCase):
         setattr(query, "get_results", mock_get_results)
         df = query.dataframe()
         self.assertEqual([], df.index.to_list())
+
+    @responses.activate
+    def test_wakeup(self):
+        responses.add(responses.POST, WAKEUP_URL, json={"success": True})
+        self.svc.wakeup()
