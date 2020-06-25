@@ -16,6 +16,8 @@ from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.utils import decode_token, jupyter_available
 from nextcode.client import Client
 from nextcode.services.query import Service
+from nextcode.services.query.query import _log_download_progress
+
 from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP
 from nextcode.services.query.exceptions import (
     QueryError,
@@ -512,3 +514,30 @@ class QueryTest(BaseTestCase):
     def test_wakeup(self):
         responses.add(responses.POST, WAKEUP_URL, json={"success": True})
         self.svc.wakeup()
+
+    def test_log_download_progress(self):
+        _log_download_progress(1000, 2, 3, 4, 5, 6)
+
+    @responses.activate
+    def test_perspectives(self):
+        responses.add(
+            responses.GET, QUERY_RESPONSE["links"]["self"], json=QUERY_RESPONSE
+        )
+        query = self.svc.get_query(QUERY_RESPONSE["query_id"])
+        _ = query.perspectives
+
+    @responses.activate
+    def test_download_results(self):
+        responses.add(
+            responses.GET, QUERY_RESPONSE["links"]["self"], json=QUERY_RESPONSE
+        )
+        query = self.svc.get_query(QUERY_RESPONSE["query_id"])
+        filename = "/tmp/out.tsv"
+        del query.links["streamresults"]
+        with self.assertRaises(Exception):
+            _ = query.download_results(filename)
+
+        query = self.svc.get_query(QUERY_RESPONSE["query_id"])
+        filename = "/tmp/out.tsv"
+        responses.add(responses.GET, QUERY_RESPONSE["links"]["streamresults"], json={})
+        _ = query.download_results(filename)

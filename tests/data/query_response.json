@@ -18,7 +18,8 @@
       
     ],
     "result": "https://test.wuxinextcode.com/api/query/query/1371/result",
-    "self": "https://test.wuxinextcode.com/api/query/query/1371"
+    "self": "https://test.wuxinextcode.com/api/query/query/1371",
+    "streamresults": "https://test.wuxinextcode.com/api/query/query/1371/streamresults"
   },
   "progress": null,
   "project_name": "projectname",

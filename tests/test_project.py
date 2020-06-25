@@ -116,6 +116,19 @@ class ProjectTest(BaseTestCase):
 
         self.svc.delete_credentials()
 
+        url = "http://test"
+
+        def mock_get_user():
+            return {"links": {"credentials": url}}
+
+        self.svc.get_my_user = mock_get_user
+        responses.add(responses.GET, url, status=404)
+        with self.assertRaises(ProjectError):
+            self.svc.get_credentials()
+
+        responses.add(responses.PUT, url, json={})
+        self.svc.get_credentials(create=True)
+
     @responses.activate
     def test_add_user_to_project(self):
         responses.add(
@@ -133,6 +146,73 @@ class ProjectTest(BaseTestCase):
         )
         responses.add(responses.DELETE, PROJECT_USERS_URL + "/1")
         self.svc.remove_user_from_project(project_name="testing", user_name="bla")
+
+        self.svc.is_admin = lambda: False
+        with self.assertRaises(ProjectError):
+            self.svc.add_user_to_project(project_name="testing", user_name="bla")
+
+    @responses.activate
+    def test_obliterate_user(self):
+        username = "user"
+        url = "http://test"
+        responses.add(responses.GET, USERS_URL, json=[{"links": {"self": url}}])
+        responses.add(responses.DELETE, url)
+        self.svc.obliterate_user(username)
+
+    @responses.activate
+    def test_delete_project(self):
+        responses.add(
+            responses.GET, PROJECTS_URL + "?project_name=testing", json=PROJECTS_RESP
+        )
+        responses.add(
+            responses.GET,
+            PROJECT_USERS_URL,
+            json=[
+                {
+                    "user_name": "bla",
+                    "policies": [],
+                    "links": {"self": PROJECT_USERS_URL + "/1"},
+                }
+            ],
+        )
+
+        with self.assertRaises(NotImplementedError):
+            self.svc.delete_project()
+
+    @responses.activate
+    def test_get_project_bucket(self):
+        username = "user"
+        url = "http://test"
+        responses.add(responses.GET, USERS_URL + "/1", json=[{"links": {"self": url}}])
+        responses.add(
+            responses.GET, PROJECTS_URL + "?project_name=testing", json=PROJECTS_RESP
+        )
+        responses.add(
+            responses.GET,
+            PROJECT_USERS_URL,
+            json=[
+                {
+                    "user_name": "bla",
+                    "policies": [],
+                    "links": {"self": PROJECT_USERS_URL + "/1"},
+                }
+            ],
+        )
+        url = "http://test"
+
+        def mock_get_user():
+            return {"links": {"credentials": url}}
+
+        self.svc.get_my_user = mock_get_user
+        responses.add(
+            responses.GET,
+            url,
+            json={
+                "aws_access_key_id": "aws_access_key_id",
+                "aws_secret_access_key": "aws_secret_access_key",
+            },
+        )
+        self.svc.get_project_bucket()
 
     @responses.activate
     def test_s3(self):

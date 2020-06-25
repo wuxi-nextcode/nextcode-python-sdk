@@ -110,7 +110,7 @@ class GorMagics(Magics):
         """
         Handle variable substitution in a gor string to interact with local state.
         """
-        replacement_vars = re.findall("\\$([^0-9][a-zA-Z0-9_]+)?", string)
+        replacement_vars = re.findall("\\$([^0-9][a-zA-Z0-9_]*)?", string)
         ret = string
         user_ns = self.shell.user_ns
         for var_name in replacement_vars:

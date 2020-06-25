@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 0.8.11 documentation</title>
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.8.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -217,7 +217,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle variable substitution in a gor string to interact with local state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([^0-9][a-zA-Z0-9_]+)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([^0-9][a-zA-Z0-9_]*)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">string</span>
         <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
         <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">replacement_vars</span><span class="p">:</span>
@@ -522,7 +522,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-06-22.<br/>
+      Last updated on 2020-06-25.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
     </p>
   </div>

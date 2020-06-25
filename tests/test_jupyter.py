@@ -48,6 +48,13 @@ class JupyterTest(BaseTestCase):
         string = self.magics.replace_vars("hello $found;")
         self.assertEqual("hello 1;", string)
 
+        self.magics.shell.user_ns = {"s": 6}
+        string = self.magics.replace_vars("hello $s;")
+        self.assertEqual("hello 6;", string)
+
+        string = self.magics.replace_vars("hello $1;")
+        self.assertEqual("hello $1;", string)
+
     @responses.activate
     def test_load_relations(self):
         with self.assertRaises(Exception) as ex:
@@ -161,7 +168,24 @@ class GorCommandTest(JupyterTest):
         with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             df = self.magics.gor("myvar <<", "gor #dbsnp#\nAnother line")
             self.assertTrue(df is None)
-            dt = self.magics.gor("user_data/file.gorz <<", "gor #dbsnp#")
+            df = self.magics.gor("user_data/file.gorz <<", "gor #dbsnp#")
+            self.assertTrue(df is None)
+
+    @responses.activate
+    def test_download(self):
+        setup_responses()
+
+        def mock_execute(*args, **kwargs):
+            m = MagicMock()
+            m.status = "DONE"
+            m.line_count = 100
+            m.running.return_value = False
+            return m
+
+        m = MagicMock()
+        m.execute = mock_execute
+        with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
+            df = self.magics.gor("file:myfile <<", "gor #dbsnp#\nAnother line")
             self.assertTrue(df is None)
 
     @responses.activate
@@ -277,3 +301,21 @@ class GorCommandTest(JupyterTest):
         m.project = "/project/"
         with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
             qry.execute("gor #dbsnp#")
+
+    def test_sizeof_fmt(self):
+        txt = jupyter.sizeof_fmt(1)
+        self.assertEqual(txt, "1.0B")
+
+        txt = jupyter.sizeof_fmt(0)
+        self.assertEqual(txt, "-")
+
+        txt = jupyter.sizeof_fmt(1024 * 1024)
+        self.assertEqual(txt, "1.0MiB")
+
+        txt = jupyter.sizeof_fmt(1024 * 1024 * 1024 * 1024)
+        self.assertEqual(txt, "1.0TiB")
+
+        txt = jupyter.sizeof_fmt(
+            1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024
+        )
+        self.assertIn("Yi", txt)
