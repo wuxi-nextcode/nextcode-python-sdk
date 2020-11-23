@@ -61,6 +61,7 @@ PIPELINES_RESP = {
             "parameters": None,
             "revision": None,
             "script": "https://gitlab.com/wuxi-nextcode/cohort/workflows/workflow-smoketest.git",
+            "storage_type": "shared",
         }
     ]
 }
@@ -243,6 +244,7 @@ class WorkflowTest(BaseTestCase):
         build_source = "builtin"
         build_context = None
         profile = "test"
+        storage_type = "dedicated"
 
         job = self.svc.post_job(
             pipeline_name,
@@ -253,6 +255,7 @@ class WorkflowTest(BaseTestCase):
             build_source,
             build_context,
             profile,
+            storage_type
         )
         self.assertEqual(666, job.job_id)
 

@@ -182,6 +182,7 @@ class Service(BaseService):
         description: Optional[str] = None,
         executor_memory_mb: Optional[int] = None,
         context: Optional[str] = None,
+        storage_type: Optional[str] = None
     ):
         """
         Run a workflow job
@@ -201,6 +202,7 @@ class Service(BaseService):
         :param description: Human readable description of the job
         :param executor_memory_mb: Override the memory limit of the nextflow executor
         :param context: Optional string to allow querying for custom information
+        :param storage_type: Optional string specifying the storage option to use for the pipeline
 
         """
         if not project_name:
@@ -210,7 +212,9 @@ class Service(BaseService):
                 "No project specified and GOR_API_PROJECT not set in environment"
             )
         log.debug(
-            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s",
+            "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, "
+            "build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s, "
+            "storage_type=%s",
             pipeline_name,
             project_name,
             params,
@@ -222,6 +226,7 @@ class Service(BaseService):
             description,
             executor_memory_mb,
             context,
+            storage_type,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -234,6 +239,7 @@ class Service(BaseService):
             "details": details,
             "description": description,
             "context": context,
+            "storage_type": storage_type,
         }
         if build_source:
             data["build_source"] = build_source
