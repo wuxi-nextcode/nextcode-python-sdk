@@ -28,14 +28,14 @@ def pytest_addoption(parser):
         "--project",
         action="store",
         dest="project",
-        help="Sets the name of the project to run the workflow in",
+        help="Sets the name of the project to run the pipeline in",
         default="no_project",
     )
     group.addoption(
         "--runid",
         action="store",
         dest="run_id",
-        help="The name/id of the folder the workflow result_dir will be stored in",
+        help="The name/id of the folder the pipeline result_dir will be stored in",
         default=str(uuid.uuid4()),
     )
     group.addoption(
@@ -44,46 +44,52 @@ def pytest_addoption(parser):
         dest="run_mode",
         type=str,
         choices=["repository", "local"],
-        help="Specifies if you want to run your local copy of the workflow, or a version from a remote git repository",
+        help="Specifies if you want to run your local copy of the pipeline, or a version from a remote git repository",
         default="local",
     )
     group.addoption(
         "--revision",
         action="store",
         dest="revision",
-        help="Specifies what revision should be run of the workflow repository",
+        help="Specifies what revision should be run of the pipeline repository",
     )
     group.addoption(
         "--repository",
         action="store",
         dest="repository",
-        help="Specifies the git repository containing the workflow",
+        help="Specifies the git repository containing the pipeline",
     )
     group.addoption(
         "--localdir",
         action="store",
         dest="local_dir",
-        help="Specifies what directory contains the workflow",
+        help="Specifies what directory contains the pipeline",
         default=".",
     )
     group.addoption(
         "--profile",
         action="store",
         dest="profile",
-        help="Specifies the default profile used to run the workflow",
+        help="Specifies the default profile used to run the pipeline",
         default="test",
     )
-
     group.addoption(
         "--use-last-run",
         action="store_true",
         dest="use_last_run",
         help="If specified the wf plugin will try to use the output from the last run instead of starting a new one",
     )
+    group.addoption(
+        "--storage_type",
+        action="store",
+        dest="storage_type",
+        help="Specifies the storage type to use for the pipeline run",
+        default=None,
+    )
 
     parser.addini(
         "base_upload_bucket",
-        "The S3 location the result_dir of the workflow will be set to",
+        "The S3 location the result_dir parameter of the pipeline will be set to",
         default="s3://nextcode-scratch/workflow-ci",
     )
 
@@ -150,6 +156,7 @@ def run_workflow(request):
     project_name = request.config.option.project
     run_mode = request.config.option.run_mode
     run_id = request.config.option.run_id
+    storage_type = request.config.option.storage_type
     # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
     profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
@@ -196,6 +203,7 @@ def run_workflow(request):
         build_source=build_source,
         build_context=build_context,
         profile=profile,
+        storage_type=storage_type
     )
     last_status = ""
     while job.running:
