@@ -190,6 +190,7 @@ class ServiceSession(requests.Session):
             # ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/
             #   and https://[xxx]-cluster.wuxinextcode.com/
             lst = self.url_base.split(".", 1)
+            import ipdb;ipdb.set_trace()
             if len(lst) >= 2:
                 old_url_base = self.url_base
                 if "-cluster" in self.url_base:

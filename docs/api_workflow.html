@@ -3,9 +3,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Workflow Service &#8212; nextcode-python-sdk 1.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workflow Service &#8212; nextcode-python-sdk 1.1.2
+ documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -39,7 +41,8 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.2
+</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -245,7 +248,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.post_job">
-<code class="sig-name descname">post_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">script</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">revision</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_source</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">profile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trace</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">executor_memory_mb</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.post_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.post_job" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">script</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">revision</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_source</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">profile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trace</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">executor_memory_mb</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.post_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.post_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a workflow job</p>
 <p>This is a low-level implementation on top of the workflow service’s POST /jobs endpoint.</p>
 <dl class="field-list simple">
@@ -264,6 +267,7 @@ and past workflow jobs.</p>
 <li><p><strong>description</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Human readable description of the job</p></li>
 <li><p><strong>executor_memory_mb</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Override the memory limit of the nextflow executor</p></li>
 <li><p><strong>context</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional string to allow querying for custom information</p></li>
+<li><p><strong>storage_type</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional string specifying the storage option to use for the pipeline</p></li>
 </ul>
 </dd>
 </dl>
@@ -467,7 +471,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 <dd><p>Refresh the local cache of the serverside job object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -478,7 +482,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 <dd><p>Rerun a job that has previously failed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -563,8 +567,8 @@ set self.__traceback__ to tb and return self.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-06-25.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
+      Last updated on 2020-12-10.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>

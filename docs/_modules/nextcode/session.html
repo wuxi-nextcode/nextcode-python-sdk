@@ -3,9 +3,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>nextcode.session &#8212; nextcode-python-sdk 1.0.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nextcode.session &#8212; nextcode-python-sdk 1.1.2
+ documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -37,7 +39,8 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.2
+</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -297,6 +300,7 @@
             <span class="c1"># ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/</span>
             <span class="c1">#   and https://[xxx]-cluster.wuxinextcode.com/</span>
             <span class="n">lst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">ipdb</span><span class="p">;</span><span class="n">ipdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">old_url_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span>
                 <span class="k">if</span> <span class="s2">&quot;-cluster&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_base</span><span class="p">:</span>
@@ -357,8 +361,8 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-06-25.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
+      Last updated on 2020-12-10.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>

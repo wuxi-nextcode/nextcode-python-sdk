@@ -3,9 +3,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Basic facilities &#8212; nextcode-python-sdk 1.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic facilities &#8212; nextcode-python-sdk 1.1.2
+ documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -39,7 +41,8 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.2
+</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -377,7 +380,12 @@ hostname to the URL of the proxy.</p></li>
 content. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 <li><p><strong>verify</strong> – (optional) Either a boolean, in which case it controls whether we verify
 the server’s TLS certificate, or a string, in which case it must be a path
-to a CA bundle to use. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+to a CA bundle to use. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>. When set to
+<code class="docutils literal notranslate"><span class="pre">False</span></code>, requests will accept any TLS certificate presented by
+the server, and will ignore hostname mismatches and/or expired
+certificates, which will make your application vulnerable to
+man-in-the-middle (MitM) attacks. Setting verify to <code class="docutils literal notranslate"><span class="pre">False</span></code> 
+may be useful during local development or testing.</p></li>
 <li><p><strong>cert</strong> – (optional) if String, path to ssl client cert file (.pem).
 If Tuple, (‘cert’, ‘key’) pair.</p></li>
 </ul>
@@ -422,7 +430,7 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 <dd class="field-even"><p>InvalidProfile</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -453,7 +461,7 @@ dictionary in json format.</p>
 <dd class="field-even"><p>InvalidProfile</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -530,7 +538,7 @@ for managing users and roles on the server.</p>
 <p>The user can log in using OAuth2 flow and aquire an API Key</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -587,8 +595,8 @@ for managing users and roles on the server.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-06-25.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.<br/>
+      Last updated on 2020-12-10.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>
