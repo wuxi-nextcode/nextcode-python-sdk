@@ -241,7 +241,7 @@ class Service(BaseService):
             "context": context,
         }
         if storage_type:
-            data["storage_type"]: storage_type
+            data["storage_type"] = storage_type
         if build_source:
             data["build_source"] = build_source
         if executor_memory_mb:
