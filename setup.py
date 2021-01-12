@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-import os, sys
+import os
+import sys
+
 from setuptools import setup, find_packages, Command
 
 if sys.version_info < (3, 6):
@@ -75,7 +77,7 @@ setup(
         "PyYAML",
         "requests",
         "hjson",
-        "PyJWT",
+        "PyJWT~=1.7.1",
         "boto3",
         "pytest",
     ],
