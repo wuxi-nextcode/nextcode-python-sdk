@@ -182,7 +182,8 @@ class Service(BaseService):
         description: Optional[str] = None,
         executor_memory_mb: Optional[int] = None,
         context: Optional[str] = None,
-        storage_type: Optional[str] = None
+        storage_type: Optional[str] = None,
+        credentials: Optional[Dict] = None,
     ):
         """
         Run a workflow job
@@ -203,6 +204,7 @@ class Service(BaseService):
         :param executor_memory_mb: Override the memory limit of the nextflow executor
         :param context: Optional string to allow querying for custom information
         :param storage_type: Optional string specifying the storage option to use for the pipeline
+        :param credentials: Optional dict containing credentials to forward to workflow-service
 
         """
         if not project_name:
@@ -214,7 +216,7 @@ class Service(BaseService):
         log.debug(
             "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, "
             "build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s, "
-            "storage_type=%s",
+            "storage_type=%s credentials=%s",
             pipeline_name,
             project_name,
             params,
@@ -227,6 +229,7 @@ class Service(BaseService):
             executor_memory_mb,
             context,
             storage_type,
+            credentials,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -248,6 +251,8 @@ class Service(BaseService):
             data["executor_memory_mb"] = executor_memory_mb
         if trace:
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}  # type: ignore
+        if credentials:
+            data["credentials"] = credentials
 
         endpoint = self.session.url_from_endpoint("jobs")
 

@@ -260,6 +260,40 @@ class WorkflowTest(BaseTestCase):
         self.assertEqual(666, job.job_id)
 
     @responses.activate
+    def test_post_job_with_creds(self):
+        responses.add(responses.POST, JOBS_URL, json=JOBS_RESP["jobs"][0])
+
+        pipeline_name = "pipeline_name"
+        project_name = "project_name"
+        params = {}
+        script = None
+        revision = None
+        build_source = "builtin"
+        build_context = None
+        profile = "test"
+        storage_type = "dedicated"
+        credentials = {
+            'ukbb_readonly': {
+                'aws_access_key_id': 'AKIALKIADSFASJGASGDS',
+                'aws_secret_access_key': 'Aj39sadfljhdslafjasls'
+            }
+        }
+
+        job = self.svc.post_job(
+            pipeline_name,
+            project_name,
+            params,
+            script,
+            revision,
+            build_source,
+            build_context,
+            profile,
+            storage_type,
+            credentials
+        )
+        self.assertEqual(666, job.job_id)
+
+    @responses.activate
     def test_pipelines(self):
         responses.add(responses.GET, PIPELINES_URL, json=PIPELINES_RESP)
         pipelines = self.svc.get_pipelines()
