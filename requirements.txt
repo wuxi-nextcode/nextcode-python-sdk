@@ -16,3 +16,4 @@ ipywidgets
 tqdm
 PyJWT~=1.7.1
 ipdb
+PyYAML
