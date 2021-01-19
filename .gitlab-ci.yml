@@ -1,0 +1,39 @@
+stages:
+  - test
+  - build
+
+test:
+  image: python:3-stretch
+  stage: test
+  script:
+    - make dev-install
+    - make cover
+
+build:
+  image: python:3-stretch
+  stage: build
+  script:
+    - make dev-install
+    - make build
+    - make release
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo $SSH_PRIVATE_KEY | base64 --decode)
+    - export GIT_URL=`echo $CI_REPOSITORY_URL | sed 's/.*gitlab.com\//git@gitlab.com:/g'`
+    - git remote set-url --push origin $GIT_URL
+    - make tag
+  after_script:
+    - pip install anybadge
+    - commits=$(git rev-list --all --count)
+    - anybadge -l "version" -v `git describe --abbrev=0 --tag` -f version.svg -c orange
+  artifacts:
+    paths:
+        - version.svg
+  only:
+    - master
+
+include:
+  - template: Jobs/Code-Quality.gitlab-ci.yml # https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/gitlab/ci/templates/Jobs/Code-Quality.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
+  - template: Dependency-Scanning.gitlab-ci.yml
