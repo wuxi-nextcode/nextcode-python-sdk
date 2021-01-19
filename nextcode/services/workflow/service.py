@@ -205,7 +205,16 @@ class Service(BaseService):
         :param context: Optional string to allow querying for custom information
         :param storage_type: Optional string specifying the storage option to use for the pipeline
         :param credentials: Optional dict containing credentials to forward to workflow-service
-
+        example credentials:  {
+            'download': {
+                'aws_access_key_id': 'ASIA...',
+                'aws_secret_access_key': 'k6q5...'
+            },
+            'upload': {
+                'aws_access_key_id': 'ASIA...',
+                'aws_secret_access_key': 'k6q5...'
+            }
+        }
         """
         if not project_name:
             project_name = os.environ.get("GOR_API_PROJECT")
