@@ -182,7 +182,8 @@ class Service(BaseService):
         description: Optional[str] = None,
         executor_memory_mb: Optional[int] = None,
         context: Optional[str] = None,
-        storage_type: Optional[str] = None
+        storage_type: Optional[str] = None,
+        credentials: Optional[Dict] = None,
     ):
         """
         Run a workflow job
@@ -203,7 +204,17 @@ class Service(BaseService):
         :param executor_memory_mb: Override the memory limit of the nextflow executor
         :param context: Optional string to allow querying for custom information
         :param storage_type: Optional string specifying the storage option to use for the pipeline
-
+        :param credentials: Optional dict containing credentials to forward to workflow-service
+        example credentials:  {
+            'download': {
+                'aws_access_key_id': 'ASIA...',
+                'aws_secret_access_key': 'k6q5...'
+            },
+            'upload': {
+                'aws_access_key_id': 'ASIA...',
+                'aws_secret_access_key': 'k6q5...'
+            }
+        }
         """
         if not project_name:
             project_name = os.environ.get("GOR_API_PROJECT")
@@ -226,7 +237,7 @@ class Service(BaseService):
             description,
             executor_memory_mb,
             context,
-            storage_type,
+            storage_type
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -248,6 +259,8 @@ class Service(BaseService):
             data["executor_memory_mb"] = executor_memory_mb
         if trace:
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}  # type: ignore
+        if credentials:
+            data["credentials"] = credentials
 
         endpoint = self.session.url_from_endpoint("jobs")
 

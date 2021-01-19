@@ -86,7 +86,13 @@ def pytest_addoption(parser):
         help="Specifies the storage type to use for the pipeline run",
         default=None,
     )
-
+    group.addoption(
+        "--credentials",
+        action="store",
+        dest="credentials",
+        help="Specifies the credentials to forward to workflow-service",
+        default=None,
+    )
     parser.addini(
         "base_upload_bucket",
         "The S3 location the result_dir parameter of the pipeline will be set to",
@@ -157,6 +163,7 @@ def run_workflow(request):
     run_mode = request.config.option.run_mode
     run_id = request.config.option.run_id
     storage_type = request.config.option.storage_type
+    credentials = request.config.option.credentials
     # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
     profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
@@ -203,7 +210,8 @@ def run_workflow(request):
         build_source=build_source,
         build_context=build_context,
         profile=profile,
-        storage_type=storage_type
+        storage_type=storage_type,
+        credentials=credentials
     )
     last_status = ""
     while job.running:
