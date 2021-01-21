@@ -34,3 +34,6 @@ tag:
 
 black:
 	black --exclude="venv|.tox" .
+
+dev-install:
+	pip3 install -r requirements.txt

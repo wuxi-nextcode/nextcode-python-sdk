@@ -1,0 +1,54 @@
+stages:
+  - test
+  - build
+  - release
+  - badge
+
+test:
+  image: python:3-stretch
+  stage: test
+  script:
+    - make dev-install
+    - make cover
+
+build:
+  image: python:3-stretch
+  stage: build
+  script:
+    - make dev-install
+    - make build
+
+release:
+  image: python:3-stretch
+  stage: release
+  when: on_success
+  script:
+    - make dev-install
+    - make build
+    - make release
+  only:
+    - tags
+  except:
+    - branches
+
+badge:
+  image: python:3-stretch
+  stage: badge
+  when: on_success
+  script:
+    - pip install anybadge
+    - commits=$(git rev-list --all --count)
+    - anybadge -l "version" -v `git describe --abbrev=0 --tag` -f version.svg -c orange
+  artifacts:
+    paths:
+        - version.svg
+  only:
+   - tags
+  except:
+    - branches
+
+
+include:
+  - template: Jobs/Code-Quality.gitlab-ci.yml # https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/gitlab/ci/templates/Jobs/Code-Quality.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
+  - template: Dependency-Scanning.gitlab-ci.yml
