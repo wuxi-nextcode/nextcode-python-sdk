@@ -55,15 +55,6 @@ class CsaTest(BaseTestCase):
             session = csa.CSASession(root_url, user_name, password)
 
         with responses.RequestsMock() as rsp:
-            rsp.add(responses.GET, f"{root_url}csa/api/users.json", status=404)
-            rsp.add(
-                responses.GET,
-                f"{root_url.replace('test', 'test-cluster')}csa/api/users.json",
-                status=200,
-            )
-            session = csa.CSASession(root_url, user_name, password)
-
-        with responses.RequestsMock() as rsp:
             rsp.add(responses.GET, f"{root_url}csa/api/users.json", status=401)
             with self.assertRaises(AuthServerError):
                 session = csa.CSASession(root_url, user_name, password)
