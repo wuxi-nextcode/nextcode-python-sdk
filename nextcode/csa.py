@@ -4,14 +4,12 @@ csa
 CSA management features
 """
 
-import os
-from urllib.parse import urlsplit
 from posixpath import join as urljoin
 import requests
 from requests import codes
 import logging
 
-from .exceptions import ServerError, NotFound, AuthServerError, CSAError
+from .exceptions import AuthServerError, CSAError
 from .utils import host_from_url
 
 log = logging.getLogger(__name__)
@@ -41,23 +39,6 @@ class CSASession:
         self.csa_url = urljoin(self.root_url, "csa/api/")
 
         resp = self.session.get(urljoin(self.csa_url, "users.json"), timeout=2.0)
-
-        if resp.status_code == codes.not_found:
-            # ! Temporary hack because services are split between https://[xxx].wuxinextcode.com/
-            #   and https://[xxx]-cluster.wuxinextcode.com/
-            lst = self.root_url.split(".", 1)
-            old_url_base = self.root_url
-            if "-cluster" in self.root_url:
-                self.root_url = self.root_url.replace("-cluster", "")
-            else:
-                self.root_url = "{}-cluster.{}".format(lst[0], lst[1])
-            log.info(
-                "Service not found on server %s. Trying alternative URL %s",
-                old_url_base,
-                self.root_url,
-            )
-            self.csa_url = urljoin(self.root_url, "csa/api/")
-            resp = self.session.get(urljoin(self.csa_url, "users.json"), timeout=2.0)
 
         if resp.status_code == codes.unauthorized:
             raise AuthServerError(

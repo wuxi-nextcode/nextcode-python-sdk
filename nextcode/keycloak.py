@@ -5,15 +5,14 @@ Keycloak login helpers and management features
 """
 
 import os
-from urllib.parse import urlsplit
 from posixpath import join as urljoin
 import requests
 from requests import codes
 import logging
 import webbrowser
-from typing import Optional, Union, Dict, List, Any
+from typing import Optional, Dict, List, Any
 
-from .exceptions import ServerError, NotFound, AuthServerError
+from .exceptions import ServerError, AuthServerError
 from .utils import host_from_url
 
 log = logging.getLogger(__name__)
@@ -134,13 +133,6 @@ class KeycloakSession:
     def _get_auth_server(self):
         auth_server = urljoin(self.root_url, "auth")
         r = requests.get(auth_server)
-        # ! temporary hack because services are split between xxx.wuxi and xxx-cluster.wuxi
-        if r.status_code == codes.not_found:
-            if "-cluster" not in auth_server:
-                lst = self.root_url.split(".", 1)
-                auth_server = lst[0] + "-cluster." + lst[1]
-            else:
-                auth_server = auth_server.replace("-cluster", "")
 
         # test if realm is available
         realm_url = urljoin(auth_server, "realms", self.realm)
