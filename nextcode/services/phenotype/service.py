@@ -92,11 +92,12 @@ class Service(BaseService):
             self.session.url_from_endpoint("projects"), self.project_name, "phenotypes"
         )
         result_type = result_type.upper()
+        tag_list = List[tags]
         if result_type not in SUPPORTED_RESULT_TYPES:
             raise PhenotypeError(
                 f"Result type {result_type} not supported. Use one of {', '.join(SUPPORTED_RESULT_TYPES)}"
             )
-        payload = {"name": name, "result_type": result_type, "description": description, "category": category, "query": query, "tag_list": List[tags]}
+        payload = {"name": name, "result_type": result_type, "description": description, "category": category, "query": query, "tag_list": tag_list}
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
