@@ -84,7 +84,7 @@ class Service(BaseService):
         :param description: Free text description of the phenotype (optional)
         :param category: Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)
         :param query: NOR query that defines this phenotype (optional)
-        :param tags: comma separated list of tags to add to this phenotype (optional)
+        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2'] 
         :raises: PhenotypeError, ServerError
         """
         #! TODO: Get link from root
