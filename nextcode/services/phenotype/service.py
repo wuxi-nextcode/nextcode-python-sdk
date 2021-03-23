@@ -74,7 +74,7 @@ class Service(BaseService):
             log.warning(f"Project {self.project_name} not found")
 
     def create_phenotype(
-        self, name: str, result_type: str, description: Optional[str] = None, category: Optional[str] = None, query: Optional[str] = None, tags: Optional[str]
+        self, name: str, result_type: str, description: Optional[str] = None, category: Optional[str] = None, query: Optional[str] = None, tags: Optional[str] = None
     ) -> Phenotype:
         """
         Create a new phenotype in the current project
