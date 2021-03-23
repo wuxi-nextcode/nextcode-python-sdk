@@ -74,12 +74,17 @@ class Service(BaseService):
             log.warning(f"Project {self.project_name} not found")
 
     def create_phenotype(
-        self, name: str, result_type: str, description: Optional[str] = None
+        self, name: str, result_type: str, description: Optional[str] = None, category: Optional[str] = None, query: Optional[str] = None, tags: Optional[List[str]] = []
     ) -> Phenotype:
         """
         Create a new phenotype in the current project
 
         :param name: Unique (lowercase) phenotype name in the project
+        :param result_type: Must be one of SET, QT or CATEGORY
+        :param description: Free text description of the phenotype (optional)
+        :param category: Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)
+        :param query: NOR query that defines this phenotype (optional)
+        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2'] 
         :raises: PhenotypeError, ServerError
         """
         #! TODO: Get link from root
@@ -91,7 +96,7 @@ class Service(BaseService):
             raise PhenotypeError(
                 f"Result type {result_type} not supported. Use one of {', '.join(SUPPORTED_RESULT_TYPES)}"
             )
-        payload = {"name": name, "result_type": result_type, "description": description}
+        payload = {"name": name, "result_type": result_type, "description": description, "category": category, "query": query, "tag_list": tags}
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
