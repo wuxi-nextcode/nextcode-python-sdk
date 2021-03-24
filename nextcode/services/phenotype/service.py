@@ -172,3 +172,49 @@ class Service(BaseService):
         :raises: `ServerError`
         """
         return PhenotypeMatrix(self, base)
+
+    def create_playlist(
+        self, name: str, description: Optional[str] = None
+    ) -> Playlist:
+        """
+        Create a new playlist in the current project
+
+        :param name: Unique (lowercase) phenotype name in the project
+        :param description: Free text description of the playlist (optional)
+        :param phenotypes: comma separated list of phenotypes to add (optional) e.g. ['tag1','tag2'] 
+        """
+        
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "playlists"
+        )
+        payload = {"name": name, "description": description}
+        resp = self.session.post(url, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # if the project did not already exist, initialize the service
+        if not self.project:
+            self._init_project(self.project_name)
+        return Playlist(self.session, data["playlist"])
+
+    def get_playlists(self, limit: int = 100) -> List[Playlist]:
+        """
+        A list of all the playlists in the current project.
+
+        :param limit: Maximum number of results (default: 100)
+        :return: List of playlists
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+        
+        if not self.project:
+            raise PhenotypeError("Project does not exist.")
+        url = self.links["playlists"]
+        content = {"limit": limit}
+        resp = self.session.get(url, data=content)
+
+        data = resp.json()["playlists"]
+        playlists = []
+        for item in data:
+            playlists.append(Playlist(self.session, item))
+        return playlists   
