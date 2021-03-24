@@ -16,7 +16,7 @@ from ...services import BaseService
 from ...exceptions import ServerError
 from .exceptions import PhenotypeError
 from .phenotype import Phenotype
-from .phenotype import Playlist
+from .playlist import Playlist
 from .phenotype_matrix import PhenotypeMatrix
 
 SERVICE_PATH = "api/phenotype-catalog"
