@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Workflow Service &#8212; nextcode-python-sdk 1.1.2
+    <title>Workflow Service &#8212; nextcode-python-sdk 1.3.0
  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
@@ -13,7 +13,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,7 +40,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.1.2
+        <span class="navbar-text navbar-version pull-left"><b>1.3.0
 </b></span>
       </div>
 
@@ -137,11 +136,11 @@ and past workflow jobs.</p>
 <p>Note: This service has not been fully integrated into the SDK and access is still quite raw.</p>
 <dl class="py class">
 <dt id="nextcode.services.workflow.service.Service">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.workflow.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.workflow.service.</span></code><code class="sig-name descname"><span class="pre">Service</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>A connection to the workflow service API server</p>
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.current_user">
-<em class="property">property </em><code class="sig-name descname">current_user</code><a class="headerlink" href="#nextcode.services.workflow.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">current_user</span></code><a class="headerlink" href="#nextcode.services.workflow.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>User JWT decoded by the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -152,7 +151,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.endpoints">
-<em class="property">property </em><code class="sig-name descname">endpoints</code><a class="headerlink" href="#nextcode.services.workflow.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">endpoints</span></code><a class="headerlink" href="#nextcode.services.workflow.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -163,7 +162,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.find_job">
-<code class="sig-name descname">find_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">job_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.find_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.find_job" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">find_job</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.find_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.find_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a job proxy object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -174,7 +173,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.get_jobs">
-<code class="sig-name descname">get_jobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">project</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_jobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of jobs satisfying the supplied criteria</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -196,7 +195,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.get_pipelines">
-<code class="sig-name descname">get_pipelines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_pipelines" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_pipelines</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_pipelines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_pipelines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the pipelines available on the current server</p>
 <p>Refer to the API documentation for the Workflow service to see formatting of data.</p>
 <dl class="field-list simple">
@@ -211,7 +210,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.get_projects">
-<code class="sig-name descname">get_projects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_projects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_projects" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_projects</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.get_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.get_projects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the projects that have been created on the current server</p>
 <p>Refer to the API documentation for the Workflow service to see formatting of data.</p>
 <dl class="field-list simple">
@@ -226,7 +225,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.healthy">
-<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">healthy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the service healthy?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -237,7 +236,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.openapi_spec">
-<code class="sig-name descname">openapi_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">openapi_spec</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raw openapi spec for the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -248,7 +247,7 @@ and past workflow jobs.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.post_job">
-<code class="sig-name descname">post_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">script</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">revision</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_source</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">build_context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">profile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trace</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">executor_memory_mb</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.post_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.post_job" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">post_job</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor_memory_mb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.post_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.post_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a workflow job</p>
 <p>This is a low-level implementation on top of the workflow service’s POST /jobs endpoint.</p>
 <dl class="field-list simple">
@@ -268,14 +267,31 @@ and past workflow jobs.</p>
 <li><p><strong>executor_memory_mb</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Override the memory limit of the nextflow executor</p></li>
 <li><p><strong>context</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional string to allow querying for custom information</p></li>
 <li><p><strong>storage_type</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional string specifying the storage option to use for the pipeline</p></li>
+<li><p><strong>credentials</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]) – Optional dict containing credentials to forward to workflow-service</p></li>
 </ul>
 </dd>
 </dl>
+<dl>
+<dt>example credentials:  {</dt><dd><dl class="simple">
+<dt>‘download’: {</dt><dd><p>‘aws_access_key_id’: ‘ASIA…’,
+‘aws_secret_access_key’: ‘k6q5…’</p>
+</dd>
+</dl>
+<p>},
+‘upload’: {</p>
+<blockquote>
+<div><p>‘aws_access_key_id’: ‘ASIA…’,
+‘aws_secret_access_key’: ‘k6q5…’</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.run_local">
-<code class="sig-name descname">run_local</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">profile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trace</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.run_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.run_local" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run_local</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/service.html#Service.run_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.service.Service.run_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a workflow job from a local nextflow folder</p>
 <p>This will package the passed-in folder and upload to a specific bucket that is exported from the workflow
 service on the cluster (see ‘scratch-bucket’ from the svc.status() method)
@@ -298,7 +314,7 @@ credential management.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.service.Service.status">
-<code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.service.Service.status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service information from the root endpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -315,13 +331,13 @@ credential management.</p>
 <p>The Query class represents a workflow job model from the RESTFul Workflow Service API</p>
 <dl class="py class">
 <dt id="nextcode.services.workflow.job.WorkflowJob">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.workflow.job.</code><code class="sig-name descname">WorkflowJob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">job_id</span></em>, <em class="sig-param"><span class="n">job</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.workflow.job.</span></code><code class="sig-name descname"><span class="pre">WorkflowJob</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Proxy object for a serverside workflow job.</p>
 <p>This object can be queried for the current status of a workflow job and will
 automatically refresh from server until the job is finished (or failed)</p>
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.cancel">
-<code class="sig-name descname">cancel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">status_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.cancel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cancel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.cancel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel a running job</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,7 +354,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.done">
-<em class="property">property </em><code class="sig-name descname">done</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.done" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">done</span></code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Has the job completed successfully</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -349,7 +365,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.duration">
-<em class="property">property </em><code class="sig-name descname">duration</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.duration" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">duration</span></code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.duration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stringified duration of job for human consumption</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -360,7 +376,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.events">
-<code class="sig-name descname">events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.events" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">events</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of events reported by Nextflow for this job</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -374,7 +390,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.failed">
-<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.failed" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">failed</span></code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the job in a failed state</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -385,7 +401,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.finished">
-<em class="property">property </em><code class="sig-name descname">finished</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.finished" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">finished</span></code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.finished" title="Permalink to this definition">¶</a></dt>
 <dd><p>Has the job finished (might be failed)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -396,7 +412,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.inspect">
-<code class="sig-name descname">inspect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.inspect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.inspect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">inspect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.inspect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.inspect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inspect a failed job for debugging.</p>
 <p>Returns unfiltered pod and node information from the kubernetes system</p>
 <dl class="field-list simple">
@@ -414,7 +430,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.log_groups">
-<code class="sig-name descname">log_groups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.log_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.log_groups" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">log_groups</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.log_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.log_groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available log groups</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -428,7 +444,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.logs">
-<code class="sig-name descname">logs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log_group</span><span class="o">=</span><span class="default_value">'pod'</span></em>, <em class="sig-param"><span class="n">log_filter</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.logs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">logs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pod'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.logs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get text logs for the specified log group</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -448,7 +464,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.processes">
-<code class="sig-name descname">processes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">process_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_all</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.processes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.processes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">processes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.processes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of all nextflow processes in this job</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -467,7 +483,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh the local cache of the serverside job object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -478,7 +494,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.resume">
-<code class="sig-name descname">resume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.resume" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">resume</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.resume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.resume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rerun a job that has previously failed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -489,7 +505,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.running">
-<em class="property">property </em><code class="sig-name descname">running</code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.running" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">running</span></code><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the job currently running</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -500,7 +516,7 @@ automatically refresh from server until the job is finished (or failed)</p>
 
 <dl class="py method">
 <dt id="nextcode.services.workflow.job.WorkflowJob.wait">
-<code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_seconds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">poll_period</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.wait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">wait</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/job.html#WorkflowJob.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.job.WorkflowJob.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for a running job to complete.</p>
 <p>This is similar to the wait method in the Query Service and will wait by default
 indefinitely for a workflow job to complete and poll the server regularly to update
@@ -534,10 +550,10 @@ workflow job object.</p>
 <p>Custom exceptions raised by the workflow service.</p>
 <dl class="py exception">
 <dt id="nextcode.services.workflow.exceptions.JobError">
-<em class="property">exception </em><code class="sig-prename descclassname">nextcode.services.workflow.exceptions.</code><code class="sig-name descname">JobError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">job_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/exceptions.html#JobError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.workflow.exceptions.</span></code><code class="sig-name descname"><span class="pre">JobError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/workflow/exceptions.html#JobError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="nextcode.services.workflow.exceptions.JobError.with_traceback">
-<code class="sig-name descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">with_traceback</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.workflow.exceptions.JobError.with_traceback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
 </dd></dl>
@@ -567,8 +583,8 @@ set self.__traceback__ to tb and return self.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-12-10.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+      Last updated on 2021-03-24.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
     </p>
   </div>
 </footer>

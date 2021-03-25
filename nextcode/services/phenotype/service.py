@@ -74,7 +74,13 @@ class Service(BaseService):
             log.warning(f"Project {self.project_name} not found")
 
     def create_phenotype(
-        self, name: str, result_type: str, description: Optional[str] = None, category: Optional[str] = None, query: Optional[str] = None, tags: Optional[List[str]] = []
+        self,
+        name: str,
+        result_type: str,
+        description: Optional[str] = None,
+        category: Optional[str] = None,
+        query: Optional[str] = None,
+        tags: Optional[List[str]] = [],
     ) -> Phenotype:
         """
         Create a new phenotype in the current project
@@ -96,7 +102,14 @@ class Service(BaseService):
             raise PhenotypeError(
                 f"Result type {result_type} not supported. Use one of {', '.join(SUPPORTED_RESULT_TYPES)}"
             )
-        payload = {"name": name, "result_type": result_type, "description": description, "category": category, "query": query, "tag_list": tags}
+        payload = {
+            "name": name,
+            "result_type": result_type,
+            "description": description,
+            "category": category,
+            "query": query,
+            "tag_list": tags,
+        }
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()

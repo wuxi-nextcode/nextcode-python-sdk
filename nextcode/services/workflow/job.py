@@ -5,9 +5,12 @@ Workflow Job
 The Query class represents a workflow job model from the RESTFul Workflow Service API
 
 """
-
+import configparser
 import json
 import datetime
+import os
+
+import botocore.session
 import dateutil
 import time
 import logging

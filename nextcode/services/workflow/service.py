@@ -237,7 +237,7 @@ class Service(BaseService):
             description,
             executor_memory_mb,
             context,
-            storage_type
+            storage_type,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,

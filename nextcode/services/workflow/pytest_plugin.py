@@ -5,6 +5,7 @@ Pytest plugin
 This is a pytest plugin that is used by workflow CI jobs for automatically testing against a live server.
 
 """
+from nextcode.credentials import generate_credential_struct, creds_to_dict
 from nextcode.packagelocal import package_and_upload
 from nextcode import get_service
 
@@ -88,10 +89,11 @@ def pytest_addoption(parser):
     )
     group.addoption(
         "--credentials",
-        action="store",
+        action="append",
+        nargs="+",
         dest="credentials",
         help="Specifies the credentials to forward to workflow-service",
-        default=None,
+        # default=,
     )
     parser.addini(
         "base_upload_bucket",
@@ -163,7 +165,7 @@ def run_workflow(request):
     run_mode = request.config.option.run_mode
     run_id = request.config.option.run_id
     storage_type = request.config.option.storage_type
-    credentials = request.config.option.credentials
+    credentials_args = request.config.option.credentials
     # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
     profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
@@ -200,7 +202,8 @@ def run_workflow(request):
             pprint.pformat(params, width=-1),
         )
     )
-
+    cred_map = creds_to_dict([x[0] for x in credentials_args])
+    credentials = generate_credential_struct(cred_map)
     job = svc.post_job(
         None,
         project_name,
@@ -211,8 +214,9 @@ def run_workflow(request):
         build_context=build_context,
         profile=profile,
         storage_type=storage_type,
-        credentials=credentials
+        credentials=credentials,
     )
+
     last_status = ""
     while job.running:
         time.sleep(5)
