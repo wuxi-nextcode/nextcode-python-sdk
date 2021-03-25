@@ -255,7 +255,7 @@ class WorkflowTest(BaseTestCase):
             build_source,
             build_context,
             profile,
-            storage_type
+            storage_type,
         )
         self.assertEqual(666, job.job_id)
 
@@ -273,9 +273,9 @@ class WorkflowTest(BaseTestCase):
         profile = "test"
         storage_type = "dedicated"
         credentials = {
-            'ukbb_readonly': {
-                'aws_access_key_id': 'AKIALKIADSFASJGASGDS',
-                'aws_secret_access_key': 'Aj39sadfljhdslafjasls'
+            "ukbb_readonly": {
+                "aws_access_key_id": "AKIALKIADSFASJGASGDS",
+                "aws_secret_access_key": "Aj39sadfljhdslafjasls",
             }
         }
 
@@ -289,7 +289,7 @@ class WorkflowTest(BaseTestCase):
             build_context,
             profile,
             storage_type,
-            credentials
+            credentials,
         )
         self.assertEqual(666, job.job_id)
 

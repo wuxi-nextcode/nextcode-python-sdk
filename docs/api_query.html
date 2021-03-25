@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Query Service &#8212; nextcode-python-sdk 1.1.2
+    <title>Query Service &#8212; nextcode-python-sdk 1.3.0
  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
@@ -13,7 +13,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,7 +40,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.1.2
+        <span class="navbar-text navbar-version pull-left"><b>1.3.0
 </b></span>
       </div>
 
@@ -137,11 +136,11 @@ methods to get started. To view past queries you can use the <cite>get_queries</
 <cite>Query</cite> objects.</p>
 <dl class="py class">
 <dt id="nextcode.services.query.service.Service">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.service.</span></code><code class="sig-name descname"><span class="pre">Service</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>A connection to the query api</p>
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.add_template_from_file">
-<code class="sig-name descname">add_template_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">package_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">replace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_template_from_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.add_template_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.add_template_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new template from yaml file.</p>
 <p>If the template already exists a TemplateError is raised. If replace is True
 the template is replaced silently</p>
@@ -167,7 +166,7 @@ the template is replaced silently</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.current_user">
-<em class="property">property </em><code class="sig-name descname">current_user</code><a class="headerlink" href="#nextcode.services.query.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">current_user</span></code><a class="headerlink" href="#nextcode.services.query.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>User JWT decoded by the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -178,7 +177,7 @@ the template is replaced silently</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.delete_template">
-<code class="sig-name descname">delete_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.delete_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.delete_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">delete_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.delete_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.delete_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a template on the server by full name, e.g. /[org]/[cat]/[name]/[version]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -195,7 +194,7 @@ the template is replaced silently</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.endpoints">
-<em class="property">property </em><code class="sig-name descname">endpoints</code><a class="headerlink" href="#nextcode.services.query.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">endpoints</span></code><a class="headerlink" href="#nextcode.services.query.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -206,7 +205,7 @@ the template is replaced silently</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.execute">
-<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em>, <em class="sig-param"><span class="n">nowait</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persist</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">relations</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">job_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">execute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nowait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a gor statement on the server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -236,7 +235,7 @@ to transition to a completed status. Therefore, most small queries will return i
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.execute_template">
-<code class="sig-name descname">execute_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">template_name</span></em>, <em class="sig-param"><span class="n">nowait</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persist</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">job_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">execute_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nowait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.execute_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.execute_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a gor template on the server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -261,7 +260,7 @@ to transition to a completed status. Therefore, most small queries will return i
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.get_queries">
-<code class="sig-name descname">get_queries</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">all</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_queries" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_queries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_queries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_queries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all queries that have been run by the current user in the current project, optionally filtered by status.</p>
 <p>Results are returned in reverse chronological order so latest queries are first.</p>
 <p>Note that queries are returned in <cite>partial</cite> state which means they might not be up to date. <cite>query.refresh()</cite>
@@ -283,7 +282,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.get_query">
-<code class="sig-name descname">get_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_query</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a query object for a query by id, does not require project to be set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -300,7 +299,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.get_template">
-<code class="sig-name descname">get_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a specific template from the server based on full name.</p>
 <p>The template name is in the format [organization]/[category]/[name]/[version]</p>
 <dl class="field-list simple">
@@ -321,7 +320,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.get_templates">
-<code class="sig-name descname">get_templates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">organization</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_templates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_templates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.get_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.get_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all templates in the system or filtered.</p>
 <p>Returns a list of full template names in the format [organization]/[category]/[name]/[version]</p>
 <dl class="field-list simple">
@@ -343,7 +342,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.healthy">
-<code class="sig-name descname">healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">healthy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the service healthy?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -354,7 +353,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.openapi_spec">
-<code class="sig-name descname">openapi_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">openapi_spec</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raw openapi spec for the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -365,7 +364,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.render_template">
-<code class="sig-name descname">render_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.render_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.render_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">render_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.render_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.render_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render a template using the supplied arguments and return the full GOR query string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Name</dt>
@@ -388,7 +387,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.set_project">
-<code class="sig-name descname">set_project</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">project</span></em>, <em class="sig-param"><span class="n">persist</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.set_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.set_project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_project</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.set_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.set_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current project for all subsequent queries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Project</dt>
@@ -405,7 +404,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.status">
-<code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.service.Service.status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service information from the root endpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -416,7 +415,7 @@ can be called to force a refresh.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.service.Service.wakeup">
-<code class="sig-name descname">wakeup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">job_type</span><span class="o">=</span><span class="default_value">'default'</span></em>, <em class="sig-param"><span class="n">user</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.wakeup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.service.Service.wakeup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">wakeup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/service.html#Service.wakeup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.service.Service.wakeup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wake up the server.</p>
 <p>Inform the query service that we are about to perform some queries.</p>
 <p>This gives the query service a chance to spawn some workers and be prepared for
@@ -445,7 +444,7 @@ raw server response in the <cite>raw</cite> member.</p>
 documented here because they are added from the server response.</p>
 <dl class="py class">
 <dt id="nextcode.services.query.query.Query">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.query.</code><code class="sig-name descname">Query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service</span></em>, <em class="sig-param"><span class="n">resp</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.query.</span></code><code class="sig-name descname"><span class="pre">Query</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query" title="Permalink to this definition">¶</a></dt>
 <dd><p>A local proxy representing a serverside Gor Query.
 This object is returned from query methods in the ‘query’ service.</p>
 <dl class="field-list simple">
@@ -465,7 +464,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 </div>
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.cancel">
-<code class="sig-name descname">cancel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.cancel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cancel</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.cancel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel a running query</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -476,7 +475,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.dataframe">
-<code class="sig-name descname">dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">dataframe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.dataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Pandas dataframe object containing the results of this query</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -493,7 +492,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.done">
-<em class="property">property </em><code class="sig-name descname">done</code><a class="headerlink" href="#nextcode.services.query.query.Query.done" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">done</span></code><a class="headerlink" href="#nextcode.services.query.query.Query.done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query in the DONE state</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -504,7 +503,7 @@ This object is returned from query methods in the ‘query’ service.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.download_results">
-<code class="sig-name descname">download_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">callback</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.download_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.download_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">download_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.download_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.download_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download the entire results for the query to a local file in a single call
 via streaming.
 :param filename: Local filename to save results to
@@ -513,7 +512,7 @@ via streaming.
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.failed">
-<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#nextcode.services.query.query.Query.failed" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">failed</span></code><a class="headerlink" href="#nextcode.services.query.query.Query.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query in a failed state</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -524,7 +523,7 @@ via streaming.
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.get_results">
-<code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">perspective</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_json</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">callback</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perspective</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.get_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns results from a completed query, optionally with limit and offset</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -551,7 +550,7 @@ via streaming.
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.init_from_resp">
-<code class="sig-name descname">init_from_resp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.init_from_resp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.init_from_resp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">init_from_resp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.init_from_resp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.init_from_resp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the query object from a server json response.
 If the response is a ‘simple query’, e.g. from the queries list
 the object will only contain partial information.
@@ -561,7 +560,7 @@ the query will be refreshed from the server.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.perspectives">
-<em class="property">property </em><code class="sig-name descname">perspectives</code><a class="headerlink" href="#nextcode.services.query.query.Query.perspectives" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">perspectives</span></code><a class="headerlink" href="#nextcode.services.query.query.Query.perspectives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of perspectives available for this query.</p>
 <p>This only applies to template queries. If this is an ad-hoc query the list will be empty.</p>
 <dl class="field-list simple">
@@ -573,13 +572,13 @@ the query will be refreshed from the server.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh the local query object from the RESTful service</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.running">
-<em class="property">property </em><code class="sig-name descname">running</code><a class="headerlink" href="#nextcode.services.query.query.Query.running" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">running</span></code><a class="headerlink" href="#nextcode.services.query.query.Query.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the query currently running</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -590,7 +589,7 @@ the query will be refreshed from the server.</p>
 
 <dl class="py method">
 <dt id="nextcode.services.query.query.Query.wait">
-<code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_seconds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">poll_period</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.query.Query.wait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">wait</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/query.html#Query.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.query.Query.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for the query to complete</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,7 +612,7 @@ the query will be refreshed from the server.</p>
 <p>Utility methods used by the query service.</p>
 <dl class="py function">
 <dt id="nextcode.services.query.utils.get_fingerprint">
-<code class="sig-prename descclassname">nextcode.services.query.utils.</code><code class="sig-name descname">get_fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contents</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/utils.html#get_fingerprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.utils.get_fingerprint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.utils.</span></code><code class="sig-name descname"><span class="pre">get_fingerprint</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/utils.html#get_fingerprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.utils.get_fingerprint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a fingerprint for the contents of a virtual relation.</p>
 <p>This fingerprint is used by the server for caching purposes.</p>
 <dl class="field-list simple">
@@ -635,10 +634,10 @@ the query will be refreshed from the server.</p>
 <p>Custom exceptions raised by the query service.</p>
 <dl class="py exception">
 <dt id="nextcode.services.query.exceptions.MissingRelations">
-<em class="property">exception </em><code class="sig-prename descclassname">nextcode.services.query.exceptions.</code><code class="sig-name descname">MissingRelations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relations</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#MissingRelations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.exceptions.MissingRelations" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.exceptions.</span></code><code class="sig-name descname"><span class="pre">MissingRelations</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#MissingRelations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.exceptions.MissingRelations" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="nextcode.services.query.exceptions.MissingRelations.with_traceback">
-<code class="sig-name descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.MissingRelations.with_traceback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">with_traceback</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.MissingRelations.with_traceback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
 </dd></dl>
@@ -647,10 +646,10 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py exception">
 <dt id="nextcode.services.query.exceptions.QueryError">
-<em class="property">exception </em><code class="sig-prename descclassname">nextcode.services.query.exceptions.</code><code class="sig-name descname">QueryError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">query_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#QueryError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.exceptions.QueryError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.exceptions.</span></code><code class="sig-name descname"><span class="pre">QueryError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#QueryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.exceptions.QueryError" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="nextcode.services.query.exceptions.QueryError.with_traceback">
-<code class="sig-name descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.QueryError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">with_traceback</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.QueryError.with_traceback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
 </dd></dl>
@@ -659,10 +658,10 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py exception">
 <dt id="nextcode.services.query.exceptions.TemplateError">
-<em class="property">exception </em><code class="sig-prename descclassname">nextcode.services.query.exceptions.</code><code class="sig-name descname">TemplateError</code><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#TemplateError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.exceptions.TemplateError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.exceptions.</span></code><code class="sig-name descname"><span class="pre">TemplateError</span></code><a class="reference internal" href="_modules/nextcode/services/query/exceptions.html#TemplateError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.exceptions.TemplateError" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="nextcode.services.query.exceptions.TemplateError.with_traceback">
-<code class="sig-name descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.TemplateError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">with_traceback</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.query.exceptions.TemplateError.with_traceback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
 </dd></dl>
@@ -676,42 +675,42 @@ set self.__traceback__ to tb and return self.</p>
 <p>Use <cite>%env LOG_QUERY=1</cite> in Jupyter to see details.</p>
 <dl class="py class">
 <dt id="nextcode.services.query.jupyter.GorMagics">
-<em class="property">class </em><code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">GorMagics</code><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">GorMagics</span></code><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic ‘ipython magic’ extension that loads up the sdk as a <cite>%gor</cite> plugin in Jupyter notebook.</p>
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.gor">
-<code class="sig-name descname">gor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em>, <em class="sig-param"><span class="n">cell</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">gor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a gor statement and return the results, supports virtual relations.</p>
 <p>See Jupyter notebook for examples and details.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.gorfind">
-<code class="sig-name descname">gorfind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gorfind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gorfind" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">gorfind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gorfind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gorfind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a file within the project tree. Example <cite>%gorfind pns.txt</cite></p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.gorls">
-<code class="sig-name descname">gorls</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gorls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gorls" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">gorls</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.gorls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.gorls" title="Permalink to this definition">¶</a></dt>
 <dd><p>List out the contents of the selected folder. Example <cite>%gorls .</cite></p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.handle_exception">
-<code class="sig-name descname">handle_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.handle_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.handle_exception" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">handle_exception</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.handle_exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.handle_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print out any exception on the stack.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.load_relations">
-<code class="sig-name descname">load_relations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relation_names</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.load_relations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.load_relations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">load_relations</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relation_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.load_relations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.load_relations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find relations in local iPython state for inclusion in a remote gor query.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="nextcode.services.query.jupyter.GorMagics.replace_vars">
-<code class="sig-name descname">replace_vars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.replace_vars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.replace_vars" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">replace_vars</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#GorMagics.replace_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.GorMagics.replace_vars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle variable substitution in a gor string to interact with local state.</p>
 </dd></dl>
 
@@ -719,13 +718,13 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py function">
 <dt id="nextcode.services.query.jupyter.get_service">
-<code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">get_service</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#get_service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.get_service" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">get_service</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#get_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.get_service" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper method to get a query service instance</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="nextcode.services.query.jupyter.load_ipython_extension">
-<code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">load_ipython_extension</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ipython</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#load_ipython_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.load_ipython_extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">load_ipython_extension</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#load_ipython_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.load_ipython_extension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Any module file that define a function named <cite>load_ipython_extension</cite>
 can be loaded via <cite>%load_ext module.path</cite> or be configured to be
 autoloaded by IPython at startup time.</p>
@@ -733,19 +732,19 @@ autoloaded by IPython at startup time.</p>
 
 <dl class="py function">
 <dt id="nextcode.services.query.jupyter.print_details">
-<code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">print_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#print_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.print_details" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">print_details</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#print_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.print_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print string, but only if LOG_QUERY is set</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="nextcode.services.query.jupyter.print_error">
-<code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">print_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#print_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.print_error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">print_error</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#print_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.print_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print string to stderr</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="nextcode.services.query.jupyter.sizeof_fmt">
-<code class="sig-prename descclassname">nextcode.services.query.jupyter.</code><code class="sig-name descname">sizeof_fmt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">'B'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#sizeof_fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nextcode.services.query.jupyter.sizeof_fmt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">nextcode.services.query.jupyter.</span></code><code class="sig-name descname"><span class="pre">sizeof_fmt</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/query/jupyter.html#sizeof_fmt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.query.jupyter.sizeof_fmt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pretty-printed number format for size.</p>
 </dd></dl>
 
@@ -772,8 +771,8 @@ autoloaded by IPython at startup time.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2020-12-10.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+      Last updated on 2021-03-24.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
     </p>
   </div>
 </footer>
