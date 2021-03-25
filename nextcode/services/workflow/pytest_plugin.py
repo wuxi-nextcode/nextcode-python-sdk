@@ -93,7 +93,7 @@ def pytest_addoption(parser):
         nargs="+",
         dest="credentials",
         help="Specifies the credentials to forward to workflow-service",
-        # default=,
+        default=[],
     )
     parser.addini(
         "base_upload_bucket",
