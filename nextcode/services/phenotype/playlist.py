@@ -13,6 +13,7 @@ import datetime
 import dateutil
 import time
 import logging
+from posixpath import join as urljoin
 from typing import Callable, Union, Optional, Dict, List
 
 from .exceptions import PhenotypeError
@@ -73,10 +74,11 @@ class Playlist:
         """
         Add a phenotype to a playlist
         """
-        url = self.links["self"]
+        url = url = urljoin(self.links["self"], "phenotypes")
         content = {"name": name}
-        _ = self.session.patch(url, json=content)
-        self.refresh()
+        _ = self.session.post(url, json=content)
+       
+        self.get_data()
 
     def get_data(self):
         return(self.data)

@@ -256,7 +256,7 @@ class Service(BaseService):
             playlists.append(Playlist(self.session, item))
         return playlists
 
-    def get_playlist(self, name: str) -> Playlist:
+    def get_playlist(self, id: int) -> Playlist:
         """
         A list a single playlist in the current project based on the id.
 
@@ -269,7 +269,7 @@ class Service(BaseService):
         if not self.project:
             raise PhenotypeError("Project does not exist.")
         url = urljoin(
-        	self.session.url_from_endpoint("projects"), self.project_name, "playlists", name)
+        	self.session.url_from_endpoint("projects"), self.project_name, "playlists", str(id))
 
         try:
             resp = self.session.get(url)
