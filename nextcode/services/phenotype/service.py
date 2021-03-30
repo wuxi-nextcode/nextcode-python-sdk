@@ -88,9 +88,8 @@ class Service(BaseService):
         :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2'] 
         :raises: PhenotypeError, ServerError
         """
-        #! TODO: Get link from root
         url = urljoin(
-            self.session.url_from_endpoint("projects"), self.project_name, "phenotypes"
+            self.session.url_from_endpoint("root"), "projects", self.project_name, "phenotypes"
         )
         result_type = result_type.upper()
         if result_type not in SUPPORTED_RESULT_TYPES:
@@ -174,6 +173,41 @@ class Service(BaseService):
         """
         return PhenotypeMatrix(self, base)
 
+    def get_categories(self) -> List:
+        """
+        A list of all categories available in the system
+        """
+        resp = self.session.get(
+        		urljoin(self.session.url_from_endpoint("root"), "projects", self.project_name, "categories")
+        	)
+        data = resp.json()["categories"]
+        print(data)
+        categories = []
+        for item in data:
+            categories.append(Category(self.session, item))
+        return categories
+
+    def add_category(self, name: str):
+        """
+        Add a new category to this project.
+
+        :param name: Name of the category
+        :raises: `PhenotypeError` if the project does not exist
+        """
+        url = urljoin(
+            self.session.url_from_endpoint("root"), "projects", self.project_name, "categories"
+        )
+        payload = {"name": name}
+        resp = self.session.post(url, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # if the project did not already exist, initialize the service
+        if not self.project:
+            self._init_project(self.project_name)
+
+        return name
+        
     def create_playlist(
         self, name: str, description: Optional[str] = None
     ) -> Playlist:
@@ -210,7 +244,9 @@ class Service(BaseService):
         
         if not self.project:
             raise PhenotypeError("Project does not exist.")
-        url = self.links["playlists"]
+        url = urljoin(
+        	self.session.url_from_endpoint("projects"), self.project_name, "playlists"
+        )
         content = {"limit": limit}
         resp = self.session.get(url, data=content)
 
@@ -218,4 +254,30 @@ class Service(BaseService):
         playlists = []
         for item in data:
             playlists.append(Playlist(self.session, item))
-        return playlists   
+        return playlists
+
+    def get_playlist(self, name: str) -> Playlist:
+        """
+        A list a single playlist in the current project based on the id.
+
+        
+        :return: A single playlist
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+        
+        if not self.project:
+            raise PhenotypeError("Project does not exist.")
+        url = urljoin(
+        	self.session.url_from_endpoint("projects"), self.project_name, "playlists", name)
+
+        try:
+            resp = self.session.get(url)
+        except ServerError as ex:
+            if ex.response and ex.response["code"] == codes.not_found:
+                raise PhenotypeError("Playlist not found") from None
+            else:
+                raise
+
+        data = resp.json()["playlist"]
+        return Playlist(self.session, data)  
