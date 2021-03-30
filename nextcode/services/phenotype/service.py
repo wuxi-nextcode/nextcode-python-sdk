@@ -178,16 +178,16 @@ class Service(BaseService):
         A list of all categories available in the system
         """
         resp = self.session.get(
-        		urljoin(self.session.url_from_endpoint("root"), "projects", self.project_name, "categories")
-        	)
+            urljoin(self.session.url_from_endpoint("root"), "projects", self.project_name, "categories")
+        )
         data = resp.json()["categories"]
-        print(data)
         categories = []
         for item in data:
-            categories.append(Category(self.session, item))
+            categories.append(item)
+        
         return categories
 
-    def add_category(self, name: str):
+    def create_category(self, name: str):
         """
         Add a new category to this project.
 
@@ -206,8 +206,8 @@ class Service(BaseService):
         if not self.project:
             self._init_project(self.project_name)
 
-        return name
-        
+        return payload
+
     def create_playlist(
         self, name: str, description: Optional[str] = None
     ) -> Playlist:
