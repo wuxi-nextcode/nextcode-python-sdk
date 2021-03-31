@@ -32,7 +32,8 @@ This will work for service users that have been added to keycloak by an administ
 .. code-block:: python
 
   from nextcode.keycloak import auth_popup
-  api_key = auth_popup("www.myserver.com")
+  auth_popup("www.myserver.com")
+  # This will pop up a browser window in which the user can login in and then gets presented with an auth token that can be copied
 
 Alternatively you can navigate your brower directy to https://myserver.com/api-key-service
 
