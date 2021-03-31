@@ -159,4 +159,6 @@ class Phenotype:
         self.session.patch(url, json=content)
         self.refresh()
 
+    def get_data(self):
+        return(self.data)
 
