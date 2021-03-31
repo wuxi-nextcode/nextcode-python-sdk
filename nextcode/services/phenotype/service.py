@@ -79,6 +79,7 @@ class Service(BaseService):
         name: str,
         result_type: str,
         description: Optional[str] = None,
+        url: Optional[str] = None,
         category: Optional[str] = None,
         query: Optional[str] = None,
         tags: Optional[List[str]] = [],
@@ -89,12 +90,13 @@ class Service(BaseService):
         :param name: Unique (lowercase) phenotype name in the project
         :param result_type: Must be one of SET, QT or CATEGORY
         :param description: Free text description of the phenotype (optional)
+        :param url: Reference URL for the phenotype (to dataset or other reference)
         :param category: Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)
         :param query: NOR query that defines this phenotype (optional)
         :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2'] 
         :raises: PhenotypeError, ServerError
         """
-        url = urljoin(
+        uri = urljoin(
             self.session.url_from_endpoint("root"), "projects", self.project_name, "phenotypes"
         )
         result_type = result_type.upper()
@@ -106,11 +108,12 @@ class Service(BaseService):
             "name": name,
             "result_type": result_type,
             "description": description,
+            "url": url,
             "category": category,
             "query": query,
             "tag_list": tags,
         }
-        resp = self.session.post(url, json=payload)
+        resp = self.session.post(uri, json=payload)
         resp.raise_for_status()
         data = resp.json()
 
