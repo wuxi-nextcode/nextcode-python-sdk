@@ -184,6 +184,7 @@ class Service(BaseService):
         context: Optional[str] = None,
         storage_type: Optional[str] = None,
         dedicated_storage_size: Optional[str] = None,
+        keep_resources: Optional[bool] = None,
         credentials: Optional[Dict] = None,
     ):
         """
@@ -207,6 +208,8 @@ class Service(BaseService):
         :param storage_type: Optional string specifying the storage option to use for the pipeline
         :param dedicated_storage_size Optional string specifying the size of the dedicated volume if using
                storage_type=dedicated
+        :param keep_resources: Optional boolean specifying if resources created by workflow service for the Job should
+               be exempt from being cleanup up by the workflow resource cleanup process.
         :param credentials: Optional dict containing credentials to forward to workflow-service
         example credentials:  {
             'download': {
@@ -267,6 +270,8 @@ class Service(BaseService):
             data["env"] = {"NXF_DEBUG": "3", "NXF_TRACE": "nextflow"}  # type: ignore
         if credentials:
             data["credentials"] = credentials
+        if keep_resources:
+            data["keep_resources"] = keep_resources
 
         endpoint = self.session.url_from_endpoint("jobs")
 

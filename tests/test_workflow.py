@@ -10,6 +10,8 @@ from nextcode.services.workflow import weblog
 from nextcode.services.workflow.exceptions import JobError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 
+# FIXME: We need to change this so we're validating against a openapi/swagger specification instead of this!
+# FIXME: Until we do these tests aren't really testing anything!
 WORKFLOW_URL = "https://test.wuxinextcode.com/workflow"
 JOBS_URL = WORKFLOW_URL + "/jobs"
 PIPELINES_URL = WORKFLOW_URL + "/pipelines"
