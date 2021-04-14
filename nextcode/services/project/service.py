@@ -335,8 +335,7 @@ class Service(BaseService):
         return None
 
     def download(self, key: str, path: Optional[str] = None):
-        """
-        """
+        """"""
         self._check_project()
         bucket = self.get_project_bucket()
         if not path:

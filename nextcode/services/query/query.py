@@ -356,7 +356,7 @@ class Query:
     def cancel(self):
         """
         Cancel a running query
-        
+
         :raises QueryError: Query is not in a running state
         """
         if self.status not in RUNNING_STATUSES:
@@ -366,7 +366,7 @@ class Query:
     def dataframe(self, limit: Optional[int] = None):
         """
         Return a Pandas dataframe object containing the results of this query
-        
+
         :param limit: Maximum number of rows to return (default all)
         :raises QueryError: If the pandas library is not installed
         :return: Pandas dataframe object

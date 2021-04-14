@@ -160,5 +160,4 @@ class Phenotype:
         self.refresh()
 
     def get_data(self):
-        return(self.data)
-
+        return self.data
