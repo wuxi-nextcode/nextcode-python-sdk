@@ -185,6 +185,7 @@ class Service(BaseService):
         storage_type: Optional[str] = None,
         dedicated_storage_size: Optional[str] = None,
         keep_resources: Optional[bool] = None,
+        mount_jobs: Optional[List[int]] = None,
         credentials: Optional[Dict] = None,
     ):
         """
@@ -210,6 +211,8 @@ class Service(BaseService):
                storage_type=dedicated
         :param keep_resources: Optional boolean specifying if resources created by workflow service for the Job should
                be exempt from being cleanup up by the workflow resource cleanup process.
+        :param mount_jobs: Optional list of job-ids whose work folder will be mounted into this job under
+               the folder /job/<job-id>.
         :param credentials: Optional dict containing credentials to forward to workflow-service
         example credentials:  {
             'download': {
@@ -231,7 +234,7 @@ class Service(BaseService):
         log.debug(
             "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, "
             "build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s, "
-            "storage_type=%s, dedicated_storage_size=%s",
+            "storage_type=%s, dedicated_storage_size=%s, mount_jobs=%s",
             pipeline_name,
             project_name,
             params,
@@ -245,6 +248,7 @@ class Service(BaseService):
             context,
             storage_type,
             dedicated_storage_size,
+            mount_jobs
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -272,6 +276,8 @@ class Service(BaseService):
             data["credentials"] = credentials
         if keep_resources:
             data["keep_resources"] = keep_resources
+        if mount_jobs:
+            data["mount_jobs"] = mount_jobs
 
         endpoint = self.session.url_from_endpoint("jobs")
 
