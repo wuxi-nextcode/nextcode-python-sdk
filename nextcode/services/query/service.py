@@ -75,7 +75,7 @@ class Service(BaseService):
         Get a specific template from the server based on full name.
 
         The template name is in the format [organization]/[category]/[name]/[version]
-        
+
         :param name: Full template name
         :raises TemplateError: if the template was not found
         :return: Template dict, see Query API Spec for details

@@ -93,11 +93,14 @@ class Service(BaseService):
         :param url: Reference URL for the phenotype (to dataset or other reference)
         :param category: Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)
         :param query: NOR query that defines this phenotype (optional)
-        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2'] 
+        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. ['tag1','tag2']
         :raises: PhenotypeError, ServerError
         """
         uri = urljoin(
-            self.session.url_from_endpoint("root"), "projects", self.project_name, "phenotypes"
+            self.session.url_from_endpoint("root"),
+            "projects",
+            self.project_name,
+            "phenotypes",
         )
         result_type = result_type.upper()
         if result_type not in SUPPORTED_RESULT_TYPES:
@@ -194,13 +197,18 @@ class Service(BaseService):
         A list of all categories available in the system
         """
         resp = self.session.get(
-            urljoin(self.session.url_from_endpoint("root"), "projects", self.project_name, "categories")
+            urljoin(
+                self.session.url_from_endpoint("root"),
+                "projects",
+                self.project_name,
+                "categories",
+            )
         )
         data = resp.json()["categories"]
         categories = []
         for item in data:
             categories.append(item)
-        
+
         return categories
 
     def create_category(self, name: str):
@@ -211,7 +219,10 @@ class Service(BaseService):
         :raises: `PhenotypeError` if the project does not exist
         """
         url = urljoin(
-            self.session.url_from_endpoint("root"), "projects", self.project_name, "categories"
+            self.session.url_from_endpoint("root"),
+            "projects",
+            self.project_name,
+            "categories",
         )
         payload = {"name": name}
         resp = self.session.post(url, json=payload)
@@ -224,17 +235,15 @@ class Service(BaseService):
 
         return payload
 
-    def create_playlist(
-        self, name: str, description: Optional[str] = None
-    ) -> Playlist:
+    def create_playlist(self, name: str, description: Optional[str] = None) -> Playlist:
         """
         Create a new playlist in the current project
 
         :param name: Unique (lowercase) phenotype name in the project
         :param description: Free text description of the playlist (optional)
-        :param phenotypes: comma separated list of phenotypes to add (optional) e.g. ['tag1','tag2'] 
+        :param phenotypes: comma separated list of phenotypes to add (optional) e.g. ['tag1','tag2']
         """
-        
+
         url = urljoin(
             self.session.url_from_endpoint("projects"), self.project_name, "playlists"
         )
@@ -257,11 +266,11 @@ class Service(BaseService):
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
-        
+
         if not self.project:
             raise PhenotypeError("Project does not exist.")
         url = urljoin(
-        	self.session.url_from_endpoint("projects"), self.project_name, "playlists"
+            self.session.url_from_endpoint("projects"), self.project_name, "playlists"
         )
         content = {"limit": limit}
         resp = self.session.get(url, data=content)
@@ -276,16 +285,20 @@ class Service(BaseService):
         """
         A list a single playlist in the current project based on the id.
 
-        
+
         :return: A single playlist
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
-        
+
         if not self.project:
             raise PhenotypeError("Project does not exist.")
         url = urljoin(
-        	self.session.url_from_endpoint("projects"), self.project_name, "playlists", str(id))
+            self.session.url_from_endpoint("projects"),
+            self.project_name,
+            "playlists",
+            str(id),
+        )
 
         try:
             resp = self.session.get(url)
@@ -296,4 +309,4 @@ class Service(BaseService):
                 raise
 
         data = resp.json()["playlist"]
-        return Playlist(self.session, data)  
+        return Playlist(self.session, data)

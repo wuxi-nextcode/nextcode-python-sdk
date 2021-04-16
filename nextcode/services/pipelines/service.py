@@ -40,7 +40,7 @@ class Service(BaseService):
     def get_pipelines(self) -> List:
         """
         Returns the pipelines available on the current server
-        
+
         Refer to the API documentation for the Pipelines service to see formatting of data.
 
         :return: List of pipelines

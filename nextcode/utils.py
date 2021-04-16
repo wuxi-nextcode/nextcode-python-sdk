@@ -64,8 +64,7 @@ def root_url_from_api_key(api_key):
 
 
 def get_access_token(api_key):
-    """
-    """
+    """"""
     payload = decode_token(api_key)
     client_id = payload["azp"]
     body = {
@@ -110,7 +109,7 @@ def host_from_url(host):
     For example, www.server.com/something -> https://www.server.com/
                  http://www.server.com -> http://www.server.com/
                  http://localhost:8080/something -> http://localhost:8080/
-    
+
     """
     if "://" not in host:
         host = f"https://{host}"

@@ -54,10 +54,12 @@ class KeycloakTest(BaseTestCase):
     def test_keycloak_session(self):
         ROOT_URL = "keycloak"
         responses.add(
-            responses.GET, f"https://{ROOT_URL}/auth",
+            responses.GET,
+            f"https://{ROOT_URL}/auth",
         )
         responses.add(
-            responses.GET, f"https://{ROOT_URL}/auth/realms/{DEFAULT_REALM}",
+            responses.GET,
+            f"https://{ROOT_URL}/auth/realms/{DEFAULT_REALM}",
         )
         responses.add(
             responses.POST,

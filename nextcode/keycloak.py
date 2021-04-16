@@ -100,7 +100,7 @@ def _get_admin_keycloak_session(auth_server, username, password):
 class KeycloakSession:
     """
     A session object on a keycloak server intended to provide high-level interfaces
-    for managing users and roles on the server. 
+    for managing users and roles on the server.
 
     The user that is passed into the constructor is assumed to be a keycloak admin.
 

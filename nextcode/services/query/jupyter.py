@@ -24,8 +24,7 @@ log = logging.getLogger(__name__)
 
 
 if jupyter_available():
-    """
-    """
+    """"""
     import pandas as pd
     from IPython.core.magic import (
         Magics,

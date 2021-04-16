@@ -215,8 +215,7 @@ class Client:
 
     @classmethod
     def available_services(cls) -> List[str]:
-        """List services that can be intantiated via an client object client.service(`service`)
-        """
+        """List services that can be intantiated via an client object client.service(`service`)"""
         ret = []
         for (_, name, _) in pkgutil.iter_modules([str(SERVICES_PATH)]):
             ret.append(name)

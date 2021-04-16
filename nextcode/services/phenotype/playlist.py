@@ -77,8 +77,8 @@ class Playlist:
         url = url = urljoin(self.links["self"], "phenotypes")
         content = {"name": name}
         _ = self.session.post(url, json=content)
-       
+
         self.get_data()
 
     def get_data(self):
-        return(self.data)
+        return self.data
