@@ -4,8 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 1.3.0
- documentation</title>
+    <title>nextcode.services.query.query &#8212; nextcode-python-sdk 1.6.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -38,8 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3.0
-</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -465,7 +463,7 @@
 <div class="viewcode-block" id="Query.cancel"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cancel a running query</span>
-<span class="sd">        </span>
+
 <span class="sd">        :raises QueryError: Query is not in a running state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">RUNNING_STATUSES</span><span class="p">:</span>
@@ -475,7 +473,7 @@
 <div class="viewcode-block" id="Query.dataframe"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.query.Query.dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a Pandas dataframe object containing the results of this query</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param limit: Maximum number of rows to return (default all)</span>
 <span class="sd">        :raises QueryError: If the pandas library is not installed</span>
 <span class="sd">        :return: Pandas dataframe object</span>
@@ -506,8 +504,8 @@
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2021-03-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
+      Last updated on 2021-04-19.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
     </p>
   </div>
 </footer>

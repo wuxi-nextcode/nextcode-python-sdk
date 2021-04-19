@@ -4,8 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phenotype Service &#8212; nextcode-python-sdk 1.3.0
- documentation</title>
+    <title>Phenotype Service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -40,8 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3.0
-</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -141,8 +139,22 @@ A project must be set when the service is instantiated.</p>
 method will work and the project will be created implicitly.</p>
 <p>To view available projects use the <cite>svc.all_projects</cite> dict</p>
 <dl class="py method">
+<dt id="nextcode.services.phenotype.service.Service.create_category">
+<code class="sig-name descname"><span class="pre">create_category</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new category to this project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the category</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="nextcode.services.phenotype.service.Service.create_phenotype">
-<code class="sig-name descname"><span class="pre">create_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_phenotype" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new phenotype in the current project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -150,6 +162,7 @@ method will work and the project will be created implicitly.</p>
 <li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Unique (lowercase) phenotype name in the project</p></li>
 <li><p><strong>result_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Must be one of SET, QT or CATEGORY</p></li>
 <li><p><strong>description</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Free text description of the phenotype (optional)</p></li>
+<li><p><strong>url</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Reference URL for the phenotype (to dataset or other reference)</p></li>
 <li><p><strong>category</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)</p></li>
 <li><p><strong>query</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – NOR query that defines this phenotype (optional)</p></li>
 <li><p><strong>tags</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – comma separated list of tags to add to this phenotype (optional) e.g. [‘tag1’,’tag2’]</p></li>
@@ -160,6 +173,24 @@ method will work and the project will be created implicitly.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#nextcode.services.phenotype.phenotype.Phenotype" title="nextcode.services.phenotype.phenotype.Phenotype"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phenotype</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nextcode.services.phenotype.service.Service.create_playlist">
+<code class="sig-name descname"><span class="pre">create_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new playlist in the current project</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Unique (lowercase) phenotype name in the project</p></li>
+<li><p><strong>description</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Free text description of the playlist (optional)</p></li>
+<li><p><strong>phenotypes</strong> – comma separated list of phenotypes to add (optional) e.g. [‘tag1’,’tag2’]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Playlist</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,6 +213,17 @@ method will work and the project will be created implicitly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nextcode.services.phenotype.service.Service.get_categories">
+<code class="sig-name descname"><span class="pre">get_categories</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_categories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all categories available in the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -248,6 +290,49 @@ method will work and the project will be created implicitly.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>List of phenotypes</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>ServerError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nextcode.services.phenotype.service.Service.get_playlist">
+<code class="sig-name descname"><span class="pre">get_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list a single playlist in the current project based on the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Playlist</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A single playlist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>ServerError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nextcode.services.phenotype.service.Service.get_playlists">
+<code class="sig-name descname"><span class="pre">get_playlists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlists" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all the playlists in the current project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Maximum number of results (default: 100)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Playlist</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of playlists</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
@@ -526,8 +611,8 @@ set self.__traceback__ to tb and return self.</p>
     </p>
     <p>
         &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2021-03-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
+      Last updated on 2021-04-19.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
     </p>
   </div>
 </footer>
