@@ -248,7 +248,7 @@ class Service(BaseService):
             context,
             storage_type,
             dedicated_storage_size,
-            mount_jobs
+            mount_jobs,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,

@@ -1,4 +1,4 @@
-Nextcode Python SDK
+Genuity Science Python SDK
 ===================
 
 What is it?
@@ -7,10 +7,10 @@ Nextcode-sdk is a python package for interfacing with WuXi Nextcode RESTFul serv
 
 .. note::
 
-    These services are not publicly accessible and only available within private installations. Therefore you will not be able to use this SDK unless you work for, or are a client of WuXi Nextcode.
+    These services are not publicly accessible and only available within private installations. Therefore you will not be able to use this SDK unless you work for, or are a client of Genuity Science.
     
-    Please contact `WuXi Nextcode
-    <https://www.WuXinextcode.com/>`_ for additional information.
+    Please contact `Genuity Science
+    <https://genuitysci.com>`_ for additional information.
 
 Installation
 -------------
@@ -49,9 +49,9 @@ Indices and tables
 Resources
 ---------
 
-`WuXi Nextcode website <https://wuxinextcode.com>`_, Keep up to date on WuXi Nextcode
+`Genuity Science website <https://genuitysci.com>`_, Keep up to date on Genuity Science
 
 `IPython website <https://ipython.org>`_, Learn more about IPython
 
-`Nextcode Python SDK Github page <https://github.com/wuxi-nextcode/nextcode-python-sdk>`_, Download the source code to the SDK.
+`Genuity Science Python SDK Github page <https://github.com/wuxi-nextcode/nextcode-python-sdk>`_, Download the source code to the SDK.
 

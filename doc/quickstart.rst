@@ -5,7 +5,7 @@ Once the sdk is installed you should be ready to connect to services. Please see
 
 Usage
 -----
-In order to use this SDK you will need to start by getting an **API KEY** from a WuXi Nextcode server. These API Keys are JWT token that you must use to initialize the SDK.
+In order to use this SDK you will need to start by getting an **API KEY** from a Genuity Science server. These API Keys are JWT token that you must use to initialize the SDK.
 
 You can then get started with the following:
 

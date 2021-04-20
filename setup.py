@@ -6,7 +6,7 @@ from setuptools import setup, find_packages, Command
 
 if sys.version_info < (3, 6):
     raise NotImplementedError(
-        """Nextcode SDK does not support Python versions older than 3.6"""
+        """Genuity Science SDK does not support Python versions older than 3.6"""
     )
 
 
@@ -66,7 +66,7 @@ setup(
     license="MIT",
     author="WUXI NextCODE",
     author_email="support@wuxinextcode.com",
-    description="Python SDK for Wuxi Nextcode Services",
+    description="Python SDK for Genuity Science Services",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://www.github.com/wuxi-nextcode/nextcode-python-sdk",

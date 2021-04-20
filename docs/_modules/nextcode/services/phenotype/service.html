@@ -4,8 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 1.3.0
- documentation</title>
+    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
@@ -38,8 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3.0
-</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -125,6 +123,7 @@
 <span class="kn">from</span> <span class="nn">...exceptions</span> <span class="kn">import</span> <span class="n">ServerError</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">PhenotypeError</span>
 <span class="kn">from</span> <span class="nn">.phenotype</span> <span class="kn">import</span> <span class="n">Phenotype</span>
+<span class="kn">from</span> <span class="nn">.playlist</span> <span class="kn">import</span> <span class="n">Playlist</span>
 <span class="kn">from</span> <span class="nn">.phenotype_matrix</span> <span class="kn">import</span> <span class="n">PhenotypeMatrix</span>
 
 <span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s2">&quot;api/phenotype-catalog&quot;</span>
@@ -187,6 +186,7 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">result_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">category</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">query</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
@@ -197,14 +197,17 @@
 <span class="sd">        :param name: Unique (lowercase) phenotype name in the project</span>
 <span class="sd">        :param result_type: Must be one of SET, QT or CATEGORY</span>
 <span class="sd">        :param description: Free text description of the phenotype (optional)</span>
+<span class="sd">        :param url: Reference URL for the phenotype (to dataset or other reference)</span>
 <span class="sd">        :param category: Enter the category for the phenotype (must be defined in the project - see get_categories) (optional)</span>
 <span class="sd">        :param query: NOR query that defines this phenotype (optional)</span>
-<span class="sd">        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. [&#39;tag1&#39;,&#39;tag2&#39;] </span>
+<span class="sd">        :param tags: comma separated list of tags to add to this phenotype (optional) e.g. [&#39;tag1&#39;,&#39;tag2&#39;]</span>
 <span class="sd">        :raises: PhenotypeError, ServerError</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1">#! TODO: Get link from root</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;projects&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="s2">&quot;phenotypes&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;projects&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="s2">&quot;phenotypes&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">result_type</span> <span class="o">=</span> <span class="n">result_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">result_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SUPPORTED_RESULT_TYPES</span><span class="p">:</span>
@@ -215,11 +218,12 @@
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
             <span class="s2">&quot;result_type&quot;</span><span class="p">:</span> <span class="n">result_type</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
             <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span>
             <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
             <span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
@@ -293,7 +297,126 @@
 <span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
 <span class="sd">        :raises: `ServerError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">PhenotypeMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">PhenotypeMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service.get_categories"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_categories">[docs]</a>    <span class="k">def</span> <span class="nf">get_categories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A list of all categories available in the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">urljoin</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;projects&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+                <span class="s2">&quot;categories&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;categories&quot;</span><span class="p">]</span>
+        <span class="n">categories</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">categories</span></div>
+
+<div class="viewcode-block" id="Service.create_category"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.create_category">[docs]</a>    <span class="k">def</span> <span class="nf">create_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new category to this project.</span>
+
+<span class="sd">        :param name: Name of the category</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;projects&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="s2">&quot;categories&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="c1"># if the project did not already exist, initialize the service</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_project</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">payload</span></div>
+
+<div class="viewcode-block" id="Service.create_playlist"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.create_playlist">[docs]</a>    <span class="k">def</span> <span class="nf">create_playlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Playlist</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new playlist in the current project</span>
+
+<span class="sd">        :param name: Unique (lowercase) phenotype name in the project</span>
+<span class="sd">        :param description: Free text description of the playlist (optional)</span>
+<span class="sd">        :param phenotypes: comma separated list of phenotypes to add (optional) e.g. [&#39;tag1&#39;,&#39;tag2&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;projects&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="s2">&quot;playlists&quot;</span>
+        <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="c1"># if the project did not already exist, initialize the service</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_project</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playlist&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Service.get_playlists"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_playlists">[docs]</a>    <span class="k">def</span> <span class="nf">get_playlists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Playlist</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A list of all the playlists in the current project.</span>
+
+<span class="sd">        :param limit: Maximum number of results (default: 100)</span>
+<span class="sd">        :return: List of playlists</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: ServerError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Project does not exist.&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;projects&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="s2">&quot;playlists&quot;</span>
+        <span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;playlists&quot;</span><span class="p">]</span>
+        <span class="n">playlists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">playlists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">playlists</span></div>
+
+<div class="viewcode-block" id="Service.get_playlist"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_playlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_playlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Playlist</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A list a single playlist in the current project based on the id.</span>
+
+
+<span class="sd">        :return: A single playlist</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: ServerError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Project does not exist.&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;projects&quot;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="s2">&quot;playlists&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Playlist not found&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;playlist&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
@@ -310,9 +433,9 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2021-03-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
+        &copy; Copyright 2021,Genuity Science.<br/>
+      Last updated on 2021-04-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
     </p>
   </div>
 </footer>

@@ -4,8 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.utils &#8212; nextcode-python-sdk 1.3.0
- documentation</title>
+    <title>nextcode.utils &#8212; nextcode-python-sdk 1.6.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
@@ -38,8 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3.0
-</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -172,9 +170,8 @@
     <span class="k">return</span> <span class="n">root_url</span>
 
 
-<div class="viewcode-block" id="get_access_token"><a class="viewcode-back" href="../../api_basic.html#nextcode.utils.get_access_token">[docs]</a><span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
     <span class="n">client_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;azp&quot;</span><span class="p">]</span>
     <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
@@ -209,7 +206,7 @@
             <span class="s2">&quot;Error authenticating with </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">token_endpoint</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="host_from_url"><a class="viewcode-back" href="../../api_basic.html#nextcode.utils.host_from_url">[docs]</a><span class="k">def</span> <span class="nf">host_from_url</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
@@ -219,7 +216,7 @@
 <span class="sd">    For example, www.server.com/something -&gt; https://www.server.com/</span>
 <span class="sd">                 http://www.server.com -&gt; http://www.server.com/</span>
 <span class="sd">                 http://localhost:8080/something -&gt; http://localhost:8080/</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;://&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
         <span class="n">host</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -256,9 +253,9 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Wuxi Nextcode.<br/>
-      Last updated on 2021-03-24.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
+        &copy; Copyright 2021,Genuity Science.<br/>
+      Last updated on 2021-04-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
     </p>
   </div>
 </footer>

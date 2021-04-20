@@ -1,7 +1,7 @@
 Jupyter Notebooks Integration
 -----------------------------
 
-Nextcode Python SDK can be used with Jupyter Notebooks and introduces `%gor` and `%%gor` magics.
+Genuity Science Python SDK can be used with Jupyter Notebooks and introduces `%gor` and `%%gor` magics.
 
 If you are running a session in one of Wuxi Nextcode's own notebook servers no installation should be required and you can skip to the next section.
 
@@ -26,8 +26,8 @@ Then you intialize the extension in your notebook after you have received an API
     * Python SDK Version: 0.1.6
     * Query API Version: 1.9.0
     * GOR Version: 9.4-SNAPSHOT (git SHA 8fc327bb08282d02f9e987e11c4073e64ec77677)
-    * Root Endpoint: https://test.wuxinextcode.com/api/query/
-    * Current User: testuser@wuxinextcode.com
+    * Root Endpoint: <endpoint>
+    * Current User: testuser
 
 
 Getting Started
