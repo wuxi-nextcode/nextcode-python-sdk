@@ -219,6 +219,19 @@ class WorkflowJob:
         resp = self.session.get(url)
         return resp.json()
 
+    def cost(self, recalculate: bool = False) -> Dict:
+        """
+        Get the estimates cost of this job.
+        :param recalculate: If set to True then the cost will be recalculated.
+        """
+        url = self.links["cost"]
+        data = {}
+        if recalculate:
+            data["recalculate"] = "true"
+
+        resp = self.session.get(url, json=data)
+        return resp.json()
+
     def processes(
         self,
         process_id: Optional[int] = None,
