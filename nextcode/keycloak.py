@@ -292,6 +292,64 @@ class KeycloakSession:
             self.realm,
         )
 
+    def get_user_client_roles(self, user_name: str, client_name: str) -> List[str]:
+        """
+        Get the specified client roles for this user
+        """
+        user_id = self.get_user(user_name)["id"]
+        client_id = self.get_client(client_name)["id"]
+        url = urljoin(self.realm_url, "users", str(user_id), "role-mappings","clients",client_id)
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        roles = resp.json()
+        role_names = [r["name"] for r in roles]
+        return role_names
+
+    def add_client_role_to_user(
+            self, user_name: str, client_name: str, role_name: str, exist_ok: bool = False
+    ) -> None:
+        user_id = self.get_user(user_name)["id"]
+        user_client_roles = self.get_user_client_roles(user_name,client_name)
+        if role_name in user_client_roles:
+            if exist_ok:
+                return
+            raise AuthServerError(f"User '{user_name}' already has role '{role_name}' for client '{client_name}'")
+
+        client_id = self.get_client(client_name)["id"]
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/clients/{client_id}/available")
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        available_roles = resp.json()
+        role = None
+        for r in available_roles:
+            if r["name"].lower() == role_name:
+                role = r
+                break
+        if not role:
+            raise AuthServerError(
+                f"Role '{role_name}' for client '{client_name}' is not available for user '{user_name}'"
+            )
+
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/clients",client_id)
+        resp = self.session.post(url, json=[role])
+        resp.raise_for_status()
+        log.info(
+            "Role '%s' for client '%s' has been added to user '%s' in realm '%s'",
+            role_name,
+            client_name,
+            user_name,
+            self.realm,
+        )
+
+    def get_client(self, client_name: str) -> Dict:
+        url = urljoin(self.realm_url, f"clients?clientId={client_name}")
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        for c in resp.json():
+            if c.get("clientId") == client_name:
+                return c
+        raise AuthServerError(f"Client '{client_name}' not found.")
+
     def login_user(self, user_name: str, password: str) -> Optional[str]:
         try:
             return login_keycloak_user(
