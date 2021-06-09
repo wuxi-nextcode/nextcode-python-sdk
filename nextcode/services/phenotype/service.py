@@ -132,7 +132,7 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
-    def get_phenotypes(self, tags: List[str] = [], limit: int = 100) -> List[Phenotype]:
+    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None) -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
 
@@ -146,11 +146,17 @@ class Service(BaseService):
 
         if not self.project:
             raise PhenotypeError("Project does not exist.")
+
         url = self.links["phenotypes"]
+        if playlist:
+            url = url.replace('phenotypes', f'playlists/{playlist}')
         content = {"with_all_tags": tags, "limit": limit}
         resp = self.session.get(url, data=content)
 
-        data = resp.json()["phenotypes"]
+        if playlist:
+            data = resp.json()['playlist']['phenotypes']
+        else:
+            data = resp.json()["phenotypes"]
         phenotypes = []
         for item in data:
             phenotypes.append(Phenotype(self.session, item))
