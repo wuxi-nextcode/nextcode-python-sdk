@@ -132,7 +132,7 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
-    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None) -> List[Phenotype]:
+    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type='list') -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
 
@@ -158,8 +158,12 @@ class Service(BaseService):
         else:
             data = resp.json()["phenotypes"]
         phenotypes = []
-        for item in data:
-            phenotypes.append(Phenotype(self.session, item))
+        if return_type == 'dataframe':
+            import pandas
+            phenotypes = pandas.DataFrame(data)
+        else:
+            for item in data:
+                phenotypes.append(Phenotype(self.session, item))
         return phenotypes
 
     def get_phenotype(self, name: str) -> Phenotype:
