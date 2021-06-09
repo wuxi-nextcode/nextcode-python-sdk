@@ -149,7 +149,7 @@ class Service(BaseService):
 
         url = self.links["phenotypes"]
         if playlist:
-            url = url.replace('phenotypes', f'playlists/{playlist}')
+            url = urljoin(self.links['self'], 'playlists', str(playlist))
         content = {"with_all_tags": tags, "limit": limit}
         resp = self.session.get(url, data=content)
 
