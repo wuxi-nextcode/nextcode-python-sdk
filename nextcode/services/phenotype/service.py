@@ -150,19 +150,33 @@ class Service(BaseService):
         url = self.links["phenotypes"]
         if playlist:
             url = urljoin(self.links['self'], 'playlists', str(playlist))
-        content = {"with_all_tags": tags, "limit": limit}
-        resp = self.session.get(url, data=content)
 
-        if playlist:
-            data = resp.json()['playlist']['phenotypes']
-        else:
-            data = resp.json()["phenotypes"]
+        def do_get(offset=0):
+            content = {"with_all_tags": tags, "limit": limit, 'offset': offset}
+            resp = self.session.get(url, data=content)
+
+            if playlist:
+                data = resp.json()['playlist']['phenotypes']
+            else:
+                data = resp.json()["phenotypes"]
+            return data
+
+        offset = 0
+        combined_data = []
+        while True:
+            data = do_get(offset)
+            offset = len(data)
+            combined_data += data
+
+            if offset < limit:
+                break
+
         phenotypes = []
         if return_type == 'dataframe':
             import pandas
-            phenotypes = pandas.DataFrame(data)
+            phenotypes = pandas.DataFrame(combined_data)
         else:
-            for item in data:
+            for item in combined_data:
                 phenotypes.append(Phenotype(self.session, item))
         return phenotypes
 
