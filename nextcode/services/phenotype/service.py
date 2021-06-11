@@ -135,6 +135,8 @@ class Service(BaseService):
     def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type='list') -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
+        The API paginates results on the `limit` parameter,
+        this method handles the pagination transparently to fetch all results.
 
         :param tags: Optional list of tags to filter for
         :param limit: Maximum number of results (default: 100)
@@ -152,6 +154,7 @@ class Service(BaseService):
             url = urljoin(self.links['self'], 'playlists', str(playlist))
 
         def do_get(offset=0):
+            # This local method fetches paginated results from `offset` to limit
             content = {"with_all_tags": tags, "limit": limit, 'offset': offset}
             resp = self.session.get(url, data=content)
 
@@ -163,6 +166,7 @@ class Service(BaseService):
 
         offset = 0
         combined_data = []
+        # Loop to fetch the entire results, combining the paginated results
         while True:
             data = do_get(offset)
             offset = len(data)
