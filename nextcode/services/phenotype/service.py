@@ -132,9 +132,11 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
-    def get_phenotypes(self, tags: List[str] = [], limit: int = 100) -> List[Phenotype]:
+    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type="list") -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
+        The API paginates results on the `limit` parameter,
+        this method handles the pagination transparently to fetch all results.
 
         :param tags: Optional list of tags to filter for
         :param limit: Maximum number of results (default: 100)
@@ -146,14 +148,40 @@ class Service(BaseService):
 
         if not self.project:
             raise PhenotypeError("Project does not exist.")
-        url = self.links["phenotypes"]
-        content = {"with_all_tags": tags, "limit": limit}
-        resp = self.session.get(url, data=content)
 
-        data = resp.json()["phenotypes"]
+        url = self.links["phenotypes"]
+        if playlist:
+            url = urljoin(self.links["self"], "playlists", str(playlist))
+
+        def do_get(offset=0):
+            # This local method fetches paginated results from `offset` to limit
+            content = {"with_all_tags": tags, "limit": limit, "offset": offset}
+            resp = self.session.get(url, data=content)
+
+            if playlist:
+                data = resp.json()["playlist"]["phenotypes"]
+            else:
+                data = resp.json()["phenotypes"]
+            return data
+
+        offset = 0
+        combined_data = []
+        # Loop to fetch the entire results, combining the paginated results
+        while True:
+            data = do_get(offset)
+            offset = len(data)
+            combined_data += data
+
+            if offset < limit:
+                break
+
         phenotypes = []
-        for item in data:
-            phenotypes.append(Phenotype(self.session, item))
+        if return_type == "dataframe":
+            import pandas
+            phenotypes = pandas.DataFrame(combined_data)
+        else:
+            for item in combined_data:
+                phenotypes.append(Phenotype(self.session, item))
         return phenotypes
 
     def get_phenotype(self, name: str) -> Phenotype:
