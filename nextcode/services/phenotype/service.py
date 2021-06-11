@@ -132,7 +132,7 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
-    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type='list') -> List[Phenotype]:
+    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type="list") -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
         The API paginates results on the `limit` parameter,
@@ -151,15 +151,15 @@ class Service(BaseService):
 
         url = self.links["phenotypes"]
         if playlist:
-            url = urljoin(self.links['self'], 'playlists', str(playlist))
+            url = urljoin(self.links["self"], "playlists", str(playlist))
 
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
-            content = {"with_all_tags": tags, "limit": limit, 'offset': offset}
+            content = {"with_all_tags": tags, "limit": limit, "offset": offset}
             resp = self.session.get(url, data=content)
 
             if playlist:
-                data = resp.json()['playlist']['phenotypes']
+                data = resp.json()["playlist"]["phenotypes"]
             else:
                 data = resp.json()["phenotypes"]
             return data
@@ -176,7 +176,7 @@ class Service(BaseService):
                 break
 
         phenotypes = []
-        if return_type == 'dataframe':
+        if return_type == "dataframe":
             import pandas
             phenotypes = pandas.DataFrame(combined_data)
         else:
