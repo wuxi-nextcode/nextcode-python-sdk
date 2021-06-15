@@ -309,16 +309,19 @@ class Service(BaseService):
             playlists.append(Playlist(self.session, item))
         return playlists
 
-    def get_playlist(self, id: int) -> Playlist:
+    def get_playlist(self, id: int = None, name: str = None) -> Playlist:
         """
         A list a single playlist in the current project based on the id.
 
-
+        :param id: Specify the playlist to get by its id
+        :param name: Retrieve a playlist by its unique name within project
         :return: A single playlist
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
 
+        if name and id:
+            raise TypeError("id and name cannot both be supplied")
         if not self.project:
             raise PhenotypeError("Project does not exist.")
         url = urljoin(
@@ -328,13 +331,23 @@ class Service(BaseService):
             str(id),
         )
 
+        if name:
+            url = urljoin(
+                self.session.url_from_endpoint('projects'),
+                self.project_name,
+                'playlists'
+            )
+
         try:
-            resp = self.session.get(url)
+            resp = self.session.get(url, data={'name': name})
         except ServerError as ex:
             if ex.response and ex.response["code"] == codes.not_found:
                 raise PhenotypeError("Playlist not found") from None
             else:
                 raise
 
-        data = resp.json()["playlist"]
+        if name:
+            data = resp.json()['playlists'][0]
+        else:
+            data = resp.json()["playlist"]
         return Playlist(self.session, data)
