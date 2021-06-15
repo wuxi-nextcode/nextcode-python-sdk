@@ -292,6 +292,8 @@ class Service(BaseService):
         :raises: ServerError
         """
 
+        if name and id:
+            raise TypeError("id and name cannot both be supplied")
         if not self.project:
             raise PhenotypeError("Project does not exist.")
         url = urljoin(
