@@ -21,7 +21,7 @@ from .config import Config, save_config
 from .utils import root_url_from_api_key, get_access_token, decode_token, host_from_url
 
 SERVICES_PATH = Path(__file__).parent.joinpath("services")
-SERVICES = ["query"]
+SERVICES = ["query", "queryserver"]
 DEFAULT_CLIENT_ID = "api-key-client"
 
 log = logging.getLogger()

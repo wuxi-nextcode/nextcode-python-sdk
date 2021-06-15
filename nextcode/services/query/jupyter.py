@@ -6,12 +6,8 @@ Bootstrapping for Jupyter Notebook magic syntax, `%gor` and `%%gor`.
 
 Use `%env LOG_QUERY=1` in Jupyter to see details.
 """
-
-from ...exceptions import ServerError, InvalidToken
-from .exceptions import MissingRelations, QueryError
-from ...utils import jupyter_available
-from typing import Dict, List, Optional, Union
-import nextcode
+import argparse
+import getopt
 import hashlib
 import time
 import logging
@@ -19,6 +15,12 @@ import re
 import sys
 import os
 import datetime
+import nextcode
+
+from ...exceptions import ServerError, InvalidToken
+from .exceptions import MissingRelations, QueryError
+from ...utils import jupyter_available, strtobool
+from typing import Dict, List, Optional, Union
 
 log = logging.getLogger(__name__)
 
@@ -55,16 +57,14 @@ def print_details(txt):
     Print string, but only if LOG_QUERY is set
     """
     if os.environ.get("LOG_QUERY"):
-        print(txt)
-        sys.stdout.flush()
+        print(txt, flush=True)
 
 
 def print_error(txt):
     """
     Print string to stderr
     """
-    print(txt, file=sys.stderr)
-    sys.stderr.flush()
+    print(txt, file=sys.stderr, flush=True)
 
 
 def sizeof_fmt(num, suffix="B"):
@@ -92,67 +92,19 @@ def get_service():
     return svc
 
 
+def get_queryserver():
+    """
+    Helper method to get a query server instance
+    """
+    svc = nextcode.get_service("queryserver")
+    return svc
+
+
 @magics_class
 class GorMagics(Magics):
     """
     The basic 'ipython magic' extension that loads up the sdk as a `%gor` plugin in Jupyter notebook.
     """
-
-    def handle_exception(self):
-        """
-        Print out any exception on the stack.
-        """
-        exception = sys.exc_info()
-        print_error(str(exception[1]))
-
-    def replace_vars(self, string):
-        """
-        Handle variable substitution in a gor string to interact with local state.
-        """
-        replacement_vars = re.findall("\\$([^0-9][a-zA-Z0-9_]*)?", string)
-        ret = string
-        user_ns = self.shell.user_ns
-        for var_name in replacement_vars:
-            if not var_name:
-                continue
-            if var_name not in user_ns.keys():
-                print("Variable '%s' not found in notebook" % var_name)
-                continue
-            var = str(user_ns[var_name])
-            ret = ret.replace(f"${var_name}", var)
-        return ret
-
-    def load_relations(self, relation_names):
-        """
-        Find relations in local iPython state for inclusion in a remote gor query.
-        """
-        relations = []
-        user_ns = self.shell.user_ns
-        print_details(
-            "Loading relations {} from local state".format(", ".join(relation_names))
-        )
-        for name in relation_names:
-            var_name = name.replace("[", "").replace("]", "").split(":")[-1]
-            if var_name not in user_ns.keys():
-                raise Exception("Variable '%s' not found" % var_name) from None
-            var = user_ns[var_name]
-            if not isinstance(var, pd.DataFrame):
-                raise Exception(
-                    "%s must be a pandas DataFrame object, not %s"
-                    % (var_name, type(var))
-                ) from None
-            md5 = hashlib.md5()
-            md5.update(str(id(user_ns[var_name])).encode())
-            data = var.to_csv(index=False, sep="\t")
-            relations.append(
-                {
-                    "name": name,
-                    "fingerprint": md5.hexdigest(),
-                    "extension": ".tsv",
-                    "data": data,
-                }
-            )
-        return relations
 
     @line_cell_magic
     def gor(self, line, cell=None):
@@ -162,109 +114,43 @@ class GorMagics(Magics):
         See Jupyter notebook for examples and details.
         """
         try:
-            st = time.time()
-            svc = get_service()
             gor_string = line
             return_var = None
             persist = None
             download_filename = None
-            user_ns = self.shell.user_ns
-            qry = None
-            # if this is a multiline statement
+
+            # if there is a << on the first line we assume we have an assignment or a persist
+            if "<<" in gor_string:
+                parts = gor_string.split("<<")
+                var = parts[0].strip()
+                gor_string = parts[1]
+
+                # if the variable looks like it might be a filename, persist it, otherwise assign to a local var
+                if var.startswith("file:"):
+                    download_filename = var[5:]
+                elif "/" in var or "." in var:
+                    persist = var
+                else:
+                    return_var = var
+
+            # Handle options (use only long options so it is less likely to conflict with gor)
+            parser = argparse.ArgumentParser(add_help=False)
+            parser.add_argument('--gzip', type=strtobool, nargs='?', const=True, default=True)
+            parser.add_argument('--queryservice', type=strtobool, nargs='?', const=True, default=False)
+            options, args = parser.parse_known_args(gor_string.split())
+            gor_string = ' '.join(args)
+
+            # If this is a multiline statement.
             if cell:
-                # if there is a << on the first line we assume we have an assignment or a persist
-                if "<<" in line:
-                    parts = line.split("<<")
-                    var = parts[0].strip()
-                    # if the variable looks like it might be a filename, persist it, otherwise assign to a local var
-                    if var.startswith("file:"):
-                        download_filename = var[5:]
-                    elif "/" in var or "." in var:
-                        persist = var
-                    else:
-                        return_var = var
-                    gor_string = parts[1]
                 gor_string += "\n" + cell
 
             gor_string = self.replace_vars(gor_string)
-            try:
-                qry = svc.execute(gor_string, nowait=True, persist=persist)
-            except MissingRelations as ex:
-                relations = self.load_relations(ex.relations)
-                qry = svc.execute(
-                    gor_string, relations=relations, nowait=True, persist=persist
-                )
-            poll_time = 1.0
-            while qry.running is True:
-                t = time.time()
-                while time.time() < t + poll_time:
-                    diff = int(time.time() - st)
-                    diff = str(datetime.timedelta(seconds=diff))
-                    sys.stdout.write(f"Query has been running for {diff}...\r")
-                    sys.stdout.flush()
-                    time.sleep(1.0)
-                poll_time = min(poll_time + 1.0, 10.0)
 
-            if qry.status != "DONE":
-                try:
-                    print_error(
-                        "Query {} failed with error:\n{}".format(
-                            qry.query_id, qry.status_message
-                        )
-                    )
-                except TypeError:
-                    raise Exception(
-                        "Query {} has unexpected status {}".format(
-                            qry.query_id, qry.status
-                        )
-                    )
-                return None
-            num_rows = qry.line_count or 0
-            print(
-                "Query {} generated {:,} rows in {:.2f} sec".format(
-                    qry.query_id, num_rows, time.time() - st
-                )
-            )
-            if persist:
-                return None
-
-            if download_filename:
-                from ipywidgets import IntProgress
-                from IPython.display import display
-                from tqdm.auto import tqdm, trange
-
-                line_count = qry.stats["line_count"]
-                f = tqdm(total=line_count, desc=f"Downloading")
-
-                def callback(num_lines):
-                    f.update(num_lines)
-
-                ret = qry.download_results(download_filename, callback=callback)
-                f.close()
-                print(f"Results have been downloaded to {ret}")
-                return None
+            if options.queryservice or (persist is not None or download_filename is not None):
+                return self.__call_query_service(gor_string, persist, download_filename, return_var)
             else:
-                MAX_ROWS = 1000000
-                if num_rows > MAX_ROWS:
-                    print_error(
-                        "Query {} returned {} rows but magic commands are capped at {} rows.".format(
-                            qry.query_id, qry.line_count, MAX_ROWS
-                        )
-                    )
-                ret = qry.dataframe(limit=MAX_ROWS)
-                if return_var:
-                    user_ns[return_var] = ret
-                    return None
-                else:
-                    return ret
-        except KeyboardInterrupt:
-            if qry:
-                try:
-                    qry.cancel()
-                except QueryError:
-                    pass
-            print_error("Query has been cancelled")
-            return None
+                return self.__call_query_server(gor_string, options.gzip, return_var)
+
         except Exception:
             self.handle_exception()
 
@@ -327,6 +213,181 @@ class GorMagics(Magics):
         for f in folders:
             ff = f[0].split(svc.project)[-1]
             print(ff)
+
+    def handle_exception(self):
+        """
+        Print out any exception on the stack.
+        """
+        exception = sys.exc_info()
+        print_error(str(exception[1]))
+
+    def replace_vars(self, string):
+        """
+        Handle variable substitution in a gor string to interact with local state.
+        """
+        replacement_vars = re.findall("\\$([^0-9][a-zA-Z0-9_]*)?", string)
+        ret = string
+        user_ns = self.shell.user_ns
+        for var_name in replacement_vars:
+            if not var_name:
+                continue
+            if var_name not in user_ns.keys():
+                print("Variable '%s' not found in notebook" % var_name)
+                continue
+            var = str(user_ns[var_name])
+            ret = ret.replace(f"${var_name}", var)
+        return ret
+
+    def load_relations(self, relation_names):
+        """
+        Find relations in local iPython state for inclusion in a remote gor query.
+        """
+        relations = []
+        user_ns = self.shell.user_ns
+        print_details(
+            "Loading relations {} from local state".format(", ".join(relation_names))
+        )
+        for name in relation_names:
+            var_name = name.replace("[", "").replace("]", "").split(":")[-1]
+            if var_name not in user_ns.keys():
+                raise Exception("Variable '%s' not found" % var_name) from None
+            var = user_ns[var_name]
+            if not isinstance(var, pd.DataFrame):
+                raise Exception(
+                    "%s must be a pandas DataFrame object, not %s"
+                    % (var_name, type(var))
+                ) from None
+            md5 = hashlib.md5()
+            md5.update(str(id(user_ns[var_name])).encode())
+            data = var.to_csv(index=False, sep="\t")
+            relations.append(
+                {
+                    "name": name,
+                    "fingerprint": md5.hexdigest(),
+                    "extension": ".tsv",
+                    "data": data,
+                }
+            )
+        return relations
+
+    def __call_query_service(self, gor_string, persist, download_filename, return_var):
+        try:
+            qry = None
+            st = time.time()
+            svc = get_service()
+            try:
+                qry = svc.execute(gor_string, nowait=True, persist=persist)
+            except MissingRelations as ex:
+                relations = self.load_relations(ex.relations)
+                qry = svc.execute(
+                    gor_string, relations=relations, nowait=True, persist=persist
+                )
+            poll_time = 1.0
+            while qry.running is True:
+                t = time.time()
+                while time.time() < t + poll_time:
+                    diff = int(time.time() - st)
+                    diff = str(datetime.timedelta(seconds=diff))
+                    sys.stdout.write(f"Query has been running for {diff}...\r")
+                    sys.stdout.flush()
+                    time.sleep(1.0)
+                poll_time = min(poll_time + 1.0, 10.0)
+
+            if qry.status != "DONE":
+                try:
+                    print_error(
+                        "Query {} failed with error:\n{}".format(
+                            qry.query_id, qry.status_message
+                        )
+                    )
+                except TypeError:
+                    raise Exception(
+                        "Query {} has unexpected status {}".format(
+                            qry.query_id, qry.status
+                        )
+                    )
+                return None
+            num_rows = qry.line_count or 0
+            query_time = time.time() - st
+            print("Query {} ran in {:.2f} sec".format(qry.query_id, query_time))
+            
+            if persist:
+                return None
+
+            if download_filename:
+                from ipywidgets import IntProgress
+                from IPython.display import display
+                from tqdm.auto import tqdm, trange
+
+                line_count = qry.stats["line_count"]
+                f = tqdm(total=line_count, desc=f"Downloading")
+
+                def callback(num_lines):
+                    f.update(num_lines)
+
+                ret = qry.download_results(download_filename, callback=callback)
+                f.close()
+                print(f"Results have been downloaded to {ret}")
+                return None
+            else:
+                MAX_ROWS = 1000000
+                if num_rows > MAX_ROWS:
+                    print_error(
+                        "Query {} returned {} rows but magic commands are capped at {} rows.".format(
+                            qry.query_id, qry.line_count, MAX_ROWS
+                        )
+                    )
+                ret = qry.dataframe(limit=MAX_ROWS)
+
+                print("Query {} fetched {:,} rows in {:.2f} sec".format(qry.query_id, num_rows, time.time() - st - query_time))
+
+                if return_var:
+                    self.shell.user_ns[return_var] = ret
+                    return None
+                else:
+                    return ret
+        except KeyboardInterrupt:
+            if qry:
+                try:
+                    qry.cancel()
+                except QueryError:
+                    pass
+            print_error("Query has been cancelled")
+            return None
+
+    def __call_query_server(self, gor_string, gzip, return_var):
+        try:
+            result = None
+            st = time.time()
+            svc = get_queryserver()
+            try:
+                result = svc.execute(gor_string, gzip=gzip)
+            except MissingRelations as ex:
+                relations = self.load_relations(ex.relations)
+                result = svc.execute(gor_string, gzip=gzip, relations=relations)
+
+            query_time = time.time() - st
+            print("Query ran in {:.2f} sec (gzip={})".format(time.time() - st, gzip))
+
+            MAX_ROWS = 1000000
+            ret = result.dataframe(limit=MAX_ROWS)
+
+            print("Query fetched {:,} rows in {:.2f} sec".format(result.num_lines, time.time() - st - query_time))
+
+            if return_var:
+                self.shell.user_ns[return_var] = ret
+                return None
+            else:
+                return ret
+
+        except KeyboardInterrupt:
+            if result:
+                try:
+                    result.cancel()
+                except QueryError:
+                    pass
+            print_error("Query has been cancelled")
+            return None
 
 
 # In order to actually use these magics, you must register them with a

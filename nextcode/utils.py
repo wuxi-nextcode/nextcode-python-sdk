@@ -130,3 +130,12 @@ def jupyter_available() -> bool:
     if pandas_spec is not None and ipython_spec is not None:
         return True
     return False
+
+
+def strtobool(s):
+    if isinstance(s, bool):
+        return s
+    if s and s.lower() in ("true", "t", "yes", "y", "on", "1"):
+        return True
+    else:
+        return False
