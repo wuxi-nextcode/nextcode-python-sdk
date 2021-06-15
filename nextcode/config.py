@@ -111,8 +111,8 @@ def _load_config() -> Dict:
         if not isinstance(content, dict):
             raise Exception("Invalid config")
         return content
-    except Exception:
-        log.info("Config file not found or invalid")
+    except Exception as ex:
+        log.info("Config file not found or invalid: %s", ex)
     return {}
 
 

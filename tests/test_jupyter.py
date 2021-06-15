@@ -94,9 +94,9 @@ class JupyterTest(BaseTestCase):
 
 class GorCommandTest(JupyterTest):
     @responses.activate
-    def test_singleline(self):
+    def test_singleline_queryservice(self):
         setup_responses()
-        df = self.magics.gor("Hello")
+        df = self.magics.gor("--queryservice True Hello")
         self.assertTrue(df is None)
 
         def mock_execute(*args, **kwargs):
@@ -110,6 +110,25 @@ class GorCommandTest(JupyterTest):
         m = MagicMock()
         m.execute = mock_execute
         with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
+            df = self.magics.gor("--queryservice True Hello")
+            self.assertTrue(isinstance(df, pd.DataFrame))
+
+    @responses.activate
+    def test_singleline_queryserver(self):
+        setup_responses()
+        df = self.magics.gor("Hello")
+        self.assertTrue(df is None)
+
+        def mock_execute(*args, **kwargs):
+            m = MagicMock()
+            m.status = "DONE"
+            m.num_lines = 100
+            m.dataframe.return_value = pd.DataFrame()
+            return m
+
+        m = MagicMock()
+        m.execute = mock_execute
+        with mock.patch("nextcode.services.query.jupyter.get_queryserver", return_value=m):
             df = self.magics.gor("Hello")
             self.assertTrue(isinstance(df, pd.DataFrame))
 
@@ -135,7 +154,7 @@ class GorCommandTest(JupyterTest):
             self.assertTrue(df is None)
 
     @responses.activate
-    def test_multiline(self):
+    def test_multiline_queryservice(self):
         setup_responses()
 
         def mock_execute(*args, **kwargs):
@@ -149,6 +168,22 @@ class GorCommandTest(JupyterTest):
         m = MagicMock()
         m.execute = mock_execute
         with mock.patch("nextcode.services.query.jupyter.get_service", return_value=m):
+            df = self.magics.gor("--queryservice True Hello", "World\nAnother world")
+            self.assertTrue(isinstance(df, pd.DataFrame))
+
+    @responses.activate
+    def test_multiline_queryserver(self):
+        setup_responses()
+
+        def mock_execute(*args, **kwargs):
+            m = MagicMock()
+            m.dataframe.return_value = pd.DataFrame()
+            m.num_lines = 999999
+            return m
+
+        m = MagicMock()
+        m.execute = mock_execute
+        with mock.patch("nextcode.services.query.jupyter.get_queryserver", return_value=m):
             df = self.magics.gor("Hello", "World\nAnother world")
             self.assertTrue(isinstance(df, pd.DataFrame))
 

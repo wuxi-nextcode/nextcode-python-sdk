@@ -1,21 +1,14 @@
-from unittest import TestCase
 import responses
 from pathlib import Path
 from unittest.mock import patch, MagicMock, PropertyMock
-import tempfile
-import shutil
-import datetime
 import json
 import os
-import time
 from copy import deepcopy
 import tempfile
 
-from nextcode import config, Client
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.utils import decode_token, jupyter_available
 from nextcode.client import Client
-from nextcode.services.query import Service
 from nextcode.services.query.query import _log_download_progress
 
 from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP

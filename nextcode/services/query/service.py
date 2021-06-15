@@ -22,7 +22,7 @@ from ...exceptions import ServerError
 from ...client import Client
 from .exceptions import QueryError, MissingRelations, TemplateError
 from .query import Query
-from .utils import get_fingerprint
+from .utils import extract_virtual_relations
 import nextcode
 
 SERVICE_PATH = "api/query"
@@ -30,7 +30,6 @@ SERVICE_PATH = "api/query"
 RUNNING_STATUSES = ("PENDING", "RUNNING", "CANCELLING")
 RESULTS_PAGE_SIZE = 200000
 QUERY_WAIT_SECONDS = 2
-DEFAULT_EXTENSION = ".tsv"
 
 log = logging.getLogger(__name__)
 
@@ -258,39 +257,9 @@ class Service(BaseService):
         to transition to a completed status. Therefore, most small queries will return in DONE status.
         """
         self._check_project()
-        url = self.session.endpoints["queries"]
-        _relations: List[Dict] = []
-        if relations:
-            _relations = relations
-        else:
-            for k, v in kw.items():
-                _relations.append({"name": f"[{k}]", "data": v})
 
-        payload_relations: List[Dict] = []
-        for r in _relations:
-            if "data" not in r or "name" not in r:
-                raise QueryError("Virtual relations must have name and data fields")
-            name = r["name"]
-            data = r["data"]
+        payload_relations = extract_virtual_relations(kw, relations)
 
-            if hasattr(data, "to_csv"):
-                data = data.to_csv(index=False, sep="\t")
-            if not isinstance(data, str):
-                raise QueryError(f"Virtual relation data for {name} must be a string")
-
-            if not data.startswith("#"):
-                data = "#" + data
-
-            fingerprint = r.get("fingerprint") or get_fingerprint(data)
-            extension = r.get("extension") or DEFAULT_EXTENSION
-            payload_relations.append(
-                {
-                    "name": name,
-                    "fingerprint": fingerprint,
-                    "extension": extension,
-                    "data": data,
-                }
-            )
         payload: Dict[str, Optional[Union[int, str, List[Any], Dict]]] = {
             "project": self.project,
             "query": query,
@@ -300,6 +269,8 @@ class Service(BaseService):
             "metadata": self.metadata,
             "type": job_type or "default",
         }
+
+        url = self.session.endpoints["queries"]
         try:
             resp = self.session.post(url, json=payload)
         except ServerError as ex:
