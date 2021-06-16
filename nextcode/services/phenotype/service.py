@@ -132,15 +132,35 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
-    def get_phenotypes(self, tags: List[str] = [], limit: int = 100, playlist=None, return_type="list") -> List[Phenotype]:
+    def get_phenotypes(
+            self,
+            all_tags: List[str] = [],
+            any_tags: List[str] = [],
+            categories: List[str] = [],
+            limit: int = 100,
+            states: List[str] = [],
+            search: str = None,
+            playlist: int = None,
+            updated_at: str = None,
+            result_types: List[str] = [],
+            return_type="list"
+        ) -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
         The API paginates results on the `limit` parameter,
         this method handles the pagination transparently to fetch all results.
 
-        :param tags: Optional list of tags to filter for
+        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
+        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
+        :param categories: Only fetch phenotypes in the given list of categories
         :param limit: Maximum number of results (default: 100)
-        :return: List of phenotypes
+        :param states: Only fetch phenotypes in the given list of states
+        :param search: String of keywords to search for in phenotypes, such as name, categories and tags
+        :param playlist: Fetch a specific playlist of phenotypes by the playlist id
+        :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
+        :param result_types: Only fetch phenotypes in the given list of result types
+        :param return_type: list (default) to return a python list of phenotypes, dataframe to return a pandas dataframe of phenotypes
+        :return: List of phenotypes unles return_type is 'dataframe' then return a pandas dataframe
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
@@ -153,9 +173,34 @@ class Service(BaseService):
         if playlist:
             url = urljoin(self.links["self"], "playlists", str(playlist))
 
+        if all_tags:
+            all_tags = ','.join(all_tags)
+
+        if any_tags:
+            any_tags = ','.join(any_tags)
+
+        if categories:
+            categories = ','.join(categories)
+
+        if result_types:
+            result_types = ','.join(result_types)
+
+        if states:
+            states = ','.join(states)
+
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
-            content = {"with_all_tags": tags, "limit": limit, "offset": offset}
+            content = {
+                "with_all_tags": all_tags,
+                "with_any_tags": any_tags,
+                "limit": limit,
+                "offset": offset,
+                "category": categories,
+                "search": search,
+                "state": states,
+                "updated_at": updated_at,
+                "result_type": result_types
+            }
             resp = self.session.get(url, data=content)
 
             if playlist:
