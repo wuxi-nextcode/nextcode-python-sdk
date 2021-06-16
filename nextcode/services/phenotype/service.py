@@ -134,7 +134,8 @@ class Service(BaseService):
 
     def get_phenotypes(
             self,
-            tags: List[str] = [],
+            all_tags: List[str] = [],
+            any_tags: List[str] = [],
             categories: List[str] = [],
             limit: int = 100,
             states: List[str] = [],
@@ -149,7 +150,8 @@ class Service(BaseService):
         The API paginates results on the `limit` parameter,
         this method handles the pagination transparently to fetch all results.
 
-        :param tags: Optional list of tags to filter for
+        :param all_tags: Filter phenotypes that have all the tags in this list
+        :param any_tags: Filter phenotypes that have any of the tags in this list
         :param limit: Maximum number of results (default: 100)
         :return: List of phenotypes
         :raises: `PhenotypeError` if the project does not exist
@@ -164,8 +166,11 @@ class Service(BaseService):
         if playlist:
             url = urljoin(self.links["self"], "playlists", str(playlist))
 
-        if tags:
-            tags = ','.join(tags)
+        if all_tags:
+            all_tags = ','.join(all_tags)
+
+        if any_tags:
+            any_tags = ','.join(any_tags)
 
         if categories:
             categories = ','.join(categories)
@@ -179,7 +184,8 @@ class Service(BaseService):
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
             content = {
-                "with_all_tags": tags,
+                "with_all_tags": all_tags,
+                "with_any_tags": any_tags,
                 "limit": limit,
                 "offset": offset,
                 "category": categories,
