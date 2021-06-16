@@ -124,9 +124,7 @@ class ServiceSession(requests.Session):
 
         # method: GET
         old_content_type = self.headers["Content-Type"]
-        if "headers" in kwargs:
-            self.headers.update(kwargs["headers"])
-
+        
         if method == "get":
             # ! Temporary hack: Remove the application/json content-type header for GET's
             del self.headers["Content-Type"]
