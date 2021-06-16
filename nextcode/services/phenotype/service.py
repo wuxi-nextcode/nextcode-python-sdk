@@ -139,6 +139,7 @@ class Service(BaseService):
             limit: int = 100,
             search: str = None,
             playlist=None,
+            result_types: List[str] = [],
             return_type="list"
         ) -> List[Phenotype]:
         """
@@ -167,9 +168,19 @@ class Service(BaseService):
         if categories:
             categories = ','.join(categories)
 
+        if result_types:
+            result_types = ','.join(result_types)
+
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
-            content = {"with_all_tags": tags, "limit": limit, "offset": offset, "category": categories, "search": search}
+            content = {
+                "with_all_tags": tags,
+                "limit": limit,
+                "offset": offset,
+                "category": categories,
+                "search": search,
+                "result_type": result_types
+            }
             resp = self.session.get(url, data=content)
 
             if playlist:
