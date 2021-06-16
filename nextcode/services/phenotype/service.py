@@ -133,12 +133,13 @@ class Service(BaseService):
         return resp.json()["tags"]
 
     def get_phenotypes(
-        self,
-        tags: List[str] = [],
-        categories: List[str] = [],
-        limit: int = 100,
-        playlist=None,
-        return_type="list"
+            self,
+            tags: List[str] = [],
+            categories: List[str] = [],
+            limit: int = 100,
+            search: str = None,
+            playlist=None,
+            return_type="list"
         ) -> List[Phenotype]:
         """
         A list of all the phenotypes in the current project.
@@ -168,7 +169,7 @@ class Service(BaseService):
 
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
-            content = {"with_all_tags": tags, "limit": limit, "offset": offset, "category": categories}
+            content = {"with_all_tags": tags, "limit": limit, "offset": offset, "category": categories, "search": search}
             resp = self.session.get(url, data=content)
 
             if playlist:
