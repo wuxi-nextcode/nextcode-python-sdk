@@ -137,6 +137,7 @@ class Service(BaseService):
             tags: List[str] = [],
             categories: List[str] = [],
             limit: int = 100,
+            states: List[str] = [],
             search: str = None,
             playlist: str = None,
             updated_at: str = None,
@@ -172,6 +173,9 @@ class Service(BaseService):
         if result_types:
             result_types = ','.join(result_types)
 
+        if states:
+            states = ','.join(states)
+
         def do_get(offset=0):
             # This local method fetches paginated results from `offset` to limit
             content = {
@@ -180,6 +184,7 @@ class Service(BaseService):
                 "offset": offset,
                 "category": categories,
                 "search": search,
+                "state": states,
                 "updated_at": updated_at,
                 "result_type": result_types
             }
