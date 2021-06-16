@@ -138,7 +138,8 @@ class Service(BaseService):
             categories: List[str] = [],
             limit: int = 100,
             search: str = None,
-            playlist=None,
+            playlist: str = None,
+            updated_at: str = None,
             result_types: List[str] = [],
             return_type="list"
         ) -> List[Phenotype]:
@@ -179,6 +180,7 @@ class Service(BaseService):
                 "offset": offset,
                 "category": categories,
                 "search": search,
+                "updated_at": updated_at,
                 "result_type": result_types
             }
             resp = self.session.get(url, data=content)
