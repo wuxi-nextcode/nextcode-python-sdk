@@ -140,7 +140,7 @@ class Service(BaseService):
             limit: int = 100,
             states: List[str] = [],
             search: str = None,
-            playlist: str = None,
+            playlist: int = None,
             updated_at: str = None,
             result_types: List[str] = [],
             return_type="list"
@@ -150,10 +150,17 @@ class Service(BaseService):
         The API paginates results on the `limit` parameter,
         this method handles the pagination transparently to fetch all results.
 
-        :param all_tags: Filter phenotypes that have all the tags in this list
-        :param any_tags: Filter phenotypes that have any of the tags in this list
+        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
+        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
+        :param categories: Only fetch phenotypes in the given list of categories
         :param limit: Maximum number of results (default: 100)
-        :return: List of phenotypes
+        :param states: Only fetch phenotypes in the given list of states
+        :param search: String of keywords to search for in phenotypes, such as name, categories and tags
+        :param playlist: Fetch a specific playlist of phenotypes by the playlist id
+        :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
+        :param result_types: Only fetch phenotypes in the given list of result types
+        :param return_type: list (default) to return a python list of phenotypes, dataframe to return a pandas dataframe of phenotypes
+        :return: List of phenotypes unles return_type is 'dataframe' then return a pandas dataframe
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
