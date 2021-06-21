@@ -214,10 +214,11 @@ class Service(BaseService):
         # Loop to fetch the entire results, combining the paginated results
         while True:
             data = do_get(offset)
-            offset = len(data)
+            results = len(data)
             combined_data += data
+            offset += results
 
-            if offset < limit:
+            if results < limit:
                 break
 
         phenotypes = []
