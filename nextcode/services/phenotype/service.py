@@ -25,6 +25,20 @@ log = logging.getLogger(__file__)
 
 SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
+def _get_paginated_results(method, limit):
+    offset = 0
+    combined_data = []
+    # Loop to fetch the entire results, combining the paginated results
+    while True:
+        data = method(offset)
+        results = len(data)
+        combined_data += data
+        offset += results
+
+        if results < limit:
+            break
+    return combined_data
+
 
 class Service(BaseService):
     """
@@ -209,17 +223,7 @@ class Service(BaseService):
                 data = resp.json()["phenotypes"]
             return data
 
-        offset = 0
-        combined_data = []
-        # Loop to fetch the entire results, combining the paginated results
-        while True:
-            data = do_get(offset)
-            results = len(data)
-            combined_data += data
-            offset += results
-
-            if results < limit:
-                break
+        combined_data = _get_paginated_results(do_get, limit)
 
         phenotypes = []
         if return_type == "dataframe":
@@ -409,17 +413,7 @@ class Service(BaseService):
             data = resp.json()['covariates']
             return data
 
-        offset = 0
-        combined_data = []
-        # Loop to fetch the entire results, combining the paginated results
-        while True:
-            data = do_get(offset)
-            results = len(data)
-            combined_data += data
-            offset += results
-
-            if results < limit:
-                break
+        combined_data = _get_paginated_results(do_get, limit)
 
         return combined_data
 
