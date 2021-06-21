@@ -397,3 +397,43 @@ class Service(BaseService):
         else:
             data = resp.json()["playlist"]
         return Playlist(self.session, data)
+
+    def get_covariates(self, limit=100):
+        """
+        Get all covariates in current project
+        """
+        url = urljoin(self.links['self'], 'covariates')
+        def do_get(offset=0):
+            content = {'limit': limit, 'offset': offset}
+            resp = self.session.get(url, data=content)
+            data = resp.json()['covariates']
+            return data
+
+        offset = 0
+        combined_data = []
+        # Loop to fetch the entire results, combining the paginated results
+        while True:
+            data = do_get(offset)
+            results = len(data)
+            combined_data += data
+            offset += results
+
+            if results < limit:
+                break
+
+        return combined_data
+
+    def get_covariate(self, id):
+        """
+        Get a single covariate by its id
+        """
+        url = urljoin(self.links['self'], 'covariates', str(id))
+        try:
+            resp = self.session.get(url)
+        except ServerError as ex:
+            if ex.response and ex.response['code'] == codes.not_found:
+                raise PhenotypeError(f"Covariate not found") from None
+            else:
+                raise ex
+        data = resp.json()['covariate']
+        return data
