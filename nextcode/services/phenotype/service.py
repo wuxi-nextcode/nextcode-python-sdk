@@ -157,12 +157,9 @@ class Service(BaseService):
             playlist: int = None,
             updated_at: str = None,
             result_types: List[str] = [],
-            return_type="list"
         ) -> List[Phenotype]:
         """
-        A list of all the phenotypes in the current project.
-        The API paginates results on the `limit` parameter,
-        this method handles the pagination transparently to fetch all results.
+        Get all phenotypes in the current project as a list of Phenotypes.
 
         :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
         :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
@@ -173,8 +170,139 @@ class Service(BaseService):
         :param playlist: Fetch a specific playlist of phenotypes by the playlist id
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
-        :param return_type: list (default) to return a python list of phenotypes, dataframe to return a pandas dataframe of phenotypes
-        :return: List of phenotypes unless return_type is 'dataframe' then return pandas dataframe or 'matrix' then return a PhenotypeMatrix
+        :return: List of Phenotype
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+        combined_data = self._get_phenotypes(
+            all_tags,
+            any_tags,
+            categories,
+            limit,
+            states,
+            search,
+            playlist,
+            updated_at,
+            result_types
+        )
+        phenotypes = []
+        for item in combined_data:
+            phenotypes.append(Phenotype(self.session, item))
+        return phenotypes
+
+    def get_phenotypes_matrix(
+            self,
+            all_tags: List[str] = [],
+            any_tags: List[str] = [],
+            categories: List[str] = [],
+            limit: int = 100,
+            states: List[str] = [],
+            search: str = None,
+            playlist: int = None,
+            updated_at: str = None,
+            result_types: List[str] = [],
+        ) -> List[Phenotype]:
+        """
+        Get all phenotypes in the current project as a PhenotypeMatrix.
+
+        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
+        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
+        :param categories: Only fetch phenotypes in the given list of categories
+        :param limit: Maximum number of results (default: 100)
+        :param states: Only fetch phenotypes in the given list of states
+        :param search: String of keywords to search for in phenotypes, such as name, categories and tags
+        :param playlist: Fetch a specific playlist of phenotypes by the playlist id
+        :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
+        :param result_types: Only fetch phenotypes in the given list of result types
+        :return: Phenotypes as PhenotypeMatrix
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+        combined_data = self._get_phenotypes(
+            all_tags,
+            any_tags,
+            categories,
+            limit,
+            states,
+            search,
+            playlist,
+            updated_at,
+            result_types
+        )
+        matrix = PhenotypeMatrix(self)
+        for item in combined_data:
+            matrix.add_phenotype(Phenotype(self.session, item))
+        return matrix
+
+    def get_phenotypes_dataframe(
+            self,
+            all_tags: List[str] = [],
+            any_tags: List[str] = [],
+            categories: List[str] = [],
+            limit: int = 100,
+            states: List[str] = [],
+            search: str = None,
+            playlist: int = None,
+            updated_at: str = None,
+            result_types: List[str] = []
+        ) -> List[Phenotype]:
+        """
+        Get all phenotypes in the current project as a pandas DataFrame.
+
+        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
+        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
+        :param categories: Only fetch phenotypes in the given list of categories
+        :param limit: Maximum number of results (default: 100)
+        :param states: Only fetch phenotypes in the given list of states
+        :param search: String of keywords to search for in phenotypes, such as name, categories and tags
+        :param playlist: Fetch a specific playlist of phenotypes by the playlist id
+        :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
+        :param result_types: Only fetch phenotypes in the given list of result types
+        :return: Phenotypes as pandas dataframe
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+        combined_data = self._get_phenotypes(
+            all_tags,
+            any_tags,
+            categories,
+            limit,
+            states,
+            search,
+            playlist,
+            updated_at,
+            result_types
+        )
+        import pandas
+        dataframe = pandas.DataFrame(combined_data)
+        return dataframe
+
+    def _get_phenotypes(
+            self,
+            all_tags: List[str] = [],
+            any_tags: List[str] = [],
+            categories: List[str] = [],
+            limit: int = 100,
+            states: List[str] = [],
+            search: str = None,
+            playlist: int = None,
+            updated_at: str = None,
+            result_types: List[str] = []
+        ) -> List[Phenotype]:
+        """
+        Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`
+        See documentation of those methods for more details
+
+        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags
+        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags
+        :param categories: Only fetch phenotypes in the given list of categories
+        :param limit: Maximum number of results (default: 100)
+        :param states: Only fetch phenotypes in the given list of states
+        :param search: String of keywords to search for in phenotypes, such as name, categories and tags
+        :param playlist: Fetch a specific playlist of phenotypes by the playlist id
+        :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
+        :param result_types: Only fetch phenotypes in the given list of result types
+        :return: List of phenotypes
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
@@ -224,21 +352,7 @@ class Service(BaseService):
             return data
 
         combined_data = _get_paginated_results(do_get, limit)
-
-        if return_type == "dataframe":
-            import pandas
-            dataframe = pandas.DataFrame(combined_data)
-            return dataframe
-        elif return_type == "matrix":
-            matrix = PhenotypeMatrix(self)
-            for item in combined_data:
-                matrix.add_phenotype(Phenotype(self.session, item))
-            return matrix
-        else:
-            phenotypes = []
-            for item in combined_data:
-                phenotypes.append(Phenotype(self.session, item))
-            return phenotypes
+        return combined_data
 
     def get_phenotype(self, name: str) -> Phenotype:
         """
