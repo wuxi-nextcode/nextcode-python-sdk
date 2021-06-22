@@ -25,6 +25,20 @@ log = logging.getLogger(__file__)
 
 SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
+def _get_paginated_results(method, limit):
+    offset = 0
+    combined_data = []
+    # Loop to fetch the entire results, combining the paginated results
+    while True:
+        data = method(offset)
+        results = len(data)
+        combined_data += data
+        offset += results
+
+        if results < limit:
+            break
+    return combined_data
+
 
 class Service(BaseService):
     """
@@ -209,17 +223,7 @@ class Service(BaseService):
                 data = resp.json()["phenotypes"]
             return data
 
-        offset = 0
-        combined_data = []
-        # Loop to fetch the entire results, combining the paginated results
-        while True:
-            data = do_get(offset)
-            results = len(data)
-            combined_data += data
-            offset += results
-
-            if results < limit:
-                break
+        combined_data = _get_paginated_results(do_get, limit)
 
         phenotypes = []
         if return_type == "dataframe":
@@ -397,3 +401,33 @@ class Service(BaseService):
         else:
             data = resp.json()["playlist"]
         return Playlist(self.session, data)
+
+    def get_covariates(self, limit=100):
+        """
+        Get all covariates in current project
+        """
+        url = urljoin(self.links['self'], 'covariates')
+        def do_get(offset=0):
+            content = {'limit': limit, 'offset': offset}
+            resp = self.session.get(url, data=content)
+            data = resp.json()['covariates']
+            return data
+
+        combined_data = _get_paginated_results(do_get, limit)
+
+        return combined_data
+
+    def get_covariate(self, id):
+        """
+        Get a single covariate by its id
+        """
+        url = urljoin(self.links['self'], 'covariates', str(id))
+        try:
+            resp = self.session.get(url)
+        except ServerError as ex:
+            if ex.response and ex.response['code'] == codes.not_found:
+                raise PhenotypeError(f"Covariate not found") from None
+            else:
+                raise ex
+        data = resp.json()['covariate']
+        return data
