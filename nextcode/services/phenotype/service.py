@@ -174,7 +174,7 @@ class Service(BaseService):
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
         :param return_type: list (default) to return a python list of phenotypes, dataframe to return a pandas dataframe of phenotypes
-        :return: List of phenotypes unles return_type is 'dataframe' then return a pandas dataframe
+        :return: List of phenotypes unless return_type is 'dataframe' then return pandas dataframe or 'matrix' then return a PhenotypeMatrix
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
@@ -225,14 +225,20 @@ class Service(BaseService):
 
         combined_data = _get_paginated_results(do_get, limit)
 
-        phenotypes = []
         if return_type == "dataframe":
             import pandas
-            phenotypes = pandas.DataFrame(combined_data)
+            dataframe = pandas.DataFrame(combined_data)
+            return dataframe
+        elif return_type == "matrix":
+            matrix = PhenotypeMatrix(self)
+            for item in combined_data:
+                matrix.add_phenotype(Phenotype(self.session, item))
+            return matrix
         else:
+            phenotypes = []
             for item in combined_data:
                 phenotypes.append(Phenotype(self.session, item))
-        return phenotypes
+            return phenotypes
 
     def get_phenotype(self, name: str) -> Phenotype:
         """
