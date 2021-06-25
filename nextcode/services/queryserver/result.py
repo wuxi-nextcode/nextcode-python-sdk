@@ -1,6 +1,7 @@
 """
 Query result object for Query Server queries.
 """
+import json
 import logging
 import time
 import zlib
@@ -9,11 +10,11 @@ from io import StringIO
 
 from requests import Response
 
+from nextcode.exceptions import ServerError
 from nextcode.services.query.exceptions import QueryError
 from nextcode.utils import jupyter_available
 
 log = logging.getLogger(__name__)
-
 
 class Result(object):
     """
@@ -40,7 +41,9 @@ class Result(object):
         for line in self.iter_lines_unzip(decode_unicode=False, delimiter=b'\n'):
 
             if line:
-                if line.startswith(b'#>'):
+                if line.startswith(b'#> EXCEPTION'):
+                    self.__throw_error_from_line__(line.decode('utf-8'))
+                elif line.startswith(b'#>'):
                     continue
 
                 self.num_lines += 1
@@ -118,6 +121,14 @@ class Result(object):
     def __check_open__(self):
         if not self.open:
             raise Exception("Response has been closed, data can not been accessed")
+
+    def __throw_error_from_line__(self, line):
+        if line.startswith("#> EXCEPTION") and line.find('{') > -1:
+            # Assume this is an exception from Query Server with embedded json.
+            json_ex = json.loads(line[line.find('{'):line.rfind('}')+1])
+            raise ServerError(json_ex["gorMessage"])
+        else:
+            raise ServerError("Error while running query.\n{}".format(line))
 
     ITER_CHUNK_SIZE = 512
 

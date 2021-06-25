@@ -117,14 +117,14 @@ class QueryServerTest(BaseTestCase):
 
     @responses.activate
     def test_server_error(self):
-        ret = '#> EXCEPTION {"errorType":"GorException", "message":"Error"}'
+        ret = '#> EXCEPTION {"errorType":"GorException", "gorMessage":"Error"}'
         responses.add(responses.POST, QUERIES_URL, body=ret, status=400)
         with self.assertRaisesRegex(ServerError, "Error"):
             self.svc.execute("gor x")
 
     @responses.activate
     def test_server_error_message(self):
-        ret = '#> EXCEPTION {"errorType":"GorException", "message":"Error","command":"gor x"}'
+        ret = '#> EXCEPTION {"errorType":"GorException", "gorMessage":"Error","command":"gor x"}'
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, QUERIES_URL, body=ret, status=403)
 
@@ -132,7 +132,7 @@ class QueryServerTest(BaseTestCase):
                 self.svc.execute("gor x")
                 self.fail("Should throw exception")
             except ServerError as ex:
-                self.assertEqual(ex.message, "GorException in command: gor x\nError")
+                self.assertEqual(ex.message, "Error")
 
     @responses.activate
     def test_cancel(self):

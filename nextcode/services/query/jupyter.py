@@ -9,12 +9,15 @@ Use `%env LOG_QUERY=1` in Jupyter to see details.
 import argparse
 import getopt
 import hashlib
+import threading
 import time
 import logging
 import re
 import sys
 import os
 import datetime
+import _thread
+
 import nextcode
 
 from ...exceptions import ServerError, InvalidToken
@@ -359,6 +362,8 @@ class GorMagics(Magics):
         try:
             result = None
             st = time.time()
+            t = updateStatusThread()
+            t.start()
             svc = get_queryserver()
             try:
                 result = svc.execute(gor_string, gzip=gzip)
@@ -367,12 +372,13 @@ class GorMagics(Magics):
                 result = svc.execute(gor_string, gzip=gzip, relations=relations)
 
             query_time = time.time() - st
-            print("Query ran in {:.2f} sec (gzip={})".format(time.time() - st, gzip))
+            print("Query ran in {:.2f} sec".format(time.time() - st,))
 
             MAX_ROWS = 1000000
             ret = result.dataframe(limit=MAX_ROWS)
-
-            print("Query fetched {:,} rows in {:.2f} sec".format(result.num_lines, time.time() - st - query_time))
+            end_time =  time.time()
+            print("Query fetched {:,} rows in {:.2f} sec (total time {:.2f} sec)".format(
+                result.num_lines, end_time - st - query_time, end_time - st))
 
             if return_var:
                 self.shell.user_ns[return_var] = ret
@@ -388,9 +394,43 @@ class GorMagics(Magics):
                     pass
             print_error("Query has been cancelled")
             return None
+        finally:
+            if t:
+                t.stop()
+                t.join()
 
 
-# In order to actually use these magics, you must register them with a
+class updateStatusThread (threading.Thread):
+    def __init__(self,):
+        threading.Thread.__init__(self)
+        self.stop_flag = False
+
+    def run(self):
+        start_time = time.time()
+        last_update_time = start_time
+        poll_time = 3.0  # Init poll time.
+        while True:
+            current_time = time.time()
+            if current_time > last_update_time + poll_time:
+                last_update_time = current_time
+                diff = int(current_time - start_time)
+                diff = str(datetime.timedelta(seconds=diff))
+                sys.stdout.write(f"Working for {diff}...\r")
+                sys.stdout.flush()
+                poll_time = 1.0 # Working poll time.
+
+            if self.stop_flag:
+                sys.stdout.write(f"                                             \r")
+                sys.stdout.flush()
+                break
+            time.sleep(0.1)
+
+    def stop(self):
+        self.stop_flag = True
+
+
+
+        # In order to actually use these magics, you must register them with a
 # running IPython.
 def load_ipython_extension(ipython):
     """
