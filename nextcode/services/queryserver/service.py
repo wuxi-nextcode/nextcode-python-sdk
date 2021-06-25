@@ -110,15 +110,16 @@ class Service(BaseService):
                                               "Accept": "application/octet-stream"})
             resp.raise_for_status()
         except ServerError as ex:
-            json_ex = json.loads(ex.message[ex.message.find('{'):ex.message.rfind('}')+1])
-            if "errorType" in json_ex and json_ex["errorType"] == "GorMissingRelationException":
-                raise MissingRelations(
-                    [r for r in json_ex["uri"].split(',')]
-                )
+            if ex.message.startswith("#>") and ex.message.find('{') > -1:
+                # Assume this is an exception from Query Server with embedded json.
+                json_ex = json.loads(ex.message[ex.message.find('{'):ex.message.rfind('}')+1])
+                if "errorType" in json_ex and json_ex["errorType"] == "GorMissingRelationException":
+                    raise MissingRelations(
+                        [r for r in json_ex["uri"].split(',')]
+                    )
+                else:
+                    raise ServerError(json_ex["gorMessage"])
             else:
-                raise ServerError("{} in command: {}\n{}".format(
-                    json_ex["errorType"] if "errorType" in json_ex else "Unknown error",
-                    json_ex["command"] if "command" in json_ex else "unknown command",
-                    json_ex["message"] if "message" in json_ex else "No message"))
+                raise ex
 
         return Result(resp, gzip)
