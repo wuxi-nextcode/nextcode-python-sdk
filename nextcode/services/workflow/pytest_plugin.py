@@ -95,6 +95,13 @@ def pytest_addoption(parser):
         help="Specifies the credentials to forward to workflow-service",
         default=[],
     )
+    group.addoption(
+        "--scheduler_name",
+        action="store",
+        dest="scheduler_name",
+        help="Specifies the scheduler to use in the pipeline run",
+        default=None,
+    )
     parser.addini(
         "base_upload_bucket",
         "The S3 location the result_dir parameter of the pipeline will be set to",
@@ -166,6 +173,7 @@ def run_workflow(request):
     run_id = request.config.option.run_id
     storage_type = request.config.option.storage_type
     credentials_args = request.config.option.credentials
+    scheduler_name = request.config.option.scheduler_name
     # Use the profile specified by the TestCase if it exists. Use the default profile if none is provided.
     profile = getattr(request.cls, "profile", request.config.option.profile)
     revision = None
@@ -215,6 +223,7 @@ def run_workflow(request):
         profile=profile,
         storage_type=storage_type,
         credentials=credentials,
+        scheduler_name=scheduler_name,
     )
 
     last_status = ""

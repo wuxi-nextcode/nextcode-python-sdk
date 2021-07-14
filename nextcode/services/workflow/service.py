@@ -187,6 +187,7 @@ class Service(BaseService):
         keep_resources: Optional[bool] = None,
         mount_jobs: Optional[List[int]] = None,
         credentials: Optional[Dict] = None,
+        scheduler_name: Optional[str] = None,
     ):
         """
         Run a workflow job
@@ -224,6 +225,8 @@ class Service(BaseService):
                 'aws_secret_access_key': 'k6q5...'
             }
         }
+        :param scheduler_name: Optional string specifying the scheduler to use. If not specified, the default scheduler
+               will be used
         """
         if not project_name:
             project_name = os.environ.get("GOR_API_PROJECT")
@@ -234,7 +237,7 @@ class Service(BaseService):
         log.debug(
             "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, "
             "build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s, "
-            "storage_type=%s, dedicated_storage_size=%s, mount_jobs=%s",
+            "storage_type=%s, dedicated_storage_size=%s, mount_jobs=%s scheduler_name=%s",
             pipeline_name,
             project_name,
             params,
@@ -249,6 +252,7 @@ class Service(BaseService):
             storage_type,
             dedicated_storage_size,
             mount_jobs,
+            scheduler_name,
         )
         data: Dict = {
             "pipeline_name": pipeline_name,
@@ -278,6 +282,8 @@ class Service(BaseService):
             data["keep_resources"] = keep_resources
         if mount_jobs:
             data["mount_jobs"] = mount_jobs
+        if scheduler_name:
+            data["scheduler_name"] = scheduler_name
 
         endpoint = self.session.url_from_endpoint("jobs")
 

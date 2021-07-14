@@ -247,6 +247,7 @@ class WorkflowTest(BaseTestCase):
         build_context = None
         profile = "test"
         storage_type = "dedicated"
+        scheduler_name = "custom-scheduler"
 
         job = self.svc.post_job(
             pipeline_name,
@@ -258,6 +259,7 @@ class WorkflowTest(BaseTestCase):
             build_context,
             profile,
             storage_type,
+            scheduler_name,
         )
         self.assertEqual(666, job.job_id)
 
@@ -280,6 +282,7 @@ class WorkflowTest(BaseTestCase):
                 "aws_secret_access_key": "Aj39sadfljhdslafjasls",
             }
         }
+        scheduler_name = "custom-scheduler"
 
         job = self.svc.post_job(
             pipeline_name,
@@ -292,6 +295,7 @@ class WorkflowTest(BaseTestCase):
             profile,
             storage_type,
             credentials,
+            scheduler_name,
         )
         self.assertEqual(666, job.job_id)
 
