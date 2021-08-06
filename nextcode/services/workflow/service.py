@@ -188,6 +188,7 @@ class Service(BaseService):
         mount_jobs: Optional[List[int]] = None,
         credentials: Optional[Dict] = None,
         scheduler_name: Optional[str] = None,
+        features: Optional[Dict] = None
     ):
         """
         Run a workflow job
@@ -227,6 +228,7 @@ class Service(BaseService):
         }
         :param scheduler_name: Optional string specifying the scheduler to use. If not specified, the default scheduler
                will be used
+        :param features: Extra parameters to pass to workflow-service to turn features on/off
         """
         if not project_name:
             project_name = os.environ.get("GOR_API_PROJECT")
@@ -254,7 +256,7 @@ class Service(BaseService):
             mount_jobs,
             scheduler_name,
         )
-        data: Dict = {
+        data = {
             "pipeline_name": pipeline_name,
             "project_name": project_name,
             "parameters": params,
@@ -265,6 +267,7 @@ class Service(BaseService):
             "details": details,
             "description": description,
             "context": context,
+            "features": features
         }
         if storage_type:
             data["storage_type"] = storage_type
