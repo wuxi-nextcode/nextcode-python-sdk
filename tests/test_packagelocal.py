@@ -1,19 +1,10 @@
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
-import responses
 
 from nextcode import config, Client
-from nextcode.session import ServiceSession
-from nextcode.exceptions import (
-    InvalidToken,
-    InvalidProfile,
-    ServiceNotFound,
-    ServerError,
-)
-from nextcode.utils import decode_token, check_resp_error
 from nextcode.packagelocal import package_and_upload
 from nextcode.exceptions import UploadError
-from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP
+from tests import BaseTestCase
 
 import logging
 
