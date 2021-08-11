@@ -96,7 +96,9 @@ def _package_and_upload(
         for filename in filenames:
             if not filename.startswith("."):
                 full_filename = os.path.join(root, filename)
-                files.append(full_filename)
+                # ignore symlinks
+                if not os.path.islink(full_filename):
+                    files.append(full_filename)
 
     for f in files:
         write_filename = f.replace(project_path, "")
