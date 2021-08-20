@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>nextcode.services.query.service &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -129,7 +129,7 @@
 <span class="kn">from</span> <span class="nn">...client</span> <span class="kn">import</span> <span class="n">Client</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">QueryError</span><span class="p">,</span> <span class="n">MissingRelations</span><span class="p">,</span> <span class="n">TemplateError</span>
 <span class="kn">from</span> <span class="nn">.query</span> <span class="kn">import</span> <span class="n">Query</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">get_fingerprint</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">extract_virtual_relations</span>
 <span class="kn">import</span> <span class="nn">nextcode</span>
 
 <span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s2">&quot;api/query&quot;</span>
@@ -137,7 +137,6 @@
 <span class="n">RUNNING_STATUSES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PENDING&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span> <span class="s2">&quot;CANCELLING&quot;</span><span class="p">)</span>
 <span class="n">RESULTS_PAGE_SIZE</span> <span class="o">=</span> <span class="mi">200000</span>
 <span class="n">QUERY_WAIT_SECONDS</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">DEFAULT_EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;.tsv&quot;</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -365,39 +364,9 @@
 <span class="sd">        to transition to a completed status. Therefore, most small queries will return in DONE status.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_project</span><span class="p">()</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span>
-        <span class="n">_relations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">relations</span><span class="p">:</span>
-            <span class="n">_relations</span> <span class="o">=</span> <span class="n">relations</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">_relations</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">})</span>
 
-        <span class="n">payload_relations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">_relations</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span> <span class="ow">or</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="s2">&quot;Virtual relations must have name and data fields&quot;</span><span class="p">)</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="n">payload_relations</span> <span class="o">=</span> <span class="n">extract_virtual_relations</span><span class="p">(</span><span class="n">kw</span><span class="p">,</span> <span class="n">relations</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;to_csv&quot;</span><span class="p">):</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">QueryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Virtual relation data for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a string&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">data</span>
-
-            <span class="n">fingerprint</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_fingerprint</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">extension</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extension&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">DEFAULT_EXTENSION</span>
-            <span class="n">payload_relations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;fingerprint&quot;</span><span class="p">:</span> <span class="n">fingerprint</span><span class="p">,</span>
-                    <span class="s2">&quot;extension&quot;</span><span class="p">:</span> <span class="n">extension</span><span class="p">,</span>
-                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
         <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
             <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
@@ -407,6 +376,8 @@
             <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">job_type</span> <span class="ow">or</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
@@ -581,8 +552,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-08-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

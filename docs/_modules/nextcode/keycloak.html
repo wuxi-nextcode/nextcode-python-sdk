@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.keycloak &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>nextcode.keycloak &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -399,6 +399,64 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="p">,</span>
         <span class="p">)</span>
 
+<div class="viewcode-block" id="KeycloakSession.get_user_client_roles"><a class="viewcode-back" href="../../api_basic.html#nextcode.keycloak.KeycloakSession.get_user_client_roles">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_client_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the specified client roles for this user</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">client_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">client_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="s2">&quot;role-mappings&quot;</span><span class="p">,</span><span class="s2">&quot;clients&quot;</span><span class="p">,</span><span class="n">client_id</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">role_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">role_names</span></div>
+
+    <span class="k">def</span> <span class="nf">add_client_role_to_user</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exist_ok</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">user_client_roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_client_roles</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span><span class="n">client_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">role_name</span> <span class="ow">in</span> <span class="n">user_client_roles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exist_ok</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39; already has role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39; for client &#39;</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">client_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">client_name</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings/clients/</span><span class="si">{</span><span class="n">client_id</span><span class="si">}</span><span class="s2">/available&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">available_roles</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">role</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">available_roles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">role_name</span><span class="p">:</span>
+                <span class="n">role</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Role &#39;</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&#39; for client &#39;</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s2">&#39; is not available for user &#39;</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/role-mappings/clients&quot;</span><span class="p">,</span><span class="n">client_id</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">[</span><span class="n">role</span><span class="p">])</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Role &#39;</span><span class="si">%s</span><span class="s2">&#39; for client &#39;</span><span class="si">%s</span><span class="s2">&#39; has been added to user &#39;</span><span class="si">%s</span><span class="s2">&#39; in realm &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+            <span class="n">role_name</span><span class="p">,</span>
+            <span class="n">client_name</span><span class="p">,</span>
+            <span class="n">user_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">realm_url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;clients?clientId=</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clientId&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">client_name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">c</span>
+        <span class="k">raise</span> <span class="n">AuthServerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Client &#39;</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">login_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">login_keycloak_user</span><span class="p">(</span>
@@ -473,8 +531,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-08-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

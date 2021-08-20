@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phenotype Service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <title>Phenotype Service &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -129,8 +129,8 @@
 <h2>Service class<a class="headerlink" href="#service-class" title="Permalink to this headline">¶</a></h2>
 <p>Service object for interfacing with the Phenotype Archive API</p>
 <dl class="py class">
-<dt id="nextcode.services.phenotype.service.Service">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.service.</span></code><code class="sig-name descname"><span class="pre">Service</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.service.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>A connection to the phenotype catalog service for a specific.</p>
 <p>The project can be passed in e.g. <cite>nextcode.get_service(“phenotype”, project=myproject)</cite>
 If it is not, the GOR_API_PROJECT environment variable or current profile config will be used.
@@ -139,8 +139,8 @@ A project must be set when the service is instantiated.</p>
 method will work and the project will be created implicitly.</p>
 <p>To view available projects use the <cite>svc.all_projects</cite> dict</p>
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.create_category">
-<code class="sig-name descname"><span class="pre">create_category</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_category" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.create_category">
+<span class="sig-name descname"><span class="pre">create_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new category to this project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -153,8 +153,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.create_phenotype">
-<code class="sig-name descname"><span class="pre">create_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_phenotype" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.create_phenotype">
+<span class="sig-name descname"><span class="pre">create_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new phenotype in the current project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -178,8 +178,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.create_playlist">
-<code class="sig-name descname"><span class="pre">create_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_playlist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.create_playlist">
+<span class="sig-name descname"><span class="pre">create_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.create_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.create_playlist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new playlist in the current project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -195,9 +195,9 @@ method will work and the project will be created implicitly.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.current_user">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">current_user</span></code><a class="headerlink" href="#nextcode.services.phenotype.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.current_user">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">current_user</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#nextcode.services.phenotype.service.Service.current_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>User JWT decoded by the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -206,9 +206,9 @@ method will work and the project will be created implicitly.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.endpoints">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">endpoints</span></code><a class="headerlink" href="#nextcode.services.phenotype.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.endpoints">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">endpoints</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#nextcode.services.phenotype.service.Service.endpoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -218,8 +218,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_categories">
-<code class="sig-name descname"><span class="pre">get_categories</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_categories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_categories" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_categories">
+<span class="sig-name descname"><span class="pre">get_categories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_categories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all categories available in the system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -229,8 +229,20 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_phenotype">
-<code class="sig-name descname"><span class="pre">get_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotype" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_covariate">
+<span class="sig-name descname"><span class="pre">get_covariate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_covariate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_covariate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a single covariate by its id</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_covariates">
+<span class="sig-name descname"><span class="pre">get_covariates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_covariates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_covariates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all covariates in current project</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_phenotype">
+<span class="sig-name descname"><span class="pre">get_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a specific phenotype in the current project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -252,8 +264,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_phenotype_matrix">
-<code class="sig-name descname"><span class="pre">get_phenotype_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotype_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotype_matrix" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_phenotype_matrix">
+<span class="sig-name descname"><span class="pre">get_phenotype_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotype_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotype_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a phenotype matrix object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -275,21 +287,28 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_phenotypes">
-<code class="sig-name descname"><span class="pre">get_phenotypes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of all the phenotypes in the current project.</p>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_phenotypes">
+<span class="sig-name descname"><span class="pre">get_phenotypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">any_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all phenotypes in the current project as a list of Phenotypes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Optional list of tags to filter for</p></li>
+<li><p><strong>all_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that have all tags in the given list of tags</p></li>
+<li><p><strong>any_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Fetch phenotypes that have any of the tags in the given list of tags</p></li>
+<li><p><strong>categories</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of categories</p></li>
 <li><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Maximum number of results (default: 100)</p></li>
+<li><p><strong>states</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of states</p></li>
+<li><p><strong>search</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String of keywords to search for in phenotypes, such as name, categories and tags</p></li>
+<li><p><strong>playlist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Fetch a specific playlist of phenotypes by the playlist id</p></li>
+<li><p><strong>updated_at</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</p></li>
+<li><p><strong>result_types</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of result types</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#nextcode.services.phenotype.phenotype.Phenotype" title="nextcode.services.phenotype.phenotype.Phenotype"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phenotype</span></code></a>]</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of phenotypes</p>
+<dd class="field-odd"><p>List of Phenotype</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
@@ -301,28 +320,100 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_playlist">
-<code class="sig-name descname"><span class="pre">get_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlist" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list a single playlist in the current project based on the id.</p>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_phenotypes_dataframe">
+<span class="sig-name descname"><span class="pre">get_phenotypes_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">any_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotypes_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotypes_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all phenotypes in the current project as a pandas DataFrame.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Playlist</span></code></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that have all tags in the given list of tags</p></li>
+<li><p><strong>any_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Fetch phenotypes that have any of the tags in the given list of tags</p></li>
+<li><p><strong>categories</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of categories</p></li>
+<li><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Maximum number of results (default: 100)</p></li>
+<li><p><strong>states</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of states</p></li>
+<li><p><strong>search</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String of keywords to search for in phenotypes, such as name, categories and tags</p></li>
+<li><p><strong>playlist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Fetch a specific playlist of phenotypes by the playlist id</p></li>
+<li><p><strong>updated_at</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</p></li>
+<li><p><strong>result_types</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of result types</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A single playlist</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#nextcode.services.phenotype.phenotype.Phenotype" title="nextcode.services.phenotype.phenotype.Phenotype"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phenotype</span></code></a>]</p>
 </dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Phenotypes as pandas dataframe</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p>ServerError</p>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>ServerError</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_playlists">
-<code class="sig-name descname"><span class="pre">get_playlists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlists" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_phenotypes_matrix">
+<span class="sig-name descname"><span class="pre">get_phenotypes_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">any_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_phenotypes_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_phenotypes_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all phenotypes in the current project as a PhenotypeMatrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that have all tags in the given list of tags</p></li>
+<li><p><strong>any_tags</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Fetch phenotypes that have any of the tags in the given list of tags</p></li>
+<li><p><strong>categories</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of categories</p></li>
+<li><p><strong>limit</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Maximum number of results (default: 100)</p></li>
+<li><p><strong>states</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of states</p></li>
+<li><p><strong>search</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String of keywords to search for in phenotypes, such as name, categories and tags</p></li>
+<li><p><strong>playlist</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Fetch a specific playlist of phenotypes by the playlist id</p></li>
+<li><p><strong>updated_at</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</p></li>
+<li><p><strong>result_types</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Only fetch phenotypes in the given list of result types</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#nextcode.services.phenotype.phenotype.Phenotype" title="nextcode.services.phenotype.phenotype.Phenotype"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phenotype</span></code></a>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Phenotypes as PhenotypeMatrix</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>ServerError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_playlist">
+<span class="sig-name descname"><span class="pre">get_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list a single playlist in the current project based on the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Specify the playlist to get by its id</p></li>
+<li><p><strong>name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Retrieve a playlist by its unique name within project</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Playlist</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A single playlist</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><cite>PhenotypeError</cite> if the project does not exist</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>ServerError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_playlists">
+<span class="sig-name descname"><span class="pre">get_playlists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_playlists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_playlists" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all the playlists in the current project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -344,8 +435,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.get_tags">
-<code class="sig-name descname"><span class="pre">get_tags</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_tags" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.get_tags">
+<span class="sig-name descname"><span class="pre">get_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/service.html#Service.get_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.service.Service.get_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all tags available in the system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -355,8 +446,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.healthy">
-<code class="sig-name descname"><span class="pre">healthy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.healthy">
+<span class="sig-name descname"><span class="pre">healthy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.healthy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the service healthy?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -366,8 +457,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.openapi_spec">
-<code class="sig-name descname"><span class="pre">openapi_spec</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.openapi_spec">
+<span class="sig-name descname"><span class="pre">openapi_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.openapi_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raw openapi spec for the service</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -377,8 +468,8 @@ method will work and the project will be created implicitly.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.service.Service.status">
-<code class="sig-name descname"><span class="pre">status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.status" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.service.Service.status">
+<span class="sig-name descname"><span class="pre">status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.service.Service.status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service information from the root endpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -394,8 +485,8 @@ method will work and the project will be created implicitly.</p>
 <h2>Phenotype<a class="headerlink" href="#phenotype" title="Permalink to this headline">¶</a></h2>
 <p>Representation of a serverside phenotype.</p>
 <dl class="py class">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.phenotype.</span></code><code class="sig-name descname"><span class="pre">Phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.phenotype.</span></span><span class="sig-name descname"><span class="pre">Phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>A local object representing a phenotype response from the phenotype
 catalog service.</p>
 <p>Note that most of the attributes come directly from the phenotype
@@ -414,8 +505,8 @@ Please refer to the API Documentation for the phenotype catalog service.</p>
 <p>To intraspect the data you can call <cite>phenotype.data.keys()</cite>. Each key
 in the <cite>data</cite> dict is exposed as an attribute with intelligent type casting.</p>
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.add_tag">
-<code class="sig-name descname"><span class="pre">add_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.add_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.add_tag" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.add_tag">
+<span class="sig-name descname"><span class="pre">add_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.add_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.add_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new tag to this phenotype.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -425,8 +516,8 @@ in the <cite>data</cite> dict is exposed as an attribute with intelligent type c
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.delete">
-<code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.delete" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a phenotype, including all data from a project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -436,8 +527,8 @@ in the <cite>data</cite> dict is exposed as an attribute with intelligent type c
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.delete_tag">
-<code class="sig-name descname"><span class="pre">delete_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.delete_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.delete_tag" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.delete_tag">
+<span class="sig-name descname"><span class="pre">delete_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.delete_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.delete_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a tag from the phenotype.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -447,32 +538,32 @@ in the <cite>data</cite> dict is exposed as an attribute with intelligent type c
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.get_tags">
-<code class="sig-name descname"><span class="pre">get_tags</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.get_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.get_tags" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.get_tags">
+<span class="sig-name descname"><span class="pre">get_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.get_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.get_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve all tags for this phenotype</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.refresh">
-<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.refresh" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh the local cache</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.set_tags">
-<code class="sig-name descname"><span class="pre">set_tags</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.set_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.set_tags" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.set_tags">
+<span class="sig-name descname"><span class="pre">set_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.set_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.set_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the tag list for this phenotype, overriding all previous tags</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.update_description">
-<code class="sig-name descname"><span class="pre">update_description</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.update_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.update_description" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.update_description">
+<span class="sig-name descname"><span class="pre">update_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.update_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.update_description" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the phenotype with a new description</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype.Phenotype.upload">
-<code class="sig-name descname"><span class="pre">upload</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.upload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.upload" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype.Phenotype.upload">
+<span class="sig-name descname"><span class="pre">upload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype.html#Phenotype.upload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype.Phenotype.upload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload phenotype data</p>
 <p>The data is expected to be a list of lists.
 e.g. <cite>phenotype.upload([[‘a’], [‘b’]])</cite>.
@@ -493,15 +584,15 @@ if each sublist should contain one or two items.</p>
 <p>A builder that allows the user to set up a
 request for a phenotype matrix.</p>
 <dl class="py class">
-<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.phenotype_matrix.</span></code><code class="sig-name descname"><span class="pre">PhenotypeMatrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.phenotype_matrix.</span></span><span class="sig-name descname"><span class="pre">PhenotypeMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>A builder to create a phenotype matrix request.</p>
 <p>You start by using add_phenotype() or add_phenotypes()
 to add a list of phenotypes and then call get_data()
 to retrieve the phenotype matrix from the server.</p>
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype">
-<code class="sig-name descname"><span class="pre">add_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype">
+<span class="sig-name descname"><span class="pre">add_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new phenotype to the matrix request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -518,8 +609,8 @@ to retrieve the phenotype matrix from the server.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes">
-<code class="sig-name descname"><span class="pre">add_phenotypes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes">
+<span class="sig-name descname"><span class="pre">add_phenotypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.add_phenotypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.add_phenotypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a list of phenotypes to the matrix request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -535,8 +626,8 @@ to retrieve the phenotype matrix from the server.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data">
-<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a phenotype matrix from the server.</p>
 <p>Can be called after phenotypes have been added to the request.</p>
 <dl class="field-list simple">
@@ -556,8 +647,8 @@ to retrieve the phenotype matrix from the server.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype">
-<code class="sig-name descname"><span class="pre">remove_phenotype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.remove_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype">
+<span class="sig-name descname"><span class="pre">remove_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/phenotype/phenotype_matrix.html#PhenotypeMatrix.remove_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.phenotype_matrix.PhenotypeMatrix.remove_phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a phenotype from the matrix request.</p>
 <p>Does not fail if the phenotype is not present.</p>
 <dl class="field-list simple">
@@ -577,11 +668,11 @@ to retrieve the phenotype matrix from the server.</p>
 <h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Custom exceptions raised by the phenotype service.</p>
 <dl class="py exception">
-<dt id="nextcode.services.phenotype.exceptions.PhenotypeError">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.exceptions.</span></code><code class="sig-name descname"><span class="pre">PhenotypeError</span></code><a class="reference internal" href="_modules/nextcode/services/phenotype/exceptions.html#PhenotypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.exceptions.PhenotypeError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.exceptions.PhenotypeError">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.services.phenotype.exceptions.</span></span><span class="sig-name descname"><span class="pre">PhenotypeError</span></span><a class="reference internal" href="_modules/nextcode/services/phenotype/exceptions.html#PhenotypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.phenotype.exceptions.PhenotypeError" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="nextcode.services.phenotype.exceptions.PhenotypeError.with_traceback">
-<code class="sig-name descname"><span class="pre">with_traceback</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.exceptions.PhenotypeError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.services.phenotype.exceptions.PhenotypeError.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.phenotype.exceptions.PhenotypeError.with_traceback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception.with_traceback(tb) –
 set self.__traceback__ to tb and return self.</p>
 </dd></dl>
@@ -611,8 +702,8 @@ set self.__traceback__ to tb and return self.</p>
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-08-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>
