@@ -123,6 +123,11 @@ class KeycloakTest(BaseTestCase):
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm/composite",
                 json.dumps(roles_response),
             )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                json.dumps({"realmMappings": roles_response}),
+            )
 
             rsps.add(
                 responses.DELETE,
@@ -154,6 +159,11 @@ class KeycloakTest(BaseTestCase):
                 responses.GET,
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm/composite",
                 json.dumps(roles_response),
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                json.dumps({"realmMappings": roles_response}),
             )
             rsps.add(
                 responses.GET,
