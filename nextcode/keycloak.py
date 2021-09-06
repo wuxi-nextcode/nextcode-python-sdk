@@ -175,14 +175,14 @@ class KeycloakSession:
 
     def get_user_roles(self, user_name: str) -> List[str]:
         """
-        Get the realm roles for this user, ignoring client-specific roles
+        Get the effective realm roles for this user, ignoring client-specific roles
         """
         user_id = self.get_user(user_name)["id"]
-        url = urljoin(self.realm_url, "users", str(user_id), "role-mappings")
+        url = urljoin(self.realm_url, f"users/{user_id}/role-mappings/realm/composite")
         resp = self.session.get(url)
         resp.raise_for_status()
         roles = resp.json()
-        role_names = [r["name"] for r in roles.get("realmMappings", [])]
+        role_names = [r["name"] for r in roles]
         return role_names
 
     def create_user(

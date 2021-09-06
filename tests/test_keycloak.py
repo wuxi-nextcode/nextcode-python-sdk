@@ -112,7 +112,7 @@ class KeycloakTest(BaseTestCase):
             session.remove_user(user_name)
 
         with responses.RequestsMock() as rsps:
-            roles_response = {"realmMappings": [{"name": "bla"}]}
+            roles_response = [{"name": "bla"}]
             rsps.add(
                 responses.GET,
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username={user_name}",
@@ -120,8 +120,13 @@ class KeycloakTest(BaseTestCase):
             )
             rsps.add(
                 responses.GET,
-                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm/composite",
                 json.dumps(roles_response),
+            )
+            rsps.add(
+                responses.GET,
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                json.dumps({"realmMappings": roles_response}),
             )
 
             rsps.add(
@@ -134,7 +139,7 @@ class KeycloakTest(BaseTestCase):
             session.remove_role_from_user(user_name, "bla")
 
         with responses.RequestsMock() as rsps:
-            roles_response = {"realmMappings": []}
+            roles_response = []
             rsps.add(
                 responses.GET,
                 f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users?username={user_name}",
@@ -152,7 +157,7 @@ class KeycloakTest(BaseTestCase):
             )
             rsps.add(
                 responses.GET,
-                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings",
+                f"https://{ROOT_URL}/auth/admin/realms/{DEFAULT_REALM}/users/{user_id}/role-mappings/realm/composite",
                 json.dumps(roles_response),
             )
             rsps.add(
