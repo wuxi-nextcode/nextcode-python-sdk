@@ -5,7 +5,7 @@ stages:
   - badge
 
 .py-with-cache:
-  image: python:3-stretch
+  image: python:3.7-stretch
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
@@ -44,7 +44,7 @@ release:
     - branches
 
 badge:
-  image: python:3-stretch
+  image: python:3.7-stretch
   stage: badge
   when: on_success
   script:
