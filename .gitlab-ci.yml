@@ -4,29 +4,34 @@ stages:
   - release
   - badge
 
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - .cache/pip
+.py-with-cache:
+  image: python:3-stretch
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .cache/pip
 
 test:
-  image: python:3-stretch
+  extends:
+    - .py-with-cache
   stage: test
   script:
     - make dev-install
     - make cover
 
 build:
-  image: python:3-stretch
+  extends:
+    - .py-with-cache
   stage: build
   script:
     - make dev-install
     - make build
 
 release:
-  image: python:3-stretch
+  extends:
+    - .py-with-cache
   stage: release
   when: on_success
   script:
