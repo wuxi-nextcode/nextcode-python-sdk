@@ -4,6 +4,13 @@ stages:
   - release
   - badge
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .cache/pip
+
 test:
   image: python:3-stretch
   stage: test
