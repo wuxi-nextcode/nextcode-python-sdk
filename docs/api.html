@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Reference &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <title>API Reference &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -124,21 +124,17 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <p>These pages feature low-level documentation of the functionality of the SDK.</p>
 <p>When using the SDK you always start by getting a <cite>Client</cite> instance using an API Key. With this object you can connect to various services.</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nextcode</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;xxx&quot;</span><span class="p">)</span>
-<span class="n">svc</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
-<span class="n">svc</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">nextcode</span>
+<span class="linenos">2</span><span class="n">client</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;xxx&quot;</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">svc</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">svc</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>There is a helper method available to get a service directly without first invoking a client.</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nextcode</span>
-<span class="n">svc</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">nextcode</span>
+<span class="linenos">2</span><span class="n">svc</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>In this example we assume the <cite>api_key</cite> has already been set but it can also be passed in.</p>
 <div class="section" id="available-services">
 <h2>Available Services<a class="headerlink" href="#available-services" title="Permalink to this headline">¶</a></h2>
@@ -205,8 +201,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-09-13.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

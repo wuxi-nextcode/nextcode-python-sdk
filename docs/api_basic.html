@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Basic facilities &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <title>Basic facilities &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -131,8 +131,8 @@
 <h2>client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
 <p>This is the basic entrypoint to interact with services.</p>
 <dl class="py class">
-<dt id="nextcode.client.Client">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.client.</span></code><code class="sig-name descname"><span class="pre">Client</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.Client">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.client.</span></span><span class="sig-name descname"><span class="pre">Client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>A base client object from which to access various services</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -152,8 +152,8 @@
 3) NEXTCODE_PROFILE from environment
 3) GOR_API_KEY from environment</p>
 <dl class="py method">
-<dt id="nextcode.client.Client.available_profiles">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">available_profiles</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.available_profiles" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.Client.available_profiles">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">available_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.available_profiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>List profiles that that are installed into the system and can be used
 with the constructor client.Client()</p>
 <dl class="field-list simple">
@@ -164,8 +164,8 @@ with the constructor client.Client()</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.client.Client.available_services">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">available_services</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.available_services" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.Client.available_services">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">available_services</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.available_services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.available_services" title="Permalink to this definition">¶</a></dt>
 <dd><p>List services that can be intantiated via an client object client.service(<cite>service</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -175,8 +175,8 @@ with the constructor client.Client()</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.client.Client.get_access_token">
-<code class="sig-name descname"><span class="pre">get_access_token</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.get_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.get_access_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.Client.get_access_token">
+<span class="sig-name descname"><span class="pre">get_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.get_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.get_access_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the JWT access token that is generated from the current api key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -205,8 +205,8 @@ with the constructor client.Client()</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.client.Client.service">
-<code class="sig-name descname"><span class="pre">service</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.service" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.Client.service">
+<span class="sig-name descname"><span class="pre">service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#Client.service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.Client.service" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve an instance to a service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,8 +219,8 @@ with the constructor client.Client()</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.client.get_api_key">
-<code class="sig-prename descclassname"><span class="pre">nextcode.client.</span></code><code class="sig-name descname"><span class="pre">get_api_key</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_api_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.get_api_key" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.get_api_key">
+<span class="sig-prename descclassname"><span class="pre">nextcode.client.</span></span><span class="sig-name descname"><span class="pre">get_api_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_api_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.get_api_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate with keycloak server and return an API key.</p>
 <p>Assumes client api-key-client.</p>
 <dl class="field-list simple">
@@ -245,8 +245,8 @@ with the constructor client.Client()</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.client.get_service">
-<code class="sig-prename descclassname"><span class="pre">nextcode.client.</span></code><code class="sig-name descname"><span class="pre">get_service</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.get_service" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.client.get_service">
+<span class="sig-prename descclassname"><span class="pre">nextcode.client.</span></span><span class="sig-name descname"><span class="pre">get_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/client.html#get_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.client.get_service" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper method which returns a service handle and creates a client object automatically</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -266,13 +266,13 @@ with the constructor client.Client()</p>
 <h2>session<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h2>
 <p>Service Session, low-level object for communicating with RESTFul services.</p>
 <dl class="py class">
-<dt id="nextcode.session.ServiceSession">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.session.</span></code><code class="sig-name descname"><span class="pre">ServiceSession</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.session.</span></span><span class="sig-name descname"><span class="pre">ServiceSession</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapped requests session object with base_url and exported endpoints
 from nextcode service api’s</p>
 <dl class="py method">
-<dt id="nextcode.session.ServiceSession.delete">
-<code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.delete" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a DELETE request. Returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -288,8 +288,8 @@ from nextcode service api’s</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.session.ServiceSession.get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.get" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a GET request. Returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -305,8 +305,8 @@ from nextcode service api’s</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.session.ServiceSession.post">
-<code class="sig-name descname"><span class="pre">post</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.post" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a POST request. Returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -325,8 +325,8 @@ object to send in the body of the <code class="xref py py-class docutils literal
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.session.ServiceSession.put">
-<code class="sig-name descname"><span class="pre">put</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.put" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession.put">
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a PUT request. Returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -344,8 +344,8 @@ object to send in the body of the <code class="xref py py-class docutils literal
 </dd></dl>
 
 <dl class="py method">
-<dt id="nextcode.session.ServiceSession.request">
-<code class="sig-name descname"><span class="pre">request</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.request" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.session.ServiceSession.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/session.html#ServiceSession.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.session.ServiceSession.request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a <code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code>, prepares it and sends it.
 Returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object.</p>
 <dl class="field-list simple">
@@ -400,8 +400,8 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 <h2>config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
 <p>Configuration, caching and profile management for nextcode sdk.</p>
 <dl class="py class">
-<dt id="nextcode.config.Config">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.config.</span></code><code class="sig-name descname"><span class="pre">Config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.Config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.config.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Borg pattern Config class see:
 <a class="reference external" href="http://code.activestate.com/recipes/66531-singleton-we-dont-need-no-stinkin-singleton-the-bo/">http://code.activestate.com/recipes/66531-singleton-we-dont-need-no-stinkin-singleton-the-bo/</a></p>
 <p>Example usage:</p>
@@ -411,8 +411,8 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.config.create_profile">
-<code class="sig-prename descclassname"><span class="pre">nextcode.config.</span></code><code class="sig-name descname"><span class="pre">create_profile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#create_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.create_profile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.config.create_profile">
+<span class="sig-prename descclassname"><span class="pre">nextcode.config.</span></span><span class="sig-name descname"><span class="pre">create_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#create_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.create_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new profile from api key and persist to disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -433,8 +433,8 @@ If Tuple, (‘cert’, ‘key’) pair.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.config.load_cache">
-<code class="sig-prename descclassname"><span class="pre">nextcode.config.</span></code><code class="sig-name descname"><span class="pre">load_cache</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#load_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.load_cache" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.config.load_cache">
+<span class="sig-prename descclassname"><span class="pre">nextcode.config.</span></span><span class="sig-name descname"><span class="pre">load_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#load_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.load_cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a dictionary from disk cache by name.</p>
 <p>The file is found in ~/.nextcode/cache/[name].cache and is assumed to be a
 dictionary in json format.</p>
@@ -447,8 +447,8 @@ dictionary in json format.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.config.set_default_profile">
-<code class="sig-prename descclassname"><span class="pre">nextcode.config.</span></code><code class="sig-name descname"><span class="pre">set_default_profile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#set_default_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.set_default_profile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.config.set_default_profile">
+<span class="sig-prename descclassname"><span class="pre">nextcode.config.</span></span><span class="sig-name descname"><span class="pre">set_default_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/config.html#set_default_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.config.set_default_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a named profile as the default one if no profile is specified or GOR_API_KEY is not set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -468,8 +468,8 @@ dictionary in json format.</p>
 <h2>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
 <p>Various utilities for nextcode-sdk functionality.</p>
 <dl class="py function">
-<dt id="nextcode.utils.host_from_url">
-<code class="sig-prename descclassname"><span class="pre">nextcode.utils.</span></code><code class="sig-name descname"><span class="pre">host_from_url</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/utils.html#host_from_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.utils.host_from_url" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.utils.host_from_url">
+<span class="sig-prename descclassname"><span class="pre">nextcode.utils.</span></span><span class="sig-name descname"><span class="pre">host_from_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/utils.html#host_from_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.utils.host_from_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the raw URI host of a url with trailing slash, no matter how it is formatted.</p>
 <dl class="simple">
 <dt>For example, www.server.com/something -&gt; <a class="reference external" href="https://www.server.com/">https://www.server.com/</a></dt><dd><p><a class="reference external" href="http://www.server.com">http://www.server.com</a> -&gt; <a class="reference external" href="http://www.server.com/">http://www.server.com/</a>
@@ -479,8 +479,8 @@ dictionary in json format.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.utils.jupyter_available">
-<code class="sig-prename descclassname"><span class="pre">nextcode.utils.</span></code><code class="sig-name descname"><span class="pre">jupyter_available</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/utils.html#jupyter_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.utils.jupyter_available" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.utils.jupyter_available">
+<span class="sig-prename descclassname"><span class="pre">nextcode.utils.</span></span><span class="sig-name descname"><span class="pre">jupyter_available</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/utils.html#jupyter_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.utils.jupyter_available" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if jupyter dependencies are available without importing these heavy libraries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -494,8 +494,8 @@ dictionary in json format.</p>
 <h2>keycloak<a class="headerlink" href="#keycloak" title="Permalink to this headline">¶</a></h2>
 <p>Keycloak login helpers and management features</p>
 <dl class="py class">
-<dt id="nextcode.keycloak.KeycloakSession">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></code><code class="sig-name descname"><span class="pre">KeycloakSession</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'admin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'api-key-client'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.keycloak.KeycloakSession">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></span><span class="sig-name descname"><span class="pre">KeycloakSession</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'admin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'api-key-client'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>A session object on a keycloak server intended to provide high-level interfaces
 for managing users and roles on the server.</p>
 <p>The user that is passed into the constructor is assumed to be a keycloak admin.</p>
@@ -511,9 +511,20 @@ for managing users and roles on the server.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="nextcode.keycloak.KeycloakSession.get_user_roles">
-<code class="sig-name descname"><span class="pre">get_user_roles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession.get_user_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession.get_user_roles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the realm roles for this user, ignoring client-specific roles</p>
+<dt class="sig sig-object py" id="nextcode.keycloak.KeycloakSession.get_user_client_roles">
+<span class="sig-name descname"><span class="pre">get_user_client_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession.get_user_client_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession.get_user_client_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the specified client roles for this user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.keycloak.KeycloakSession.get_user_roles">
+<span class="sig-name descname"><span class="pre">get_user_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#KeycloakSession.get_user_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.KeycloakSession.get_user_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the effective realm roles for this user, ignoring client-specific roles</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
@@ -524,8 +535,8 @@ for managing users and roles on the server.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.keycloak.auth_popup">
-<code class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></code><code class="sig-name descname"><span class="pre">auth_popup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#auth_popup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.auth_popup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.keycloak.auth_popup">
+<span class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></span><span class="sig-name descname"><span class="pre">auth_popup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#auth_popup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.auth_popup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a web browser on the login page for the specified server</p>
 <p>The user can log in using OAuth2 flow and aquire an API Key</p>
 <dl class="field-list simple">
@@ -536,8 +547,8 @@ for managing users and roles on the server.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nextcode.keycloak.login_keycloak_user">
-<code class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></code><code class="sig-name descname"><span class="pre">login_keycloak_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'api-key-client'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#login_keycloak_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.login_keycloak_user" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="nextcode.keycloak.login_keycloak_user">
+<span class="sig-prename descclassname"><span class="pre">nextcode.keycloak.</span></span><span class="sig-name descname"><span class="pre">login_keycloak_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wuxinextcode.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'api-key-client'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/keycloak.html#login_keycloak_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.keycloak.login_keycloak_user" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -587,8 +598,8 @@ for managing users and roles on the server.</p>
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-09-13.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

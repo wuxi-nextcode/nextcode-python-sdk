@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>nextcode.services.phenotype.service &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -131,6 +131,20 @@
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
 <span class="n">SUPPORTED_RESULT_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SET&quot;</span><span class="p">,</span> <span class="s2">&quot;QT&quot;</span><span class="p">,</span> <span class="s2">&quot;CATEGORY&quot;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_get_paginated_results</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">combined_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Loop to fetch the entire results, combining the paginated results</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">combined_data</span> <span class="o">+=</span> <span class="n">data</span>
+        <span class="n">offset</span> <span class="o">+=</span> <span class="n">results</span>
+
+        <span class="k">if</span> <span class="n">results</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">combined_data</span>
 
 
 <div class="viewcode-block" id="Service"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service">[docs]</a><span class="k">class</span> <span class="nc">Service</span><span class="p">(</span><span class="n">BaseService</span><span class="p">):</span>
@@ -239,12 +253,162 @@
         <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Service.get_phenotypes"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotypes">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Phenotype</span><span class="p">]:</span>
+<div class="viewcode-block" id="Service.get_phenotypes"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotypes">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotypes</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">all_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">any_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">result_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Phenotype</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A list of all the phenotypes in the current project.</span>
+<span class="sd">        Get all phenotypes in the current project as a list of Phenotypes.</span>
 
-<span class="sd">        :param tags: Optional list of tags to filter for</span>
+<span class="sd">        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags</span>
+<span class="sd">        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags</span>
+<span class="sd">        :param categories: Only fetch phenotypes in the given list of categories</span>
 <span class="sd">        :param limit: Maximum number of results (default: 100)</span>
+<span class="sd">        :param states: Only fetch phenotypes in the given list of states</span>
+<span class="sd">        :param search: String of keywords to search for in phenotypes, such as name, categories and tags</span>
+<span class="sd">        :param playlist: Fetch a specific playlist of phenotypes by the playlist id</span>
+<span class="sd">        :param updated_at: Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</span>
+<span class="sd">        :param result_types: Only fetch phenotypes in the given list of result types</span>
+<span class="sd">        :return: List of Phenotype</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: ServerError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">combined_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_phenotypes</span><span class="p">(</span>
+            <span class="n">all_tags</span><span class="p">,</span>
+            <span class="n">any_tags</span><span class="p">,</span>
+            <span class="n">categories</span><span class="p">,</span>
+            <span class="n">limit</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">,</span>
+            <span class="n">search</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">,</span>
+            <span class="n">result_types</span>
+        <span class="p">)</span>
+        <span class="n">phenotypes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">combined_data</span><span class="p">:</span>
+            <span class="n">phenotypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Phenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">phenotypes</span></div>
+
+<div class="viewcode-block" id="Service.get_phenotypes_matrix"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotypes_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotypes_matrix</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">all_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">any_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">result_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Phenotype</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all phenotypes in the current project as a PhenotypeMatrix.</span>
+
+<span class="sd">        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags</span>
+<span class="sd">        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags</span>
+<span class="sd">        :param categories: Only fetch phenotypes in the given list of categories</span>
+<span class="sd">        :param limit: Maximum number of results (default: 100)</span>
+<span class="sd">        :param states: Only fetch phenotypes in the given list of states</span>
+<span class="sd">        :param search: String of keywords to search for in phenotypes, such as name, categories and tags</span>
+<span class="sd">        :param playlist: Fetch a specific playlist of phenotypes by the playlist id</span>
+<span class="sd">        :param updated_at: Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</span>
+<span class="sd">        :param result_types: Only fetch phenotypes in the given list of result types</span>
+<span class="sd">        :return: Phenotypes as PhenotypeMatrix</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: ServerError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">combined_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_phenotypes</span><span class="p">(</span>
+            <span class="n">all_tags</span><span class="p">,</span>
+            <span class="n">any_tags</span><span class="p">,</span>
+            <span class="n">categories</span><span class="p">,</span>
+            <span class="n">limit</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">,</span>
+            <span class="n">search</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">,</span>
+            <span class="n">result_types</span>
+        <span class="p">)</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">PhenotypeMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">combined_data</span><span class="p">:</span>
+            <span class="n">matrix</span><span class="o">.</span><span class="n">add_phenotype</span><span class="p">(</span><span class="n">Phenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">matrix</span></div>
+
+<div class="viewcode-block" id="Service.get_phenotypes_dataframe"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotypes_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotypes_dataframe</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">all_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">any_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">result_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Phenotype</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all phenotypes in the current project as a pandas DataFrame.</span>
+
+<span class="sd">        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags</span>
+<span class="sd">        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags</span>
+<span class="sd">        :param categories: Only fetch phenotypes in the given list of categories</span>
+<span class="sd">        :param limit: Maximum number of results (default: 100)</span>
+<span class="sd">        :param states: Only fetch phenotypes in the given list of states</span>
+<span class="sd">        :param search: String of keywords to search for in phenotypes, such as name, categories and tags</span>
+<span class="sd">        :param playlist: Fetch a specific playlist of phenotypes by the playlist id</span>
+<span class="sd">        :param updated_at: Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</span>
+<span class="sd">        :param result_types: Only fetch phenotypes in the given list of result types</span>
+<span class="sd">        :return: Phenotypes as pandas dataframe</span>
+<span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
+<span class="sd">        :raises: ServerError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">combined_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_phenotypes</span><span class="p">(</span>
+            <span class="n">all_tags</span><span class="p">,</span>
+            <span class="n">any_tags</span><span class="p">,</span>
+            <span class="n">categories</span><span class="p">,</span>
+            <span class="n">limit</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">,</span>
+            <span class="n">search</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">,</span>
+            <span class="n">result_types</span>
+        <span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pandas</span>
+        <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">combined_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dataframe</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_phenotypes</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">all_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">any_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">playlist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">result_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Phenotype</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`</span>
+<span class="sd">        See documentation of those methods for more details</span>
+
+<span class="sd">        :param all_tags: Only fetch phenotypes that have all tags in the given list of tags</span>
+<span class="sd">        :param any_tags: Fetch phenotypes that have any of the tags in the given list of tags</span>
+<span class="sd">        :param categories: Only fetch phenotypes in the given list of categories</span>
+<span class="sd">        :param limit: Maximum number of results (default: 100)</span>
+<span class="sd">        :param states: Only fetch phenotypes in the given list of states</span>
+<span class="sd">        :param search: String of keywords to search for in phenotypes, such as name, categories and tags</span>
+<span class="sd">        :param playlist: Fetch a specific playlist of phenotypes by the playlist id</span>
+<span class="sd">        :param updated_at: Only fetch phenotypes that match the given dates. Example: &gt;=2017-04-01 ┃ &lt;=2012-07-04 ┃ 2016-04-30..2016-07-04</span>
+<span class="sd">        :param result_types: Only fetch phenotypes in the given list of result types</span>
 <span class="sd">        :return: List of phenotypes</span>
 <span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
 <span class="sd">        :raises: ServerError</span>
@@ -253,15 +417,49 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Project does not exist.&quot;</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">]</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;with_all_tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span> <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">}</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">]</span>
-        <span class="n">phenotypes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">phenotypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Phenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">phenotypes</span></div>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">playlist</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">],</span> <span class="s2">&quot;playlists&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">playlist</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">all_tags</span><span class="p">:</span>
+            <span class="n">all_tags</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_tags</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">any_tags</span><span class="p">:</span>
+            <span class="n">any_tags</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">any_tags</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">categories</span><span class="p">:</span>
+            <span class="n">categories</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result_types</span><span class="p">:</span>
+            <span class="n">result_types</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result_types</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">do_get</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+            <span class="c1"># This local method fetches paginated results from `offset` to limit</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;with_all_tags&quot;</span><span class="p">:</span> <span class="n">all_tags</span><span class="p">,</span>
+                <span class="s2">&quot;with_any_tags&quot;</span><span class="p">:</span> <span class="n">any_tags</span><span class="p">,</span>
+                <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span>
+                <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="n">offset</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">,</span>
+                <span class="s2">&quot;search&quot;</span><span class="p">:</span> <span class="n">search</span><span class="p">,</span>
+                <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">states</span><span class="p">,</span>
+                <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span> <span class="n">updated_at</span><span class="p">,</span>
+                <span class="s2">&quot;result_type&quot;</span><span class="p">:</span> <span class="n">result_types</span>
+            <span class="p">}</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">playlist</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;playlist&quot;</span><span class="p">][</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;phenotypes&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="n">combined_data</span> <span class="o">=</span> <span class="n">_get_paginated_results</span><span class="p">(</span><span class="n">do_get</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">combined_data</span>
 
 <div class="viewcode-block" id="Service.get_phenotype"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_phenotype">[docs]</a>    <span class="k">def</span> <span class="nf">get_phenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Phenotype</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -388,16 +586,19 @@
             <span class="n">playlists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">playlists</span></div>
 
-<div class="viewcode-block" id="Service.get_playlist"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_playlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_playlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Playlist</span><span class="p">:</span>
+<div class="viewcode-block" id="Service.get_playlist"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_playlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_playlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Playlist</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A list a single playlist in the current project based on the id.</span>
 
-
+<span class="sd">        :param id: Specify the playlist to get by its id</span>
+<span class="sd">        :param name: Retrieve a playlist by its unique name within project</span>
 <span class="sd">        :return: A single playlist</span>
 <span class="sd">        :raises: `PhenotypeError` if the project does not exist</span>
 <span class="sd">        :raises: ServerError</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;id and name cannot both be supplied&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Project does not exist.&quot;</span><span class="p">)</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
@@ -407,16 +608,56 @@
             <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
         <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s1">&#39;projects&#39;</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+                <span class="s1">&#39;playlists&#39;</span>
+            <span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">})</span>
         <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="s2">&quot;Playlist not found&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;playlist&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;playlists&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;playlist&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service.get_covariates"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_covariates">[docs]</a>    <span class="k">def</span> <span class="nf">get_covariates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all covariates in current project</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">],</span> <span class="s1">&#39;covariates&#39;</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">do_get</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="n">offset</span><span class="p">}</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;covariates&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="n">combined_data</span> <span class="o">=</span> <span class="n">_get_paginated_results</span><span class="p">(</span><span class="n">do_get</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">combined_data</span></div>
+
+<div class="viewcode-block" id="Service.get_covariate"><a class="viewcode-back" href="../../../../api_phenotype.html#nextcode.services.phenotype.service.Service.get_covariate">[docs]</a>    <span class="k">def</span> <span class="nf">get_covariate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a single covariate by its id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">],</span> <span class="s1">&#39;covariates&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ServerError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">codes</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PhenotypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Covariate not found&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ex</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;covariate&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
 </pre></div>
 
     </div>
@@ -434,8 +675,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-09-13.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.workflow.service &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>nextcode.services.workflow.service &#8212; nextcode-python-sdk 1.16.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.16.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -294,6 +294,8 @@
         <span class="n">keep_resources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mount_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">credentials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scheduler_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run a workflow job</span>
@@ -331,6 +333,9 @@
 <span class="sd">                &#39;aws_secret_access_key&#39;: &#39;k6q5...&#39;</span>
 <span class="sd">            }</span>
 <span class="sd">        }</span>
+<span class="sd">        :param scheduler_name: Optional string specifying the scheduler to use. If not specified, the default scheduler</span>
+<span class="sd">               will be used</span>
+<span class="sd">        :param features: Extra parameters to pass to workflow-service to turn features on/off</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">project_name</span><span class="p">:</span>
             <span class="n">project_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GOR_API_PROJECT&quot;</span><span class="p">)</span>
@@ -341,7 +346,7 @@
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;post_job called with pipeline_name=</span><span class="si">%s</span><span class="s2">, project_name=</span><span class="si">%s</span><span class="s2">, params=</span><span class="si">%s</span><span class="s2">, script=</span><span class="si">%s</span><span class="s2">, revision=</span><span class="si">%s</span><span class="s2">, &quot;</span>
             <span class="s2">&quot;build_source=</span><span class="si">%s</span><span class="s2">, build_context=</span><span class="si">%s</span><span class="s2">, profile=</span><span class="si">%s</span><span class="s2">, description=</span><span class="si">%s</span><span class="s2">, executor_memory_mb=</span><span class="si">%s</span><span class="s2">, context=</span><span class="si">%s</span><span class="s2">, &quot;</span>
-            <span class="s2">&quot;storage_type=</span><span class="si">%s</span><span class="s2">, dedicated_storage_size=</span><span class="si">%s</span><span class="s2">, mount_jobs=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;storage_type=</span><span class="si">%s</span><span class="s2">, dedicated_storage_size=</span><span class="si">%s</span><span class="s2">, mount_jobs=</span><span class="si">%s</span><span class="s2"> scheduler_name=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">pipeline_name</span><span class="p">,</span>
             <span class="n">project_name</span><span class="p">,</span>
             <span class="n">params</span><span class="p">,</span>
@@ -356,8 +361,9 @@
             <span class="n">storage_type</span><span class="p">,</span>
             <span class="n">dedicated_storage_size</span><span class="p">,</span>
             <span class="n">mount_jobs</span><span class="p">,</span>
+            <span class="n">scheduler_name</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;pipeline_name&quot;</span><span class="p">:</span> <span class="n">pipeline_name</span><span class="p">,</span>
             <span class="s2">&quot;project_name&quot;</span><span class="p">:</span> <span class="n">project_name</span><span class="p">,</span>
             <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
@@ -368,6 +374,7 @@
             <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">details</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
             <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">context</span><span class="p">,</span>
+            <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">storage_type</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;storage_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">storage_type</span>
@@ -385,6 +392,8 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;keep_resources&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keep_resources</span>
         <span class="k">if</span> <span class="n">mount_jobs</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mount_jobs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_jobs</span>
+        <span class="k">if</span> <span class="n">scheduler_name</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;scheduler_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheduler_name</span>
 
         <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">url_from_endpoint</span><span class="p">(</span><span class="s2">&quot;jobs&quot;</span><span class="p">)</span>
 
@@ -408,8 +417,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-09-13.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>
