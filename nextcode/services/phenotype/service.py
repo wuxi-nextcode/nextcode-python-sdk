@@ -26,16 +26,18 @@ log = logging.getLogger(__file__)
 SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
 def _get_paginated_results(method, limit):
+    default_batch_size = 100 # Used for pagination
     offset = 0
     combined_data = []
     # Loop to fetch the entire results, combining the paginated results
     while True:
-        data = method(offset)
+        batch_size = min(default_batch_size, limit-offset) # Make sure we dont get request too many phenos in last api call
+        data = method(batch_size, offset)
         results = len(data)
         combined_data += data
         offset += results
 
-        if results < limit:
+        if results < batch_size or offset >= limit: # Stop if response smaller than requested or results (larger or) equal to limit
             break
     return combined_data
 
@@ -330,12 +332,12 @@ class Service(BaseService):
         if states:
             states = ','.join(states)
 
-        def do_get(offset=0):
+        def do_get(batch_size, offset):
             # This local method fetches paginated results from `offset` to limit
             content = {
                 "with_all_tags": all_tags,
                 "with_any_tags": any_tags,
-                "limit": limit,
+                "limit": batch_size,
                 "offset": offset,
                 "category": categories,
                 "search": search,
@@ -527,8 +529,8 @@ class Service(BaseService):
         Get all covariates in current project
         """
         url = urljoin(self.links['self'], 'covariates')
-        def do_get(offset=0):
-            content = {'limit': limit, 'offset': offset}
+        def do_get(batch_size, offset):
+            content = {'limit': batch_size, 'offset': offset}
             resp = self.session.get(url, data=content)
             data = resp.json()['covariates']
             return data
