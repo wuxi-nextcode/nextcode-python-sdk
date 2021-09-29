@@ -232,8 +232,8 @@ class Service(BaseService):
             result_types
         )
         matrix = PhenotypeMatrix(self)
-        for item in combined_data:
-            matrix.add_phenotype(Phenotype(self.session, item))
+        if combined_data:
+            matrix.add_phenotypes([item['name'] for item in combined_data])
         return matrix
 
     def get_phenotypes_dataframe(
@@ -318,19 +318,19 @@ class Service(BaseService):
             url = urljoin(self.links["self"], "playlists", str(playlist))
 
         if all_tags:
-            all_tags = ','.join(all_tags)
+            all_tags = ','.join(all_tags) if isinstance(all_tags, list) else all_tags
 
         if any_tags:
-            any_tags = ','.join(any_tags)
+            any_tags = ','.join(any_tags) if isinstance(any_tags, list) else any_tags
 
         if categories:
-            categories = ','.join(categories)
+            categories = ','.join(categories) if  isinstance(categories, list) else categories
 
         if result_types:
-            result_types = ','.join(result_types)
+            result_types = ','.join(result_types) if isinstance(result_types, list) else result_types
 
         if states:
-            states = ','.join(states)
+            states = ','.join(states) if isinstance(states, list) else states
 
         def do_get(batch_size, offset):
             # This local method fetches paginated results from `offset` to limit
