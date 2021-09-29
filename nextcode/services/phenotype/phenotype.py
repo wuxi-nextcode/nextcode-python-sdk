@@ -101,23 +101,42 @@ class Phenotype:
         resp = self.session.post(url, json=content)
         return resp.json()
 
+    def update(self, description: Optional[str] = None, tags:  Optional[List[str]] = None, query: Optional[str] = None, category: Optional[str] = None, url: Optional[str] = None):
+        """
+        Update phenotype attributes
+        """
+        uri = self.links["self"]
+
+        if tags and not isinstance(tags, list):
+            tags = [tags]
+
+        content = {"description": description,
+                   "query": query,
+                   "tag_list": tags,
+                   "category": category,
+                   "url": url
+                   }
+
+        self.session.patch(uri, json={k: v for k, v in content.items() if v is not None})
+        self.refresh()
+
+    def update_query(self, query: str):
+        """
+        Update the phenotype with a new query that defines this phenotype 
+        """
+        self.update(query = query)
+
     def update_description(self, description: str):
         """
         Update the phenotype with a new description
         """
-        url = self.links["self"]
-        content = {"description": description}
-        _ = self.session.patch(url, json=content)
-        self.refresh()
+        self.update(description = description)
 
     def set_tags(self, tags: List[str]):
         """
         Set the tag list for this phenotype, overriding all previous tags
         """
-        url = self.links["self"]
-        content = {"tag_list": tags}
-        self.session.patch(url, json=content)
-        self.refresh()
+        self.update(tags = tags)
 
     def get_tags(self):
         """
@@ -131,16 +150,12 @@ class Phenotype:
 
         :raises: `PhenotypeError` if the tag is already set on this phenotype
         """
-        url = self.links["self"]
         tags = set(self.tag_list)
         if tag in tags:
             raise PhenotypeError(f"Tag {tag} already exists on this phenotype")
 
         tags.add(tag)
-
-        content = {"tag_list": list(tags)}
-        self.session.patch(url, json=content)
-        self.refresh()
+        self.update(tags = list(tags))
 
     def delete_tag(self, tag: str):
         """
@@ -148,16 +163,12 @@ class Phenotype:
 
         :raises: `PhenotypeError` if the tag does not exist
         """
-        url = self.links["self"]
         tags = set(self.tag_list)
         try:
             tags.remove(tag)
         except KeyError:
             raise PhenotypeError(f"Tag {tag} does not exist on this phenotype")
 
-        content = {"tag_list": list(tags)}
-        self.session.patch(url, json=content)
-        self.refresh()
-
+        self.update(tags = list(tags))
     def get_data(self):
         return self.data
