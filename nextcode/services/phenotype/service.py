@@ -159,6 +159,8 @@ class Service(BaseService):
             playlist: int = None,
             updated_at: str = None,
             result_types: List[str] = [],
+            names: Optional[List[str]] = [],
+            pn_count: Optional[str] = None
         ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a list of Phenotypes.
@@ -172,6 +174,12 @@ class Service(BaseService):
         :param playlist: Fetch a specific playlist of phenotypes by the playlist id
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
+        :param names: Only fetch phenotypes in the given list of phenotype names
+        :param pn_count: Only fetch phenotypes that match the given pn counts.
+            "<10" matches records where the attribute less than 10.
+            ">=10" matches records where the attribute is greater than or equal to 10.
+            "=30" matches records where the attribute is equal to 30.
+            "10..20" matches records where the attribute is between 10 and 20 (both included).
         :return: List of Phenotype
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
@@ -185,7 +193,9 @@ class Service(BaseService):
             search,
             playlist,
             updated_at,
-            result_types
+            result_types,
+            names,
+            pn_count
         )
         phenotypes = []
         for item in combined_data:
@@ -203,6 +213,8 @@ class Service(BaseService):
             playlist: int = None,
             updated_at: str = None,
             result_types: List[str] = [],
+            names: Optional[List[str]] = [],
+            pn_count: Optional[str] = None
         ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a PhenotypeMatrix.
@@ -216,6 +228,12 @@ class Service(BaseService):
         :param playlist: Fetch a specific playlist of phenotypes by the playlist id
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
+        :param names: Only fetch phenotypes in the given list of phenotype names
+        :param pn_count: Only fetch phenotypes that match the given pn counts.
+            "<10" matches records where the attribute less than 10.
+            ">=10" matches records where the attribute is greater than or equal to 10.
+            "=30" matches records where the attribute is equal to 30.
+            "10..20" matches records where the attribute is between 10 and 20 (both included).        
         :return: Phenotypes as PhenotypeMatrix
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
@@ -229,7 +247,9 @@ class Service(BaseService):
             search,
             playlist,
             updated_at,
-            result_types
+            result_types,
+            names,
+            pn_count
         )
         matrix = PhenotypeMatrix(self)
         for item in combined_data:
@@ -246,7 +266,11 @@ class Service(BaseService):
             search: str = None,
             playlist: int = None,
             updated_at: str = None,
-            result_types: List[str] = []
+            result_types: List[str] = [],
+            names: Optional[List[str]] = [],
+            pn_count: Optional[str] = None,
+            detail: Optional[bool] = False
+
         ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a pandas DataFrame.
@@ -260,6 +284,13 @@ class Service(BaseService):
         :param playlist: Fetch a specific playlist of phenotypes by the playlist id
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
+        :param names: Only fetch phenotypes in the given list of phenotype names
+        :param pn_count: Only fetch phenotypes that match the given pn counts.
+            "<10" matches records where the attribute less than 10.
+            ">=10" matches records where the attribute is greater than or equal to 10.
+            "=30" matches records where the attribute is equal to 30.
+            "10..20" matches records where the attribute is between 10 and 20 (both included).
+        :param detail Return subset of phenotype info columns. detail=True returns all
         :return: Phenotypes as pandas dataframe
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
@@ -273,10 +304,16 @@ class Service(BaseService):
             search,
             playlist,
             updated_at,
-            result_types
+            result_types,
+            names,
+            pn_count
         )
         import pandas
         dataframe = pandas.DataFrame(combined_data)
+
+        if not dataframe.empty and not detail:
+            cols = ["name", "description", "result_type", "tag_list", "pn_count"]
+            return dataframe[cols]
         return dataframe
 
     def _get_phenotypes(
@@ -289,7 +326,10 @@ class Service(BaseService):
             search: str = None,
             playlist: int = None,
             updated_at: str = None,
-            result_types: List[str] = []
+            result_types: List[str] = [],
+            names: Optional[List[str]] = [],
+            pn_count: Optional[str] = None
+        
         ) -> List[Phenotype]:
         """
         Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`
@@ -304,6 +344,8 @@ class Service(BaseService):
         :param playlist: Fetch a specific playlist of phenotypes by the playlist id
         :param updated_at: Only fetch phenotypes that match the given dates. Example: >=2017-04-01 ┃ <=2012-07-04 ┃ 2016-04-30..2016-07-04
         :param result_types: Only fetch phenotypes in the given list of result types
+        :param names: Only fetch phenotypes in the given list of phenotype names
+        :param pn_count: Only fetch phenotypes that match the given pn counts.
         :return: List of phenotypes
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
@@ -332,6 +374,9 @@ class Service(BaseService):
         if states:
             states = ','.join(states)
 
+        if names:
+            names = ','.join(names)
+
         def do_get(batch_size, offset):
             # This local method fetches paginated results from `offset` to limit
             content = {
@@ -343,9 +388,11 @@ class Service(BaseService):
                 "search": search,
                 "state": states,
                 "updated_at": updated_at,
-                "result_type": result_types
+                "result_type": result_types,
+                "names": names,
+                "pn_count": pn_count
             }
-            resp = self.session.get(url, data=content)
+            resp = self.session.get(url, data={k: v for k, v in content.items() if v is not None})
 
             if playlist:
                 data = resp.json()["playlist"]["phenotypes"]
