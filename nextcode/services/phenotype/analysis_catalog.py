@@ -2,8 +2,8 @@
 Analysis catalog
 ------------------
 
-Analysis catalog is a collection of phenotypes, parameters and  to use when running
-a certain workflow analysis (e.g plink)
+Analysis catalog is a collection of phenotypes and parameters that are needed to run
+the workflow analysis
 
 
 """

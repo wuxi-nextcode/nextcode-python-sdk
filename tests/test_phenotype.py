@@ -314,8 +314,6 @@ class PhenotypeTest(BaseTestCase):
         analysis_catalog = self.svc.create_analysis_catalog(playlist, name, recipe_name, recipe_parameters, covariate_phenotypes)
         self.assertEqual(analysis_catalog.data, ANALYSIS_CATALOG_RESP)
 
-        # TODO: Add tests for server errors
-
     @responses.activate
     def test_get_analysis_catalog_run(self):
         analysis_catalog_name = "acname"
@@ -327,5 +325,3 @@ class PhenotypeTest(BaseTestCase):
         )
         analysis_catalog_run = self.svc.get_analysis_catalog_run(analysis_catalog_name, analysis_catalog_run_name)
         self.assertEqual(analysis_catalog_run.data, ANALYSIS_CATALOG_RUN_RESP)
-
-        # TODO: Add tests for server errors
