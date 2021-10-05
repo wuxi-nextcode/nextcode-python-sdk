@@ -14,6 +14,9 @@ import dateutil
 import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
+import numpy as np
+import plotly.graph_objects as go
+from plotly.offline import init_notebook_mode, iplot
 
 from .exceptions import PhenotypeError
 from .phenotype_matrix import PhenotypeMatrix
@@ -203,12 +206,7 @@ class Phenotype:
         """
         Display phenotype
         """
-        try:
-            import matplotlib.pyplot as plt
-        except ModuleNotFoundError:
-            raise PhenotypeError("matplotlib library is not installed")
-            
-        if not self.df:
+        if self.df is None:
             self.get_data()
         
         switcher = {
@@ -217,56 +215,46 @@ class Phenotype:
             "CATEGORY": self._plot_categorical
         }
 
-        fig, ax = plt.subplots()
-        fig.suptitle('Phenotype Overview')
-        ax = switcher.get(self.data.get("result_type"), "Nothing")(ax = ax)
-        plt.show()
+        init_notebook_mode()
 
-    def _plot_qt(self, ax):
+        layout = {'title': 'Phenotype Overview',
+          'hovermode': False, 
+          'showlegend': False,
+          'width': 500,
+          'height': 400}
+
+        fig = switcher.get(self.data.get("result_type"), "Nothing")(layout=layout)
+        iplot(fig)   
+
+    def _plot_qt(self, **kwargs):
         """
         Plot QT phenotype
         """
-        try:
-            import numpy as np
-        except ModuleNotFoundError:
-            raise PhenotypeError("numpy library is not installed")
         grp_col = self.df.columns[1]
         bin_count = int(np.ceil(np.log2(len(self.df[grp_col]))) + 1) # Sturge’s rule
-        ax.hist(x=self.df[grp_col], bins = bin_count)
-        return ax
+        fig = go.Figure([go.Histogram(x=self.df[self.df.columns[1]], nbinsx=bin_count)],
+                   **kwargs)
+        fig.update_layout(yaxis={'title': "Count"})
+        return fig
 
-    def _plot_categorical(self, ax, type='bar'):
+    def _plot_categorical(self, **kwargs):
         """
         Plot CATEGORICAL phenotype
         """
         grp_col = self.df.columns[1]
         grp_df = self.df.groupby(grp_col).count()
         grp_df = grp_df.reset_index()
-        labels = grp_df[grp_col]
-        if type == 'bar':
-            try:
-                import numpy as np
-            except ModuleNotFoundError:
-                raise PhenotypeError("numpy library is not installed")
-            x = np.arange(len(labels))  # the label locations
-            width = 0.35  # the width of the bars
-            ax.bar(x, grp_df['pn'], width)
-            ax.set_xticks(x)
-            ax.set_xticklabels(labels)
-            ax.set_ylabel('Count')
-            ax.set_xlabel('Category')
-        elif type == 'pie':
-            ax.pie(grp_df['pn'], labels=labels, autopct=make_autopct(grp_df['pn']),startangle=90)
-            ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        else:
-            raise ValueError("type must be either 'bar' or 'pie'")
-        return ax
+ 
+        fig = go.Figure([go.Bar(x=grp_df[grp_col], y = grp_df[grp_col])],
+                   **kwargs)
+        fig.update_layout(xaxis={'title': "Category"},
+                          yaxis={'title': "Count"})
+        return fig
 
-    def _plot_set(self, ax):
+    def _plot_set(self, **kwargs):
         """
         Plot SET phenotype
         """
-        count = len(self.df.index)
-        ax.pie([count], labels=[""], colors=['orange'],  autopct='Count: \n {:,}'.format(count))
-        ax.axis('equal')
-        return ax
+        fig = go.Figure([go.Pie(labels=["Count"], values=[len(self.df.index)])], **kwargs)
+        fig.update_traces(textinfo='value')
+        return fig
