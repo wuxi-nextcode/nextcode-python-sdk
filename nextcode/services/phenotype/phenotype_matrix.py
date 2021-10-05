@@ -18,7 +18,6 @@ from io import StringIO
 from .exceptions import PhenotypeError
 from ...exceptions import ServerError
 from ...session import ServiceSession
-from ...utils import jupyter_available
 
 log = logging.getLogger(__name__)
 
@@ -32,10 +31,11 @@ class PhenotypeMatrix:
     to retrieve the phenotype matrix from the server.
     """
 
-    def __init__(self, service, base: str = None):
-        self.service = service
+    def __init__(self, session: ServiceSession, base: str = None, project_name: str = None):
+        self.session = session
         self.base = base
         self.phenotypes: Dict[str, Dict[str, Optional[str]]] = {}
+        self.project_name = project_name
 
     def add_phenotype(
         self,
@@ -100,17 +100,17 @@ class PhenotypeMatrix:
             "base": self.base,
             "phenotypes": phenotypes_list,
         }
-        url = self.service.links["get_phenotype_matrix"]
-        resp = self.service.session.post(url, json=content)
+        url = self.session.url_from_endpoint("get_phenotype_matrix").format(project_name = self.project_name)
+        resp = self.session.post(url, json=content)
         resp.raise_for_status()
         tsv_data = resp.text
         if not dataframe:
             return tsv_data
 
-        if not jupyter_available():
+        try:
+            import pandas as pd
+        except ModuleNotFoundError:
             raise PhenotypeError("Pandas library is not installed")
-
-        import pandas as pd
 
         if not tsv_data:
             return pd.DataFrame()

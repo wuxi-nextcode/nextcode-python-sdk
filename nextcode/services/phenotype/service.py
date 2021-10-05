@@ -251,7 +251,7 @@ class Service(BaseService):
             names,
             pn_count
         )
-        matrix = PhenotypeMatrix(self)
+        matrix = PhenotypeMatrix(self.session, project_name = self.project_name)
         if combined_data:
             matrix.add_phenotypes([item['name'] for item in combined_data])
         return matrix
@@ -437,7 +437,7 @@ class Service(BaseService):
         :raises: `PhenotypeError` if the project does not exist
         :raises: `ServerError`
         """
-        return PhenotypeMatrix(self, base)
+        return PhenotypeMatrix(self.session, base=base, project_name=self.project_name)
 
     def get_categories(self) -> List:
         """

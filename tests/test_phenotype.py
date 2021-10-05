@@ -26,6 +26,7 @@ ROOT_RESP = {
         "documentation": PHENOTYPE_URL + "/documentation",
         "projects": PROJECTS_URL,
         "tags": PHENOTYPE_URL + "/tags",
+        "get_phenotype_matrix": PROJECTS_URL + "/{project_name}/get_phenotype_matrix"
     },
     "service_name": "phenotype-catalog",
 }
