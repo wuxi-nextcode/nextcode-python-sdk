@@ -15,6 +15,7 @@ import logging
 from typing import Callable, Union, Optional, Dict, List
 
 from .exceptions import PhenotypeError
+from .phenotype_matrix import PhenotypeMatrix
 from ...exceptions import ServerError
 from ...session import ServiceSession
 
@@ -170,5 +171,18 @@ class Phenotype:
             raise PhenotypeError(f"Tag {tag} does not exist on this phenotype")
 
         self.update(tags = list(tags))
-    def get_data(self):
+    
+    def get_info(self):
+        """
+        Retrieve info for this phenotype
+        """
         return self.data
+
+    def get_data(self, label: Optional[str] = None):
+        """
+        Retrieve a phenotype data from the server.
+        """
+        matrix = PhenotypeMatrix(self.session, project_name = self.data["project_key"])
+        matrix.add_phenotype(name = self.data["name"], label = label)
+        return matrix.get_data()
+
