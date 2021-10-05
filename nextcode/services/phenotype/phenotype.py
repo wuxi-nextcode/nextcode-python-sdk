@@ -190,7 +190,7 @@ class Phenotype:
         self.df = matrix.get_data()
         return self.df
 
-    def display(self, type=None):
+    def display(self):
         """
         Display phenotype
         """
@@ -212,7 +212,7 @@ class Phenotype:
           'height': 400}
 
         fig = switcher.get(self.data.get("result_type"), "Nothing")(layout=layout)
-        iplot(fig)   
+        iplot(fig)
 
     def _plot_qt(self, **kwargs):
         """
