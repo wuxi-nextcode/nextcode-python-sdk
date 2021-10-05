@@ -9,7 +9,6 @@ Representation of a serverside phenotype.
 
 import json
 import datetime
-from types import LambdaType
 import dateutil
 import time
 import logging
@@ -24,17 +23,6 @@ from ...exceptions import ServerError
 from ...session import ServiceSession
 
 log = logging.getLogger(__name__)
-
-
-def make_autopct(values):
-    """
-    Format percent for plotting functions
-    """
-    def my_autopct(pct):
-        total = sum(values)
-        val = int(round(pct*total/100.0))
-        return '{p:.1f}% \n ({v:,})'.format(p=pct,v=val)
-    return my_autopct
 
 class Phenotype:
     """
