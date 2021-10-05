@@ -9,6 +9,7 @@ Representation of a serverside phenotype.
 
 import json
 import datetime
+from types import LambdaType
 import dateutil
 import time
 import logging
@@ -21,6 +22,16 @@ from ...session import ServiceSession
 
 log = logging.getLogger(__name__)
 
+
+def make_autopct(values):
+    """
+    Format percent for plotting functions
+    """
+    def my_autopct(pct):
+        total = sum(values)
+        val = int(round(pct*total/100.0))
+        return '{p:.1f}% \n ({v:,})'.format(p=pct,v=val)
+    return my_autopct
 
 class Phenotype:
     """
@@ -50,6 +61,7 @@ class Phenotype:
         self.session = session
         self.data = data
         self.links = data["links"]
+        self.df = None
 
     def __getattr__(self, name):
         try:
@@ -184,5 +196,77 @@ class Phenotype:
         """
         matrix = PhenotypeMatrix(self.session, project_name = self.data["project_key"])
         matrix.add_phenotype(name = self.data["name"], label = label)
-        return matrix.get_data()
+        self.df = matrix.get_data()
+        return self.df
 
+    def display(self, type=None):
+        """
+        Display phenotype
+        """
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError:
+            raise PhenotypeError("matplotlib library is not installed")
+            
+        if not self.df:
+            self.get_data()
+        
+        switcher = {
+            "SET": self._plot_set,
+            "QT": self._plot_qt,
+            "CATEGORY": self._plot_categorical
+        }
+
+        fig, ax = plt.subplots()
+        fig.suptitle('Phenotype Overview')
+        ax = switcher.get(self.data.get("result_type"), "Nothing")(ax = ax)
+        plt.show()
+
+    def _plot_qt(self, ax):
+        """
+        Plot QT phenotype
+        """
+        try:
+            import numpy as np
+        except ModuleNotFoundError:
+            raise PhenotypeError("numpy library is not installed")
+        grp_col = self.df.columns[1]
+        bin_count = int(np.ceil(np.log2(len(self.df[grp_col]))) + 1) # Sturge’s rule
+        ax.hist(x=self.df[grp_col], bins = bin_count)
+        return ax
+
+    def _plot_categorical(self, ax, type='bar'):
+        """
+        Plot CATEGORICAL phenotype
+        """
+        grp_col = self.df.columns[1]
+        grp_df = self.df.groupby(grp_col).count()
+        grp_df = grp_df.reset_index()
+        labels = grp_df[grp_col]
+        if type == 'bar':
+            try:
+                import numpy as np
+            except ModuleNotFoundError:
+                raise PhenotypeError("numpy library is not installed")
+            x = np.arange(len(labels))  # the label locations
+            width = 0.35  # the width of the bars
+            ax.bar(x, grp_df['pn'], width)
+            ax.set_xticks(x)
+            ax.set_xticklabels(labels)
+            ax.set_ylabel('Count')
+            ax.set_xlabel('Category')
+        elif type == 'pie':
+            ax.pie(grp_df['pn'], labels=labels, autopct=make_autopct(grp_df['pn']),startangle=90)
+            ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        else:
+            raise ValueError("type must be either 'bar' or 'pie'")
+        return ax
+
+    def _plot_set(self, ax):
+        """
+        Plot SET phenotype
+        """
+        count = len(self.df.index)
+        ax.pie([count], labels=[""], colors=['orange'],  autopct='Count: \n {:,}'.format(count))
+        ax.axis('equal')
+        return ax
