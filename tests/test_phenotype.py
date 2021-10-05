@@ -30,7 +30,7 @@ ROOT_RESP = {
     "service_name": "phenotype-catalog",
 }
 
-
+PLAYLIST_ID = "1"
 PROJECT = "test-project"
 PHENOTYPE_NAME = "test-pheno"
 PHENOTYPE_RESP = {
@@ -56,6 +56,49 @@ PHENOTYPE_RESP = {
     },
 }
 
+AC_RECIPE_PARAMETERS = {
+    "freeze": 'mr-freeze',
+    "inheritance_model": "Additive",
+    "regression_model": "GLM_FIRTH",
+    "genome_range": "All",
+    "dimension_reduction": "Standardize_variance",
+    "hide_covar_specific_results": "Yes",
+    "variant_rate_threshold": "0.1",
+    "hwe_threshold": "1.0E-50",
+    "maf_threshold": "0.01",
+    "snp_qc_threshold": "",
+    "indel_qc_threshold": "",
+    "variant_blacklist_file": "",
+    "segment_blacklist_file": "",
+    "ref_path": "ref",
+    "treat_warnings_as_error": "Yes",
+    "max_run_time": "12",
+    "project_name": PROJECT,
+}
+ANALYSIS_CATALOG_RESP = {
+    "project_key": "string",
+    "name": "string",
+    "recipe_name": "string",
+    "recipe_parameters": AC_RECIPE_PARAMETERS,
+    "analysis_catalog_items": [],
+    "excluded_pns": [],
+    "runs": [],
+    "created_at": "2020-03-05T12:35:01.323Z",
+    "updated_at": "2020-03-05T12:35:01.323Z",
+    "created_by": "string",
+}
+
+ANALYSIS_CATALOG_RUN_RESP = {
+    "project_key": "string",
+    "name": "string",
+    "state": "string",
+    "created_at": "2020-03-05T12:35:01.323Z",
+    "updated_at": "2020-03-05T12:35:01.323Z",
+    "ended_at": "2020-03-05T12:35:01.323Z",
+    "links": {
+        "self": PROJECTS_URL + f"/{PROJECT}/analysis_catalogs/acname/runs/acrunname",
+    },
+}
 
 PROJECT_RESP = {
     "name": PROJECT,
@@ -256,3 +299,33 @@ class PhenotypeTest(BaseTestCase):
         )
         df = matrix.get_data()
         self.assertIn("blu", df.to_string())
+
+    @responses.activate
+    def test_create_analysis_catalog(self):
+        playlist = PLAYLIST_ID
+        name = "acname"
+        recipe_name = "plink-regression"
+        recipe_parameters = AC_RECIPE_PARAMETERS
+        covariate_phenotypes = ["pheno1", "pheno2"]
+        ret = {"analysis_catalog": ANALYSIS_CATALOG_RESP}
+        responses.add(
+            responses.POST, PROJECTS_URL + f"/{PROJECT}/playlists/{PLAYLIST_ID}/analysis_catalogs", json=ret
+        )
+        analysis_catalog = self.svc.create_analysis_catalog(playlist, name, recipe_name, recipe_parameters, covariate_phenotypes)
+        self.assertEqual(analysis_catalog.data, ANALYSIS_CATALOG_RESP)
+
+        # TODO: Add tests for server errors
+
+    @responses.activate
+    def test_get_analysis_catalog_run(self):
+        analysis_catalog_name = "acname"
+        analysis_catalog_run_name = "acrunname"
+
+        ret = {"analysis_catalog_run": ANALYSIS_CATALOG_RUN_RESP}
+        responses.add(
+            responses.GET, PROJECTS_URL + f"/{PROJECT}/analysis_catalogs/{analysis_catalog_name}/runs/{analysis_catalog_run_name}", json=ret
+        )
+        analysis_catalog_run = self.svc.get_analysis_catalog_run(analysis_catalog_name, analysis_catalog_run_name)
+        self.assertEqual(analysis_catalog_run.data, ANALYSIS_CATALOG_RUN_RESP)
+
+        # TODO: Add tests for server errors
