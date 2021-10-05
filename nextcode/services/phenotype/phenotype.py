@@ -13,9 +13,15 @@ import dateutil
 import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
-import numpy as np
-import plotly.graph_objects as go
-from plotly.offline import init_notebook_mode, iplot
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    print('numpy is not installed - some functions might not work')
+try:
+    import plotly.graph_objects as go
+    from plotly.offline import init_notebook_mode, iplot
+except ModuleNotFoundError:
+    print('plotly is not installed - some functions might not work')
 
 from .exceptions import PhenotypeError
 from .phenotype_matrix import PhenotypeMatrix
