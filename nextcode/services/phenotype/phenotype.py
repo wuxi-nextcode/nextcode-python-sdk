@@ -239,7 +239,7 @@ class Phenotype:
         grp_df = self.df.groupby(grp_col).count()
         grp_df = grp_df.reset_index()
  
-        fig = go.Figure([go.Bar(x=grp_df[grp_col], y = grp_df[grp_col])],
+        fig = go.Figure([go.Bar(x=[str(x) for x in grp_df[grp_col]], y = grp_df['pn'])],
                    **kwargs)
         fig.update_layout(xaxis={'title': "Category"},
                           yaxis={'title': "Count"})
