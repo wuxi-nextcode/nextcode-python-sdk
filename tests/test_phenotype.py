@@ -309,9 +309,17 @@ class PhenotypeTest(BaseTestCase):
         covariate_phenotypes = ["pheno1", "pheno2"]
         ret = {"analysis_catalog": ANALYSIS_CATALOG_RESP}
         responses.add(
-            responses.POST, PROJECTS_URL + f"/{PROJECT}/playlists/{PLAYLIST_ID}/analysis_catalogs", json=ret
+            responses.POST,
+            PROJECTS_URL + f"/{PROJECT}/playlists/{PLAYLIST_ID}/analysis_catalogs",
+            json=ret
         )
-        analysis_catalog = self.svc.create_analysis_catalog(playlist, name, recipe_name, recipe_parameters, covariate_phenotypes)
+        analysis_catalog = self.svc.create_analysis_catalog(
+            playlist,
+            name,
+            recipe_name,
+            recipe_parameters,
+            covariate_phenotypes
+        )
         self.assertEqual(analysis_catalog.data, ANALYSIS_CATALOG_RESP)
 
     @responses.activate
@@ -321,7 +329,9 @@ class PhenotypeTest(BaseTestCase):
 
         ret = {"analysis_catalog_run": ANALYSIS_CATALOG_RUN_RESP}
         responses.add(
-            responses.GET, PROJECTS_URL + f"/{PROJECT}/analysis_catalogs/{analysis_catalog_name}/runs/{analysis_catalog_run_name}", json=ret
+            responses.GET,
+            PROJECTS_URL + f"/{PROJECT}/analysis_catalogs/{analysis_catalog_name}/runs/{analysis_catalog_run_name}",
+            json=ret
         )
         analysis_catalog_run = self.svc.get_analysis_catalog_run(analysis_catalog_name, analysis_catalog_run_name)
         self.assertEqual(analysis_catalog_run.data, ANALYSIS_CATALOG_RUN_RESP)
