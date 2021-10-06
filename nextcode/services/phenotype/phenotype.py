@@ -13,6 +13,11 @@ import dateutil
 import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
+try:
+    import plotly.graph_objects as go
+    from plotly.offline import init_notebook_mode, iplot
+except ModuleNotFoundError:
+    print('plotly is not installed - some functions might not work')
 
 from .exceptions import PhenotypeError
 from .phenotype_matrix import PhenotypeMatrix
@@ -20,7 +25,6 @@ from ...exceptions import ServerError
 from ...session import ServiceSession
 
 log = logging.getLogger(__name__)
-
 
 class Phenotype:
     """
@@ -50,6 +54,7 @@ class Phenotype:
         self.session = session
         self.data = data
         self.links = data["links"]
+        self.df = None
 
     def __getattr__(self, name):
         try:
@@ -184,5 +189,61 @@ class Phenotype:
         """
         matrix = PhenotypeMatrix(self.session, project_name = self.data["project_key"])
         matrix.add_phenotype(name = self.data["name"], label = label)
-        return matrix.get_data()
+        self.df = matrix.get_data()
+        return self.df
 
+    def display(self):
+        """
+        Display phenotype
+        """
+        if self.df is None:
+            self.get_data()
+        
+        switcher = {
+            "SET": self._plot_set,
+            "QT": self._plot_qt,
+            "CATEGORY": self._plot_categorical
+        }
+
+        init_notebook_mode()
+
+        layout = {'title': 'Phenotype Overview',
+          'hovermode': False, 
+          'showlegend': False,
+          'width': 500,
+          'height': 400}
+
+        fig = switcher.get(self.data.get("result_type"), "Nothing")(layout=layout)
+        iplot(fig)
+
+    def _plot_qt(self, **kwargs):
+        """
+        Plot QT phenotype
+        """
+        grp_col = self.df.columns[1]
+        fig = go.Figure([go.Histogram(x=self.df[grp_col])],
+                   **kwargs)
+        fig.update_layout(yaxis={'title': "Count"})
+        return fig
+
+    def _plot_categorical(self, **kwargs):
+        """
+        Plot CATEGORICAL phenotype
+        """
+        grp_col = self.df.columns[1]
+        grp_df = self.df.groupby(grp_col).count()
+        grp_df = grp_df.reset_index()
+ 
+        fig = go.Figure([go.Bar(x=[str(x) for x in grp_df[grp_col]], y = grp_df['pn'])],
+                   **kwargs)
+        fig.update_layout(xaxis={'title': "Category"},
+                          yaxis={'title': "Count"})
+        return fig
+
+    def _plot_set(self, **kwargs):
+        """
+        Plot SET phenotype
+        """
+        fig = go.Figure([go.Pie(labels=["Count"], values=[len(self.df.index)])], **kwargs)
+        fig.update_traces(textinfo='value')
+        return fig

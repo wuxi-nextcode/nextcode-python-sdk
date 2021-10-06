@@ -82,7 +82,7 @@ setup(
         "pytest",
     ],
     extras_require={
-        "jupyter": ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets"]
+        "jupyter": ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
     },
     include_package_data=True,
     entry_points={},
