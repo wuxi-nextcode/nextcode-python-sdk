@@ -14,10 +14,6 @@ import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
 try:
-    import numpy as np
-except ModuleNotFoundError:
-    print('numpy is not installed - some functions might not work')
-try:
     import plotly.graph_objects as go
     from plotly.offline import init_notebook_mode, iplot
 except ModuleNotFoundError:
@@ -225,8 +221,7 @@ class Phenotype:
         Plot QT phenotype
         """
         grp_col = self.df.columns[1]
-        bin_count = int(np.ceil(np.log2(len(self.df[grp_col]))) + 1) # Sturge’s rule
-        fig = go.Figure([go.Histogram(x=self.df[self.df.columns[1]], nbinsx=bin_count)],
+        fig = go.Figure([go.Histogram(x=self.df[grp_col])],
                    **kwargs)
         fig.update_layout(yaxis={'title': "Count"})
         return fig
