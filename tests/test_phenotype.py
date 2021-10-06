@@ -35,7 +35,7 @@ ROOT_RESP = {
 PROJECT = "test-project"
 PHENOTYPE_NAME = "test-pheno"
 PHENOTYPE_RESP = {
-    "project_key": "string",
+    "project_key": PROJECT,
     "name": "string",
     "description": "string",
     "result_type": "SET",
@@ -151,6 +151,34 @@ class PhenotypeTest(BaseTestCase):
         # TODO: Add tests for server errors
 
     @responses.activate
+    def test_update_phenotype(self):
+        result_type = "SET"
+        
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
+
+        UPDATED_RESP = PHENOTYPE_RESP
+        UPDATED_RESP["description"] = "UPDATED DESCRIPTION"
+        ret_updated = {"phenotype": UPDATED_RESP}
+
+        responses.add(
+            responses.PATCH,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}"
+        )
+        responses.add(
+            responses.GET,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}",
+            json=ret_updated,
+        )
+        
+        phenotype.update(description="UPDATED DESCRIPTION")
+        self.assertEqual(phenotype.data, UPDATED_RESP)
+
+
+    @responses.activate
     def test_delete_phenotype(self):
         ret = {"phenotype": PHENOTYPE_RESP}
         responses.add(
@@ -186,6 +214,23 @@ class PhenotypeTest(BaseTestCase):
 
         with self.assertRaises(TypeError):
             _ = phenotype.upload("invalid")
+
+    @responses.activate
+    def test_phenotype_get_data(self):
+        result_type = "SET"
+        ret = {"phenotype": PHENOTYPE_RESP}
+        responses.add(
+            responses.POST, PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes", json=ret
+        )
+        phenotype = self.svc.create_phenotype(PHENOTYPE_NAME, result_type)
+
+        ret = "pn\tblu\nc\td"
+        responses.add(
+            responses.POST,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/get_phenotype_matrix", body=ret,
+        )
+        df = phenotype.get_data()
+        self.assertIn("blu", df.to_string())
 
     @responses.activate
     def test_attributes(self):
