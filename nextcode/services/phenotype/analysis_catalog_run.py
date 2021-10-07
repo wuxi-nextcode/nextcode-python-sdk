@@ -58,6 +58,3 @@ class AnalysisCatalogRun:
 
     def __repr__(self) -> str:
         return f"<AnalysisCatalogRun {self.name} in project {self.project_key}>"
-
-    def get_data(self):
-        return self.data
