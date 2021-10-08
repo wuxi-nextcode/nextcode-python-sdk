@@ -18,6 +18,8 @@ from .exceptions import PhenotypeError
 from .phenotype import Phenotype
 from .playlist import Playlist
 from .phenotype_matrix import PhenotypeMatrix
+from .analysis_catalog import AnalysisCatalog
+from .analysis_catalog_run import AnalysisCatalogRun
 
 SERVICE_PATH = "api/phenotype-catalog"
 
@@ -233,7 +235,7 @@ class Service(BaseService):
             "<10" matches records where the attribute less than 10.
             ">=10" matches records where the attribute is greater than or equal to 10.
             "=30" matches records where the attribute is equal to 30.
-            "10..20" matches records where the attribute is between 10 and 20 (both included).        
+            "10..20" matches records where the attribute is between 10 and 20 (both included).
         :return: Phenotypes as PhenotypeMatrix
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
@@ -329,7 +331,7 @@ class Service(BaseService):
             result_types: List[str] = [],
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None
-        
+
         ) -> List[Phenotype]:
         """
         Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`
@@ -600,3 +602,57 @@ class Service(BaseService):
                 raise ex
         data = resp.json()['covariate']
         return data
+
+    def create_analysis_catalog(
+            self,
+            playlist_id: str,
+            name: str,
+            recipe_name: str,
+            recipe_parameters: Dict,
+            covariate_phenotypes: Optional[List[str]] = [],
+            excluded_pns: Optional[List[str]] = []
+    ) -> AnalysisCatalog:
+        """
+        Create a new analysis catalog in the current project
+
+        :param playlist_id: The id of the playlist that contains the phenotypes to use for analysis
+        :param name: Analysis Catalog name
+        :param recipe_name: The name of the recipe to use
+        :param recipe_parameters: The parameters required to run the recipe
+        :param covariate_phenotypes: The names of phenotypes to use as covariates, e.g. ['Pheno1','Pheno2'] (optional)
+        :param excluded_pns: the PNs to exclude from the analysis, e.g. ['PN1','PN2'] (optional)
+        """
+
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "playlists", playlist_id, "analysis_catalogs"
+        )
+        payload = {"name": name, "recipe_name": recipe_name, "recipe_parameters": recipe_parameters, "covariate_phenotypes": covariate_phenotypes, "excluded_pns": excluded_pns}
+        resp = self.session.post(url, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # if the project did not already exist, initialize the service
+        if not self.project:
+            self._init_project(self.project_name)
+        return AnalysisCatalog(self.session, data["analysis_catalog"])
+
+    def get_analysis_catalog_run(self, analysis_catalog_name: str, analysis_catalog_run_name: str) -> AnalysisCatalogRun:
+        """
+        Get a new analysis catalog in the current project
+
+        :param analysis_catalog_name: The name of the Analysis Catalog
+        :param analysis_catalog_run_name: The name of the Analysis Catalog run
+        """
+
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "analysis_catalogs", analysis_catalog_name, "runs", analysis_catalog_run_name
+        )
+
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # if the project did not already exist, initialize the service
+        if not self.project:
+            self._init_project(self.project_name)
+        return AnalysisCatalogRun(self.session, data["analysis_catalog_run"])
