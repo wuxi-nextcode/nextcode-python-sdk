@@ -381,3 +381,44 @@ class PhenotypeTest(BaseTestCase):
         )
         analysis_catalog_run = self.svc.get_analysis_catalog_run(analysis_catalog_name, analysis_catalog_run_name)
         self.assertEqual(analysis_catalog_run.data, ANALYSIS_CATALOG_RUN_RESP)
+
+    @responses.activate
+    def test_get_analysis_catalog_runs(self):
+        ret = {"analysis_catalog_runs": [ANALYSIS_CATALOG_RUN_RESP]}
+
+        responses.add(
+            responses.GET,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}/analysis_catalog_runs",
+            json=ret,
+            )
+        analysis_catalog_runs = self.svc.get_analysis_catalog_runs(PHENOTYPE_NAME)
+        self.assertEqual([ac.data for ac in analysis_catalog_runs], [ANALYSIS_CATALOG_RUN_RESP])
+
+    @responses.activate
+    def test_get_analysis_catalogs(self):
+        ret = {"analysis_catalogs": [ANALYSIS_CATALOG_RESP]}
+        responses.add(
+            responses.GET, PROJECTS_URL + f"/{PROJECT}/analysis_catalogs", json=ret
+        )
+        analysis_catalogs = self.svc.get_analysis_catalogs()
+        self.assertEqual([ac.data for ac in analysis_catalogs], [ANALYSIS_CATALOG_RESP])
+
+        responses.add(
+            responses.GET,
+            PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}/analysis_catalogs",
+            json=ret,
+        )
+        analysis_catalogs = self.svc.get_analysis_catalogs(PHENOTYPE_NAME)
+        self.assertEqual([ac.data for ac in analysis_catalogs], [ANALYSIS_CATALOG_RESP])
+
+    @responses.activate
+    def test_get_analysis_catalog(self):
+        analysis_catalog_name = "acname"
+
+        ret = {"analysis_catalog": ANALYSIS_CATALOG_RESP}
+        responses.add(
+            responses.GET, PROJECTS_URL + f"/{PROJECT}/analysis_catalogs/{analysis_catalog_name}", json=ret
+        )
+
+        analysis_catalog = self.svc.get_analysis_catalog(analysis_catalog_name)
+        self.assertEqual(analysis_catalog.data, ANALYSIS_CATALOG_RESP)
