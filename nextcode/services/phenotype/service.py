@@ -274,7 +274,6 @@ class Service(BaseService):
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None,
             detail: Optional[bool] = False
-
     ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a pandas DataFrame.
