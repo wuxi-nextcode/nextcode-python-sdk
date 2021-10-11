@@ -681,8 +681,13 @@ class Service(BaseService):
         url = urljoin(
             self.session.url_from_endpoint("projects"), self.project_name, "playlists", playlist_id, "analysis_catalogs"
         )
-        payload = {"name": name, "recipe_name": recipe_name, "recipe_parameters": recipe_parameters,
-                   "covariate_phenotypes": covariate_phenotypes, "excluded_pns": excluded_pns}
+        payload = {
+            "name": name,
+            "recipe_name": recipe_name,
+            "recipe_parameters": recipe_parameters,
+            "covariate_phenotypes": covariate_phenotypes,
+            "excluded_pns": excluded_pns
+        }
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
