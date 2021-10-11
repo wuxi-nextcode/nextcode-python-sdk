@@ -333,7 +333,6 @@ class Service(BaseService):
             result_types: List[str] = [],
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None
-
     ) -> List[Phenotype]:
         """
         Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`
