@@ -68,9 +68,9 @@ class Service(BaseService):
     def __init__(self, client: Client, *args, **kwargs) -> None:
         super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
         project_name = (
-                kwargs.get("project")
-                or os.environ.get("GOR_API_PROJECT")
-                or client.profile.project
+            kwargs.get("project")
+            or os.environ.get("GOR_API_PROJECT")
+            or client.profile.project
         )
         if not project_name:
             raise PhenotypeError("Please specify a project")
