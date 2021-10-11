@@ -390,7 +390,7 @@ class PhenotypeTest(BaseTestCase):
             responses.GET,
             PHENOTYPE_URL + f"/projects/{PROJECT}/phenotypes/{PHENOTYPE_NAME}/analysis_catalog_runs",
             json=ret,
-            )
+        )
         analysis_catalog_runs = self.svc.get_analysis_catalog_runs(PHENOTYPE_NAME)
         self.assertEqual([ac.data for ac in analysis_catalog_runs], [ANALYSIS_CATALOG_RUN_RESP])
 
