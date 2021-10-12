@@ -27,19 +27,21 @@ log = logging.getLogger(__file__)
 
 SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
+
 def _get_paginated_results(method, limit):
-    default_batch_size = 100 # Used for pagination
+    default_batch_size = 100  # Used for pagination
     offset = 0
     combined_data = []
     # Loop to fetch the entire results, combining the paginated results
     while True:
-        batch_size = min(default_batch_size, limit-offset) # Make sure we dont get request too many phenos in last api call
+        batch_size = min(default_batch_size,
+                         limit - offset)  # Make sure we dont get request too many phenos in last api call
         data = method(batch_size, offset)
         results = len(data)
         combined_data += data
         offset += results
 
-        if results < batch_size or offset >= limit: # Stop if response smaller than requested or results (larger or) equal to limit
+        if results < batch_size or offset >= limit:  # Stop if response smaller than requested or results (larger or) equal to limit
             break
     return combined_data
 
@@ -93,14 +95,14 @@ class Service(BaseService):
             log.warning(f"Project {self.project_name} not found")
 
     def create_phenotype(
-        self,
-        name: str,
-        result_type: str,
-        description: Optional[str] = None,
-        url: Optional[str] = None,
-        category: Optional[str] = None,
-        query: Optional[str] = None,
-        tags: Optional[List[str]] = [],
+            self,
+            name: str,
+            result_type: str,
+            description: Optional[str] = None,
+            url: Optional[str] = None,
+            category: Optional[str] = None,
+            query: Optional[str] = None,
+            tags: Optional[List[str]] = [],
     ) -> Phenotype:
         """
         Create a new phenotype in the current project
@@ -163,7 +165,7 @@ class Service(BaseService):
             result_types: List[str] = [],
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None
-        ) -> List[Phenotype]:
+    ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a list of Phenotypes.
 
@@ -217,7 +219,7 @@ class Service(BaseService):
             result_types: List[str] = [],
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None
-        ) -> List[Phenotype]:
+    ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a PhenotypeMatrix.
 
@@ -272,8 +274,7 @@ class Service(BaseService):
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None,
             detail: Optional[bool] = False
-
-        ) -> List[Phenotype]:
+    ) -> List[Phenotype]:
         """
         Get all phenotypes in the current project as a pandas DataFrame.
 
@@ -331,8 +332,7 @@ class Service(BaseService):
             result_types: List[str] = [],
             names: Optional[List[str]] = [],
             pn_count: Optional[str] = None
-
-        ) -> List[Phenotype]:
+    ) -> List[Phenotype]:
         """
         Internal method to be called by `get_phenotypes`, `get_phenotypes_matrix` and `get_phenotypes_dataframe`
         See documentation of those methods for more details
@@ -368,7 +368,7 @@ class Service(BaseService):
             any_tags = ','.join(any_tags) if isinstance(any_tags, list) else any_tags
 
         if categories:
-            categories = ','.join(categories) if  isinstance(categories, list) else categories
+            categories = ','.join(categories) if isinstance(categories, list) else categories
 
         if result_types:
             result_types = ','.join(result_types) if isinstance(result_types, list) else result_types
@@ -578,6 +578,7 @@ class Service(BaseService):
         Get all covariates in current project
         """
         url = urljoin(self.links['self'], 'covariates')
+
         def do_get(batch_size, offset):
             content = {'limit': batch_size, 'offset': offset}
             resp = self.session.get(url, data=content)
@@ -603,6 +604,58 @@ class Service(BaseService):
         data = resp.json()['covariate']
         return data
 
+    def get_analysis_catalogs(self, phenotype_name: Optional[str] = None, limit: int = 100) -> List[AnalysisCatalog]:
+        """
+        A list of all the analysis catalogs in the current project. Optionally scope results to a given phenotype name.
+
+        :param phenotype_name: Only list analysis catalogs for a specific phenotype name (optional)
+        :param limit: Maximum number of results (default: 100)
+        :return: List of analysis catalogs
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+
+        if not self.project:
+            raise PhenotypeError("Project does not exist.")
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "analysis_catalogs"
+        )
+
+        if phenotype_name:
+            url = urljoin(
+                self.session.url_from_endpoint("projects"), self.project_name, "phenotypes", phenotype_name,
+                "analysis_catalogs"
+            )
+
+        content = {"limit": limit}
+        resp = self.session.get(url, data=content)
+
+        data = resp.json()["analysis_catalogs"]
+        analysis_catalogs = []
+        for item in data:
+            analysis_catalogs.append(AnalysisCatalog(self.session, item))
+        return analysis_catalogs
+
+    def get_analysis_catalog(self, analysis_catalog_name: str) -> AnalysisCatalog:
+        """
+        Get an analysis catalog in the current project by name
+
+        :param analysis_catalog_name: The name of the Analysis Catalogs
+        """
+
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "analysis_catalogs", analysis_catalog_name
+        )
+
+        resp = self.session.get(url)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # if the project did not already exist, initialize the service
+        if not self.project:
+            self._init_project(self.project_name)
+        return AnalysisCatalogRun(self.session, data["analysis_catalog"])
+
     def create_analysis_catalog(
             self,
             playlist_id: str,
@@ -626,7 +679,13 @@ class Service(BaseService):
         url = urljoin(
             self.session.url_from_endpoint("projects"), self.project_name, "playlists", playlist_id, "analysis_catalogs"
         )
-        payload = {"name": name, "recipe_name": recipe_name, "recipe_parameters": recipe_parameters, "covariate_phenotypes": covariate_phenotypes, "excluded_pns": excluded_pns}
+        payload = {
+            "name": name,
+            "recipe_name": recipe_name,
+            "recipe_parameters": recipe_parameters,
+            "covariate_phenotypes": covariate_phenotypes,
+            "excluded_pns": excluded_pns
+        }
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -636,16 +695,18 @@ class Service(BaseService):
             self._init_project(self.project_name)
         return AnalysisCatalog(self.session, data["analysis_catalog"])
 
-    def get_analysis_catalog_run(self, analysis_catalog_name: str, analysis_catalog_run_name: str) -> AnalysisCatalogRun:
+    def get_analysis_catalog_run(self, analysis_catalog_name: str,
+                                 analysis_catalog_run_name: str) -> AnalysisCatalogRun:
         """
-        Get a new analysis catalog in the current project
+        Get an analysis catalog run in the current project by names
 
         :param analysis_catalog_name: The name of the Analysis Catalog
         :param analysis_catalog_run_name: The name of the Analysis Catalog run
         """
 
         url = urljoin(
-            self.session.url_from_endpoint("projects"), self.project_name, "analysis_catalogs", analysis_catalog_name, "runs", analysis_catalog_run_name
+            self.session.url_from_endpoint("projects"), self.project_name, "analysis_catalogs", analysis_catalog_name,
+            "runs", analysis_catalog_run_name
         )
 
         resp = self.session.get(url)
@@ -656,3 +717,31 @@ class Service(BaseService):
         if not self.project:
             self._init_project(self.project_name)
         return AnalysisCatalogRun(self.session, data["analysis_catalog_run"])
+
+    def get_analysis_catalog_runs(self, phenotype_name: str, limit: int = 100) -> List[AnalysisCatalogRun]:
+        """
+        A list of all the analysis catalog runs in the current project for a given phenotype.
+
+        :param phenotype_name: Only list analysis catalog runs for a specific phenotype name
+        :param limit: Maximum number of results (default: 100)
+        :return: List of analysis catalog runs
+        :raises: `PhenotypeError` if the project does not exist
+        :raises: ServerError
+        """
+
+        if not self.project:
+            raise PhenotypeError("Project does not exist.")
+
+        url = urljoin(
+            self.session.url_from_endpoint("projects"), self.project_name, "phenotypes", phenotype_name,
+            "analysis_catalog_runs"
+        )
+
+        content = {"limit": limit}
+        resp = self.session.get(url, data=content)
+
+        data = resp.json()["analysis_catalog_runs"]
+        analysis_catalog_runs = []
+        for item in data:
+            analysis_catalog_runs.append(AnalysisCatalogRun(self.session, item))
+        return analysis_catalog_runs
