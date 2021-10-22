@@ -654,7 +654,7 @@ class Service(BaseService):
         # if the project did not already exist, initialize the service
         if not self.project:
             self._init_project(self.project_name)
-        return AnalysisCatalogRun(self.session, data["analysis_catalog"])
+        return AnalysisCatalog(self.session, data["analysis_catalog"])
 
     def create_analysis_catalog(
             self,
@@ -680,11 +680,13 @@ class Service(BaseService):
             self.session.url_from_endpoint("projects"), self.project_name, "playlists", playlist_id, "analysis_catalogs"
         )
         payload = {
-            "name": name,
-            "recipe_name": recipe_name,
-            "recipe_parameters": recipe_parameters,
-            "covariate_phenotypes": covariate_phenotypes,
-            "excluded_pns": excluded_pns
+            "analysis_catalog": {
+                "name": name,
+                "recipe_name": recipe_name,
+                "recipe_parameters": recipe_parameters,
+                "covariate_phenotypes": covariate_phenotypes,
+                "excluded_pns": excluded_pns
+            }
         }
         resp = self.session.post(url, json=payload)
         resp.raise_for_status()
