@@ -192,10 +192,15 @@ class Phenotype:
         self.df = matrix.get_data()
         return self.df
 
-    def display(self):
+    def display(self, title=None):
         """
         Display phenotype
+
+        :title: Phenotype plot title. Default: Phenotype name.
         """
+        if not title:
+            title = self.data['name']
+
         if self.df is None:
             self.get_data()
         
@@ -207,11 +212,13 @@ class Phenotype:
 
         init_notebook_mode()
 
-        layout = {'title': 'Phenotype Overview',
-          'hovermode': False, 
-          'showlegend': False,
-          'width': 500,
-          'height': 400}
+        layout = {
+            'title': title,
+            'hovermode': False, 
+            'showlegend': False,
+            'width': 500,
+            'height': 400
+        }
 
         fig = switcher.get(self.data.get("result_type"), "Nothing")(layout=layout)
         iplot(fig)
