@@ -17,6 +17,7 @@ from posixpath import join as urljoin
 from typing import Callable, Union, Optional, Dict, List
 
 from .exceptions import PhenotypeError
+from .phenotype_matrix import PhenotypeMatrix
 from ...exceptions import ServerError
 from ...session import ServiceSession
 
@@ -74,11 +75,23 @@ class Playlist:
         """
         Add a phenotype to a playlist
         """
-        url = url = urljoin(self.links["self"], "phenotypes")
+        url = urljoin(self.links["self"], "phenotypes")
         content = {"name": name}
         _ = self.session.post(url, json=content)
 
-        self.get_data()
+        self.get_info()
 
-    def get_data(self):
+    def get_info(self):
         return self.data
+
+    def list_phenotypes(self):
+        return [phenotype['name'] for phenotype in self.get_info()['phenotypes']]
+    
+    def get_data(self, missing_value=None):
+        """
+        Retrieve phenotype data from the server.
+        """
+        matrix = PhenotypeMatrix(self.session, project_name = self.data["project_key"])
+        matrix.add_phenotypes(names=self.list_phenotypes(), missing_value=missing_value)
+        self.df = matrix.get_data()
+        return self.df
