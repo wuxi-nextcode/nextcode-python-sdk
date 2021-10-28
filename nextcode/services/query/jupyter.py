@@ -358,27 +358,33 @@ class GorMagics(Magics):
             print_error("Query has been cancelled")
             return None
 
+    def __call_query_server_execute_and_get_dataframe(self, gor_string, gzip, relations, st):
+        svc = get_queryserver()
+        result = svc.execute(gor_string, gzip=gzip, relations=relations)
+        query_time = time.time() - st
+        print("Query ran in {:.2f} sec".format(time.time() - st,))
+
+        MAX_ROWS = 1000000
+        ret = result.dataframe(limit=MAX_ROWS)
+
+        end_time =  time.time()
+        print("Query fetched {:,} rows in {:.2f} sec (total time {:.2f} sec)".format(
+            result.num_lines, end_time - st - query_time, end_time - st))
+
+        return ret
+
     def __call_query_server(self, gor_string, gzip, return_var):
         try:
             result = None
             st = time.time()
             t = updateStatusThread()
             t.start()
-            svc = get_queryserver()
+            relations = []
             try:
-                result = svc.execute(gor_string, gzip=gzip)
+                ret = self.__call_query_server_execute_and_get_dataframe(gor_string, gzip, relations, st)
             except MissingRelations as ex:
                 relations = self.load_relations(ex.relations)
-                result = svc.execute(gor_string, gzip=gzip, relations=relations)
-
-            query_time = time.time() - st
-            print("Query ran in {:.2f} sec".format(time.time() - st,))
-
-            MAX_ROWS = 1000000
-            ret = result.dataframe(limit=MAX_ROWS)
-            end_time =  time.time()
-            print("Query fetched {:,} rows in {:.2f} sec (total time {:.2f} sec)".format(
-                result.num_lines, end_time - st - query_time, end_time - st))
+                ret = self.__call_query_server_execute_and_get_dataframe(gor_string, gzip, relations, st)
 
             if return_var:
                 self.shell.user_ns[return_var] = ret
