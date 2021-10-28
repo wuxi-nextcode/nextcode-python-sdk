@@ -11,10 +11,11 @@ from io import StringIO
 from requests import Response
 
 from nextcode.exceptions import ServerError
-from nextcode.services.query.exceptions import QueryError
+from nextcode.services.query.exceptions import QueryError, MissingRelations
 from nextcode.utils import jupyter_available
 
 log = logging.getLogger(__name__)
+
 
 class Result(object):
     """
@@ -42,7 +43,7 @@ class Result(object):
 
             if line:
                 if line.startswith(b'#> EXCEPTION'):
-                    self.__throw_error_from_line__(line.decode('utf-8'))
+                    throw_error_from_line(line.decode('utf-8'))
                 elif line.startswith(b'#>'):
                     continue
 
@@ -122,14 +123,6 @@ class Result(object):
         if not self.open:
             raise Exception("Response has been closed, data can not been accessed")
 
-    def __throw_error_from_line__(self, line):
-        if line.startswith("#> EXCEPTION") and line.find('{') > -1:
-            # Assume this is an exception from Query Server with embedded json.
-            json_ex = json.loads(line[line.find('{'):line.rfind('}')+1])
-            raise ServerError(json_ex["gorMessage"])
-        else:
-            raise ServerError("Error while running query.\n{}".format(line))
-
     ITER_CHUNK_SIZE = 512
 
     def iter_lines_unzip(self, chunk_size=ITER_CHUNK_SIZE, decode_unicode=False, delimiter=None):
@@ -188,3 +181,17 @@ def _log_download_progress(
     if num_chunk is not None and num_chunk % 1000 == 0:
         msg = f"Downloaded {total_received_lines}/{total_expected_lines} lines ({mb:.2f} MB) in {diff:.2f} sec"
         log.info(msg)
+
+
+def throw_error_from_line(line):
+    if line.startswith("#> EXCEPTION") and line.find('{') > -1:
+        # Assume this is an exception from Query Server with embedded json.
+        json_ex = json.loads(line[line.find('{'):line.rfind('}')+1])
+        if "errorType" in json_ex and json_ex["errorType"] == "GorMissingRelationException":
+            raise MissingRelations(
+                [r for r in json_ex["uri"].split(',')]
+            )
+        else:
+            raise ServerError(json_ex["gorMessage"])
+    else:
+        raise ServerError("Error while running query.\n{}".format(line))
