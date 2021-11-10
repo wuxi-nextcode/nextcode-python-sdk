@@ -364,8 +364,7 @@ class GorMagics(Magics):
         query_time = time.time() - st
         print("Query ran in {:.2f} sec".format(time.time() - st,))
 
-        MAX_ROWS = 1000000
-        ret = result.dataframe(limit=MAX_ROWS)
+        ret = result.dataframe()
 
         end_time =  time.time()
         print("Query fetched {:,} rows in {:.2f} sec (total time {:.2f} sec)".format(
