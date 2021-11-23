@@ -21,6 +21,7 @@ test-results
 htmlcov
 .vscode
 *.*workspace
+docs/.doctrees
 
 # Common virtualenv names
 venv

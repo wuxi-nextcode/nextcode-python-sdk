@@ -2,57 +2,17 @@
 import os
 import sys
 
-from setuptools import setup, find_packages, Command
+from setuptools import setup, find_packages
 
 if sys.version_info < (3, 6):
     raise NotImplementedError(
         """Genuity Science SDK does not support Python versions older than 3.6"""
     )
-
-
 version_file = os.path.abspath(os.path.join("nextcode", "VERSION"))
-
 
 def get_version():
     with open(version_file) as f:
         return f.readlines()[0].strip()
-
-
-class BumpCommand(Command):
-    description = "Version bump"
-    user_options = [("which=", None, "Specify which part of the version to bump")]
-
-    def initialize_options(self):
-        self.which = None
-
-    def finalize_options(self):
-        assert self.which in (None, "major", "minor", "patch"), "Invalid bump pragma"
-
-    def run(self):
-        bump_version(self.which)
-
-
-def bump_version(which):
-    major, minor, patch = (0, 1, 0)
-    old_version = get_version()
-    major, minor, patch = old_version.split(".")
-
-    if which == "major":
-        major = int(major) + 1
-        minor = 0
-        patch = 0
-    elif which == "minor":
-        minor = int(minor) + 1
-        patch = 0
-    else:
-        patch = int(patch.split("-")[0]) + 1
-
-    new_version = "%s.%s.%s" % (major, minor, patch)
-
-    with open(version_file, "w") as f:
-        f.write(new_version)
-    print(f"Version has been bumped from {old_version} to {new_version}")
-
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -103,5 +63,4 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     test_suite="tests",
-    cmdclass={"bump": BumpCommand},
 )

@@ -1,6 +1,0 @@
-[MASTER]
-disable=R,C,W
-
-[TYPECHECK]
-generated-members=requests.*,codes.*,responses.*
-ignore-patterns=test_.*?py
