@@ -1,14 +1,11 @@
 boto3
 mock
-pylint
 responses
 pytest
 pytest-cover
 pylint2junit
 twine
 black
-tox
-mypy
 pandas
 codecov
 ipython

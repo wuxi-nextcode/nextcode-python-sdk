@@ -1,9 +1,11 @@
+# 2021-11-22 this requirements file will not successfully install on setuptools >=58.0.0
+# the base image we use comes with 57.5.0 but may get updated in future
+# setuptools==57.*
 sphinx
 sphinx-autodoc-typehints
 sphinx-rtd-theme
 nbsphinx
 jupyter-sphinx-theme
 ipython
-pandoc
 sphinx_bootstrap_theme
 sphinxcontrib-osexample==0.1.1
