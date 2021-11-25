@@ -81,3 +81,8 @@ html_css_files = [
     "https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap.min.css",
     "https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap-theme.min.css"
 ]
+
+html_js_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js",
+    "https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+]
