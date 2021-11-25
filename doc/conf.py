@@ -78,4 +78,6 @@ html_theme_options = {"navbar_site_name": "Contents", "source_link_position": "f
 html_static_path = ["_static"]
 html_css_files = [
     "css/custom.css",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap.min.css",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap-theme.min.css"
 ]
