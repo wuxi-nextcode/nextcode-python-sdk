@@ -3,7 +3,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Building queries with the Python SDK &#8212; nextcode-python-sdk 1.21.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -395,7 +396,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Building-queries-with-the-Python-SDK">
+<section id="Building-queries-with-the-Python-SDK">
 <h1>Building queries with the Python SDK<a class="headerlink" href="#Building-queries-with-the-Python-SDK" title="Permalink to this headline"></a></h1>
 <p>In the following notebook, we will show how to build complex queries in GOR using the Python SDK to connect to our instance. First, as always, we load the gor magic extension to be able to use the <code class="docutils literal notranslate"><span class="pre">%gor</span></code> and <code class="docutils literal notranslate"><span class="pre">%%gor</span></code> syntax. This notebook assumes you are familiar with the gor syntax.</p>
 <div class="nbinput nblast docutils container">
@@ -436,7 +437,7 @@ div.rendered_html tbody tr:hover {
 env: LOG_QUERY=1
 </pre></div></div>
 </div>
-<div class="section" id="Simple-single-line-gor-expression">
+<section id="Simple-single-line-gor-expression">
 <h2>Simple single-line gor expression<a class="headerlink" href="#Simple-single-line-gor-expression" title="Permalink to this headline"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -506,8 +507,8 @@ Query 19503 generated 2 rows in 0.84 sec
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Single-line-gor-expression-which-stores-results-in-local-variable">
+</section>
+<section id="Single-line-gor-expression-which-stores-results-in-local-variable">
 <h2>Single-line gor expression which stores results in local variable<a class="headerlink" href="#Single-line-gor-expression-which-stores-results-in-local-variable" title="Permalink to this headline"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -545,8 +546,8 @@ Query 19504 generated 2 rows in 0.73 sec
 1  chr1  10039         A      C  rs978760828
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Simple-multi-line-gor-expression">
+</section>
+<section id="Simple-multi-line-gor-expression">
 <h2>Simple multi-line gor expression<a class="headerlink" href="#Simple-multi-line-gor-expression" title="Permalink to this headline"></a></h2>
 <p>Multi-line expressions are started with <code class="docutils literal notranslate"><span class="pre">%%</span></code>. Each statement should end with <code class="docutils literal notranslate"><span class="pre">;</span></code></p>
 <div class="nbinput docutils container">
@@ -620,8 +621,8 @@ Query 19505 generated 2 rows in 0.77 sec
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Multi-line-gor-expression-which-stores-results-in-local-variable">
+</section>
+<section id="Multi-line-gor-expression-which-stores-results-in-local-variable">
 <h2>Multi-line gor expression which stores results in local variable<a class="headerlink" href="#Multi-line-gor-expression-which-stores-results-in-local-variable" title="Permalink to this headline"></a></h2>
 <p>To load results from a multi-line gor expression into a variable you can use the special <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> operator</p>
 <div class="nbinput docutils container">
@@ -661,8 +662,8 @@ Query 19506 generated 10 rows in 0.86 sec
 RangeIndex(start=0, stop=10, step=1)
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Store-results-in-the-user_data-folder">
+</section>
+<section id="Store-results-in-the-user_data-folder">
 <h2>Store results in the user_data folder<a class="headerlink" href="#Store-results-in-the-user_data-folder" title="Permalink to this headline"></a></h2>
 <p>Instead of fetching the data to the jupyter server you can also use the | write gor command to store files in the user_data folder within the project on NFS.</p>
 <div class="nbinput docutils container">
@@ -792,7 +793,7 @@ Query 19509 generated 1 rows in 0.73 sec
 </table>
 </div></div>
 </div>
-<div class="section" id="Download-results-to-a-local-file">
+<section id="Download-results-to-a-local-file">
 <h3>Download results to a local file<a class="headerlink" href="#Download-results-to-a-local-file" title="Permalink to this headline"></a></h3>
 <p>When the results are very large and you want to be able to use them locally without rerunning the query you can stream the results directly to a file with the &lt;&lt; operator by specifying <code class="docutils literal notranslate"><span class="pre">file:</span></code>. You can cancel the download at any time and have partial results in the output file.</p>
 <div class="nbinput nblast docutils container">
@@ -842,9 +843,9 @@ Query 19509 generated 1 rows in 0.73 sec
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="Gor-expression-which-references-a-local-variable">
+</section>
+</section>
+<section id="Gor-expression-which-references-a-local-variable">
 <h2>Gor expression which references a local variable<a class="headerlink" href="#Gor-expression-which-references-a-local-variable" title="Permalink to this headline"></a></h2>
 <p>Local variables can be references using the <code class="docutils literal notranslate"><span class="pre">$xxx</span></code> syntax. This will expand the variable inline and is meant to be used for simple strings and numbers</p>
 <div class="nbinput nblast docutils container">
@@ -867,8 +868,8 @@ Query 19509 generated 1 rows in 0.73 sec
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Gor-expression-with-defs-and-create-statements">
+</section>
+<section id="Gor-expression-with-defs-and-create-statements">
 <h2>Gor expression with defs and create statements<a class="headerlink" href="#Gor-expression-with-defs-and-create-statements" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -887,8 +888,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Compound-expressions">
+</section>
+<section id="Compound-expressions">
 <h2>Compound expressions<a class="headerlink" href="#Compound-expressions" title="Permalink to this headline"></a></h2>
 <p>Using the local variables you can construct compount expressions, allowing you to split up long gor scripts.</p>
 <div class="nbinput nblast docutils container">
@@ -921,8 +922,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Virtual-relations">
+</section>
+<section id="Virtual-relations">
 <h2>Virtual relations<a class="headerlink" href="#Virtual-relations" title="Permalink to this headline"></a></h2>
 <p>You can load pandas dataframes into the query with the special <code class="docutils literal notranslate"><span class="pre">[var:xxx]</span></code> syntax.</p>
 <div class="nbinput nblast docutils container">
@@ -947,8 +948,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Cancelling-queries">
+</section>
+<section id="Cancelling-queries">
 <h2>Cancelling queries<a class="headerlink" href="#Cancelling-queries" title="Permalink to this headline"></a></h2>
 <p>Try executing this long-running query and then click the stop button</p>
 <div class="nbinput nblast docutils container">
@@ -960,12 +961,12 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-<div class="section" id="Using-the-SDK-without-magic-syntax">
+<section id="Using-the-SDK-without-magic-syntax">
 <h3>Using the SDK without magic syntax<a class="headerlink" href="#Using-the-SDK-without-magic-syntax" title="Permalink to this headline"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">%</span></code> and <code class="docutils literal notranslate"><span class="pre">%%</span></code> is simply syntactic sugar for executing queries through the python sdk. You can use the sdk directly as well and that is probably the preferred method for serious analysis.</p>
-</div>
-</div>
-<div class="section" id="Initializing-the-SDK">
+</section>
+</section>
+<section id="Initializing-the-SDK">
 <h2>Initializing the SDK<a class="headerlink" href="#Initializing-the-SDK" title="Permalink to this headline"></a></h2>
 <p>The SDK usually needs to be initialized with an API key and a project. However, in Wuxi notebooks this has already been done for you.</p>
 <div class="nbinput nblast docutils container">
@@ -982,8 +983,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Running-basic-queries">
+</section>
+<section id="Running-basic-queries">
 <h2>Running basic queries<a class="headerlink" href="#Running-basic-queries" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -999,8 +1000,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Analysing-failed-queries">
+</section>
+<section id="Analysing-failed-queries">
 <h2>Analysing failed queries<a class="headerlink" href="#Analysing-failed-queries" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -1015,8 +1016,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Using-virtual-relations">
+</section>
+<section id="Using-virtual-relations">
 <h2>Using virtual relations<a class="headerlink" href="#Using-virtual-relations" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -1043,8 +1044,8 @@ gor [mydbsnp];
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
