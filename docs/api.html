@@ -3,8 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Reference &#8212; nextcode-python-sdk 1.21.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -127,7 +126,7 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="api-reference">
+  <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
 <p>These pages feature low-level documentation of the functionality of the SDK.</p>
 <p>When using the SDK you always start by getting a <cite>Client</cite> instance using an API Key. With this object you can connect to various services.</p>
@@ -143,20 +142,50 @@
 </pre></div>
 </div>
 <p>In this example we assume the <cite>api_key</cite> has already been set but it can also be passed in.</p>
-<section id="available-services">
+<div class="section" id="available-services">
 <h2>Available Services<a class="headerlink" href="#available-services" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_query.html">Query Service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_workflow.html">Workflow Service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_pipelines.html">Pipelines Service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_phenotype.html">Phenotype Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_query.html">Query Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_query.html#service-class">Service class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_query.html#query-object">Query Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_query.html#utility-methods">Utility methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_query.html#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_query.html#jupyter-extensions">Jupyter Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_workflow.html">Workflow Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_workflow.html#service-class">Service class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_workflow.html#workflow-job">Workflow Job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_workflow.html#pytest-plugin">Pytest plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_workflow.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_pipelines.html">Pipelines Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_pipelines.html#service-class">Service class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_phenotype.html">Phenotype Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_phenotype.html#service-class">Service class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_phenotype.html#phenotype">Phenotype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_phenotype.html#phenotype-matrix">Phenotype Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_phenotype.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api_exceptions.html">Exceptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_basic.html">Basic facilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_basic.html">Basic facilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#client">client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#session">session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#config">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#utils">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#keycloak">keycloak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_basic.html#csa">csa</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
     </div>

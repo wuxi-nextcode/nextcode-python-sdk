@@ -3,8 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pipelines Service &#8212; nextcode-python-sdk 1.21.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -82,7 +81,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Pipelines Service</a></li>
+<li><a class="reference internal" href="#">Pipelines Service</a><ul>
+<li><a class="reference internal" href="#service-class">Service class</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -124,9 +126,73 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="pipelines-service">
-<h1>Pipelines Service<a class="headerlink" href="#pipelines-service" title="Permalink to this headline"></a></h1>
-</section>
+  <div class="section" id="module-nextcode.services.pipelines">
+<span id="pipelines-service"></span><h1>Pipelines Service<a class="headerlink" href="#module-nextcode.services.pipelines" title="Permalink to this headline"></a></h1>
+<div class="section" id="service-class">
+<h2>Service class<a class="headerlink" href="#service-class" title="Permalink to this headline"></a></h2>
+<p>Service object for interfacing with the Pipelines service API</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nextcode.services.pipelines.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nextcode/services/pipelines.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nextcode.services.pipelines.Service" title="Permalink to this definition"></a></dt>
+<dd><dl class="py property">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service.current_user">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#nextcode.services.pipelines.Service.current_user" title="Permalink to this definition"></a></dt>
+<dd><p>User JWT decoded by the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service.endpoints">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">endpoints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#nextcode.services.pipelines.Service.endpoints" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of name: endpoint url for exposed endpoints in the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service.healthy">
+<span class="sig-name descname"><span class="pre">healthy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.pipelines.Service.healthy" title="Permalink to this definition"></a></dt>
+<dd><p>Is the service healthy?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service.openapi_spec">
+<span class="sig-name descname"><span class="pre">openapi_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.pipelines.Service.openapi_spec" title="Permalink to this definition"></a></dt>
+<dd><p>Raw openapi spec for the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nextcode.services.pipelines.Service.status">
+<span class="sig-name descname"><span class="pre">status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nextcode.services.pipelines.Service.status" title="Permalink to this definition"></a></dt>
+<dd><p>Service information from the root endpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
 
 
     </div>
