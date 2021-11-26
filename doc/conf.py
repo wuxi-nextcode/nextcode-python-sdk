@@ -84,5 +84,6 @@ html_css_files = [
 
 html_js_files = [
     "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js",
-    "https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+    "https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js",
+    "https://cdn.jsdelivr.net/npm/porter-stemmer@0.9/porter.min.js"
 ]
