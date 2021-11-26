@@ -7,5 +7,5 @@ sphinx-rtd-theme
 nbsphinx
 jupyter-sphinx-theme
 ipython
-sphinx_bootstrap_theme
+https://github.com/larsoner/sphinx-bootstrap-theme/archive/language_data.zip
 sphinxcontrib-osexample==0.1.1

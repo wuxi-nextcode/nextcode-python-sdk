@@ -4,24 +4,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 1.6.0 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>nextcode.services.query.jupyter &#8212; nextcode-python-sdk 1.21.0
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3/dist/css/bootstrap-theme.min.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -37,7 +42,8 @@
         </button>
         <a class="navbar-brand" href="../../../../index.html">
           nextcode-python-sdk</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.21.0
+</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -113,19 +119,24 @@
 
 <span class="sd">Use `%env LOG_QUERY=1` in Jupyter to see details.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">...exceptions</span> <span class="kn">import</span> <span class="n">ServerError</span><span class="p">,</span> <span class="n">InvalidToken</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">MissingRelations</span><span class="p">,</span> <span class="n">QueryError</span>
-<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">jupyter_available</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">nextcode</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">getopt</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">_thread</span>
+
+<span class="kn">import</span> <span class="nn">nextcode</span>
+
+<span class="kn">from</span> <span class="nn">...exceptions</span> <span class="kn">import</span> <span class="n">ServerError</span><span class="p">,</span> <span class="n">InvalidToken</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">MissingRelations</span><span class="p">,</span> <span class="n">QueryError</span>
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">jupyter_available</span><span class="p">,</span> <span class="n">strtobool</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -162,16 +173,14 @@
 <span class="sd">    Print string, but only if LOG_QUERY is set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LOG_QUERY&quot;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="print_error"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.print_error">[docs]</a><span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Print string to stderr</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sizeof_fmt"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.sizeof_fmt">[docs]</a><span class="k">def</span> <span class="nf">sizeof_fmt</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">):</span>
@@ -199,67 +208,19 @@
     <span class="k">return</span> <span class="n">svc</span></div>
 
 
+<div class="viewcode-block" id="get_queryserver"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.get_queryserver">[docs]</a><span class="k">def</span> <span class="nf">get_queryserver</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper method to get a query server instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">svc</span> <span class="o">=</span> <span class="n">nextcode</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="s2">&quot;queryserver&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">svc</span></div>
+
+
 <div class="viewcode-block" id="GorMagics"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics">[docs]</a><span class="nd">@magics_class</span>
 <span class="k">class</span> <span class="nc">GorMagics</span><span class="p">(</span><span class="n">Magics</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The basic &#39;ipython magic&#39; extension that loads up the sdk as a `%gor` plugin in Jupyter notebook.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="GorMagics.handle_exception"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.handle_exception">[docs]</a>    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Print out any exception on the stack.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">exception</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-        <span class="n">print_error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div>
-
-<div class="viewcode-block" id="GorMagics.replace_vars"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.replace_vars">[docs]</a>    <span class="k">def</span> <span class="nf">replace_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Handle variable substitution in a gor string to interact with local state.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([^0-9][a-zA-Z0-9_]*)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="n">string</span>
-        <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
-        <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">replacement_vars</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">var_name</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found in notebook&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span>
-                <span class="k">continue</span>
-            <span class="n">var</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">])</span>
-            <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ret</span></div>
-
-<div class="viewcode-block" id="GorMagics.load_relations"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.load_relations">[docs]</a>    <span class="k">def</span> <span class="nf">load_relations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_names</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Find relations in local iPython state for inclusion in a remote gor query.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">relations</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
-        <span class="n">print_details</span><span class="p">(</span>
-            <span class="s2">&quot;Loading relations </span><span class="si">{}</span><span class="s2"> from local state&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relation_names</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">relation_names</span><span class="p">:</span>
-            <span class="n">var_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
-            <span class="n">var</span> <span class="o">=</span> <span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be a pandas DataFrame object, not </span><span class="si">%s</span><span class="s2">&quot;</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
-                <span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
-            <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
-            <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">]))</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">relations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;fingerprint&quot;</span><span class="p">:</span> <span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
-                    <span class="s2">&quot;extension&quot;</span><span class="p">:</span> <span class="s2">&quot;.tsv&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="n">relations</span></div>
 
 <div class="viewcode-block" id="GorMagics.gor"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.gor">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">gor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -269,109 +230,43 @@
 <span class="sd">        See Jupyter notebook for examples and details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="n">svc</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">()</span>
             <span class="n">gor_string</span> <span class="o">=</span> <span class="n">line</span>
             <span class="n">return_var</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">persist</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">download_filename</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
-            <span class="n">qry</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="c1"># if this is a multiline statement</span>
+
+            <span class="c1"># if there is a &lt;&lt; on the first line we assume we have an assignment or a persist</span>
+            <span class="k">if</span> <span class="s2">&quot;&lt;&lt;&quot;</span> <span class="ow">in</span> <span class="n">gor_string</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">gor_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;&lt;&quot;</span><span class="p">)</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">gor_string</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># if the variable looks like it might be a filename, persist it, otherwise assign to a local var</span>
+                <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;file:&quot;</span><span class="p">):</span>
+                    <span class="n">download_filename</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+                <span class="k">elif</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">var</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
+                    <span class="n">persist</span> <span class="o">=</span> <span class="n">var</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">return_var</span> <span class="o">=</span> <span class="n">var</span>
+
+            <span class="c1"># Handle options (use only long options so it is less likely to conflict with gor)</span>
+            <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--gzip&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">strtobool</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--queryservice&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">strtobool</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">(</span><span class="n">gor_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="n">gor_string</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+            <span class="c1"># If this is a multiline statement.</span>
             <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="c1"># if there is a &lt;&lt; on the first line we assume we have an assignment or a persist</span>
-                <span class="k">if</span> <span class="s2">&quot;&lt;&lt;&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;&lt;&quot;</span><span class="p">)</span>
-                    <span class="n">var</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="c1"># if the variable looks like it might be a filename, persist it, otherwise assign to a local var</span>
-                    <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;file:&quot;</span><span class="p">):</span>
-                        <span class="n">download_filename</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
-                    <span class="k">elif</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">var</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
-                        <span class="n">persist</span> <span class="o">=</span> <span class="n">var</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">return_var</span> <span class="o">=</span> <span class="n">var</span>
-                    <span class="n">gor_string</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">gor_string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">cell</span>
 
             <span class="n">gor_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_vars</span><span class="p">(</span><span class="n">gor_string</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">MissingRelations</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-                <span class="n">relations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_relations</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">relations</span><span class="p">)</span>
-                <span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="n">gor_string</span><span class="p">,</span> <span class="n">relations</span><span class="o">=</span><span class="n">relations</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span>
-                <span class="p">)</span>
-            <span class="n">poll_time</span> <span class="o">=</span> <span class="mf">1.0</span>
-            <span class="k">while</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">+</span> <span class="n">poll_time</span><span class="p">:</span>
-                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span><span class="p">)</span>
-                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">diff</span><span class="p">))</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query has been running for </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">...</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-                <span class="n">poll_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">poll_time</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">print_error</span><span class="p">(</span>
-                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> failed with error:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">status_message</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> has unexpected status </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">num_rows</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span> <span class="ow">or</span> <span class="mi">0</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> generated </span><span class="si">{:,}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">num_rows</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="n">persist</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-
-            <span class="k">if</span> <span class="n">download_filename</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">IntProgress</span>
-                <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
-                <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span><span class="p">,</span> <span class="n">trange</span>
-
-                <span class="n">line_count</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;line_count&quot;</span><span class="p">]</span>
-                <span class="n">f</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">line_count</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Downloading&quot;</span><span class="p">)</span>
-
-                <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">num_lines</span><span class="p">):</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">num_lines</span><span class="p">)</span>
-
-                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">download_results</span><span class="p">(</span><span class="n">download_filename</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results have been downloaded to </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">queryservice</span> <span class="ow">or</span> <span class="p">(</span><span class="n">persist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">download_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call_query_service</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">persist</span><span class="p">,</span> <span class="n">download_filename</span><span class="p">,</span> <span class="n">return_var</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">MAX_ROWS</span> <span class="o">=</span> <span class="mi">1000000</span>
-                <span class="k">if</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">MAX_ROWS</span><span class="p">:</span>
-                    <span class="n">print_error</span><span class="p">(</span>
-                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> returned </span><span class="si">{}</span><span class="s2"> rows but magic commands are capped at </span><span class="si">{}</span><span class="s2"> rows.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">MAX_ROWS</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">MAX_ROWS</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">return_var</span><span class="p">:</span>
-                    <span class="n">user_ns</span><span class="p">[</span><span class="n">return_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">ret</span>
-        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">qry</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">qry</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
-                <span class="k">except</span> <span class="n">QueryError</span><span class="p">:</span>
-                    <span class="k">pass</span>
-            <span class="n">print_error</span><span class="p">(</span><span class="s2">&quot;Query has been cancelled&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call_query_server</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">gzip</span><span class="p">,</span> <span class="n">return_var</span><span class="p">)</span>
+
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle_exception</span><span class="p">()</span></div>
 
@@ -433,10 +328,227 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No results found&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
             <span class="n">ff</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">project</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span></div></div>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GorMagics.handle_exception"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.handle_exception">[docs]</a>    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print out any exception on the stack.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exception</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+        <span class="n">print_error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="GorMagics.replace_vars"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.replace_vars">[docs]</a>    <span class="k">def</span> <span class="nf">replace_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle variable substitution in a gor string to interact with local state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">replacement_vars</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$([^0-9][a-zA-Z0-9_]*)?&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">string</span>
+        <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
+        <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">replacement_vars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">var_name</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found in notebook&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">])</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="GorMagics.load_relations"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.GorMagics.load_relations">[docs]</a>    <span class="k">def</span> <span class="nf">load_relations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find relations in local iPython state for inclusion in a remote gor query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">relations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">user_ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span>
+        <span class="n">print_details</span><span class="p">(</span>
+            <span class="s2">&quot;Loading relations </span><span class="si">{}</span><span class="s2"> from local state&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relation_names</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">relation_names</span><span class="p">:</span>
+            <span class="n">var_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_ns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Variable &#39;</span><span class="si">%s</span><span class="s2">&#39; not found&quot;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be a pandas DataFrame object, not </span><span class="si">%s</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+            <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+            <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">user_ns</span><span class="p">[</span><span class="n">var_name</span><span class="p">]))</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">relations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;fingerprint&quot;</span><span class="p">:</span> <span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+                    <span class="s2">&quot;extension&quot;</span><span class="p">:</span> <span class="s2">&quot;.tsv&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">relations</span></div>
+
+    <span class="k">def</span> <span class="nf">__call_query_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gor_string</span><span class="p">,</span> <span class="n">persist</span><span class="p">,</span> <span class="n">download_filename</span><span class="p">,</span> <span class="n">return_var</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">qry</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">svc</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingRelations</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="n">relations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_relations</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">relations</span><span class="p">)</span>
+                <span class="n">qry</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="n">gor_string</span><span class="p">,</span> <span class="n">relations</span><span class="o">=</span><span class="n">relations</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="n">persist</span>
+                <span class="p">)</span>
+            <span class="n">poll_time</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">while</span> <span class="n">qry</span><span class="o">.</span><span class="n">running</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">+</span> <span class="n">poll_time</span><span class="p">:</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span><span class="p">)</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">diff</span><span class="p">))</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query has been running for </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">...</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="n">poll_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">poll_time</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;DONE&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">print_error</span><span class="p">(</span>
+                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> failed with error:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">status_message</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> has unexpected status </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">status</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">num_rows</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span> <span class="ow">or</span> <span class="mi">0</span>
+            <span class="n">query_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> ran in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">query_time</span><span class="p">))</span>
+            
+            <span class="k">if</span> <span class="n">persist</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">download_filename</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">IntProgress</span>
+                <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+                <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span><span class="p">,</span> <span class="n">trange</span>
+
+                <span class="n">line_count</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;line_count&quot;</span><span class="p">]</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">line_count</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Downloading&quot;</span><span class="p">)</span>
+
+                <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">num_lines</span><span class="p">):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">num_lines</span><span class="p">)</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">download_results</span><span class="p">(</span><span class="n">download_filename</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results have been downloaded to </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">MAX_ROWS</span> <span class="o">=</span> <span class="mi">1000000</span>
+                <span class="k">if</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">MAX_ROWS</span><span class="p">:</span>
+                    <span class="n">print_error</span><span class="p">(</span>
+                        <span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> returned </span><span class="si">{}</span><span class="s2"> rows but magic commands are capped at </span><span class="si">{}</span><span class="s2"> rows.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">qry</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">MAX_ROWS</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">MAX_ROWS</span><span class="p">)</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query </span><span class="si">{}</span><span class="s2"> fetched </span><span class="si">{:,}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">qry</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">num_rows</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span> <span class="o">-</span> <span class="n">query_time</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">return_var</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">return_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">ret</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">qry</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">qry</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">QueryError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="n">print_error</span><span class="p">(</span><span class="s2">&quot;Query has been cancelled&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__call_query_server_execute_and_get_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gor_string</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">relations</span><span class="p">,</span> <span class="n">st</span><span class="p">):</span>
+        <span class="n">svc</span> <span class="o">=</span> <span class="n">get_queryserver</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span> <span class="n">relations</span><span class="o">=</span><span class="n">relations</span><span class="p">)</span>
+        <span class="n">query_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query ran in </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">st</span><span class="p">,))</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">dataframe</span><span class="p">()</span>
+
+        <span class="n">end_time</span> <span class="o">=</span>  <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query fetched </span><span class="si">{:,}</span><span class="s2"> rows in </span><span class="si">{:.2f}</span><span class="s2"> sec (total time </span><span class="si">{:.2f}</span><span class="s2"> sec)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">num_lines</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">st</span> <span class="o">-</span> <span class="n">query_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">def</span> <span class="nf">__call_query_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gor_string</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">return_var</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">updateStatusThread</span><span class="p">()</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">relations</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call_query_server_execute_and_get_dataframe</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">relations</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingRelations</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="n">relations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_relations</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">relations</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call_query_server_execute_and_get_dataframe</span><span class="p">(</span><span class="n">gor_string</span><span class="p">,</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">relations</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">return_var</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">return_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">QueryError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="n">print_error</span><span class="p">(</span><span class="s2">&quot;Query has been cancelled&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
 
 
-<span class="c1"># In order to actually use these magics, you must register them with a</span>
+<div class="viewcode-block" id="updateStatusThread"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.updateStatusThread">[docs]</a><span class="k">class</span> <span class="nc">updateStatusThread</span> <span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="updateStatusThread.run"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.updateStatusThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">last_update_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="n">poll_time</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># Init poll time.</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current_time</span> <span class="o">&gt;</span> <span class="n">last_update_time</span> <span class="o">+</span> <span class="n">poll_time</span><span class="p">:</span>
+                <span class="n">last_update_time</span> <span class="o">=</span> <span class="n">current_time</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">diff</span><span class="p">))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Working for </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">...</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">poll_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Working poll time.</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_flag</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;                                             </span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">break</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+
+        <span class="c1"># In order to actually use these magics, you must register them with a</span>
 <span class="c1"># running IPython.</span>
 <div class="viewcode-block" id="load_ipython_extension"><a class="viewcode-back" href="../../../../api_query.html#nextcode.services.query.jupyter.load_ipython_extension">[docs]</a><span class="k">def</span> <span class="nf">load_ipython_extension</span><span class="p">(</span><span class="n">ipython</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -521,8 +633,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2021-04-20.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Last updated on 2021-11-26.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.<br/>
     </p>
   </div>
 </footer>
