@@ -14,6 +14,10 @@ import time
 import logging
 from typing import Callable, Union, Optional, Dict, List
 try:
+    import pandas as pd
+except ModuleNotFoundError:
+    print('pandas is not installed - some functions might not work')
+try:
     import plotly.graph_objects as go
     from plotly.offline import init_notebook_mode, iplot
 except ModuleNotFoundError:
@@ -88,11 +92,11 @@ class Phenotype:
         """
         _ = self.session.delete(self.links["self"])
 
-    def upload(self, data: List):
+    def upload(self, data: Union[List,pd.DataFrame]):
         """
         Upload phenotype data
 
-        The data is expected to be a list of lists.
+        The data is expected to be either a list of lists or pandas DataFrame.
         e.g. `phenotype.upload([['a'], ['b']])`.
         The `result_type` of the phenotype dictates
         if each sublist should contain one or two items.
@@ -100,7 +104,11 @@ class Phenotype:
         :raises: `ServerError` if there was a problem uploading
         """
         if not isinstance(data, list):
-            raise TypeError("data must be a list")
+            if isinstance(data, pd.DataFrame):
+                data = data.values.tolist()
+            else:
+                raise TypeError("data must be a list or pandas DataFrame")
+
         url = self.links["upload"]
 
         content = {"data": data}
