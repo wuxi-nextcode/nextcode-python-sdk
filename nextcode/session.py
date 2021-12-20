@@ -84,9 +84,11 @@ class ServiceSession(requests.Session):
         self.endpoints = self.root_info.get("endpoints")
 
     def _initialize(self) -> None:
-        if self.api_key:
+        if environ.get('NEXTCODE_ACCESS_TOKEN'):
+            self.token = environ.get('NEXTCODE_ACCESS_TOKEN')
+        elif self.api_key:
             self.token = get_access_token(self.api_key)
-            self.headers["Authorization"] = "Bearer {}".format(self.token)
+        self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
         except ServerError as ex:
