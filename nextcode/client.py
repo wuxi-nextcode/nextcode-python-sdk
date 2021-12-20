@@ -165,10 +165,10 @@ class Client:
             # environment, in which case we create an ephemeral profile, not
             # backed up by disk.
             api_key = api_key or os.environ.get("GOR_API_KEY")
-            #if not api_key:
-            #    raise InvalidProfile(
-            #        "No profile specified and GOR_API_KEY not set in environment"
-            #    )
+            if not api_key and not os.environ.get('NEXTCODE_ACCESS_TOKEN'):
+                raise InvalidProfile(
+                    "No profile specified and GOR_API_KEY not set in environment"
+                )
             root_url = root_url or os.environ.get("NEXTCODE_ROOT_URL")
             if not root_url:
                 root_url = root_url_from_api_key(api_key)
