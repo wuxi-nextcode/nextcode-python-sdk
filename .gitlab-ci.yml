@@ -38,7 +38,7 @@ build:
     - make build
 
 generate-documents:
-  image: python:3.9-slim
+  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
   script:
     - pip3 install -r doc/requirements.txt
     - apt update && apt install -y pandoc

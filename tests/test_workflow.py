@@ -276,6 +276,7 @@ class WorkflowTest(BaseTestCase):
         build_context = None
         profile = "test"
         storage_type = "dedicated"
+        enable_fast_local_storage = True,
         credentials = {
             "ukbb_readonly": {
                 "aws_access_key_id": "AKIALKIADSFASJGASGDS",
@@ -294,6 +295,7 @@ class WorkflowTest(BaseTestCase):
             build_context,
             profile,
             storage_type,
+            enable_fast_local_storage,
             credentials,
             scheduler_name,
         )
