@@ -184,6 +184,8 @@ class Service(BaseService):
         context: Optional[str] = None,
         storage_type: Optional[str] = None,
         dedicated_storage_size: Optional[str] = None,
+        enable_fast_local_storage: Optional[bool] = None,
+        fast_local_storage_size: Optional[str] = None,
         keep_resources: Optional[bool] = None,
         mount_jobs: Optional[List[int]] = None,
         credentials: Optional[Dict] = None,
@@ -211,6 +213,10 @@ class Service(BaseService):
         :param storage_type: Optional string specifying the storage option to use for the pipeline
         :param dedicated_storage_size Optional string specifying the size of the dedicated volume if using
                storage_type=dedicated
+        :param enable_fast_local_storage Optional bool specifying whether fast local storage will be enabled for
+               this run
+        :param fast_local_storage_size Optional string specifying the size of the local storage if
+               enable_fast_local_storage is True
         :param keep_resources: Optional boolean specifying if resources created by workflow service for the Job should
                be exempt from being cleanup up by the workflow resource cleanup process.
         :param mount_jobs: Optional list of job-ids whose work folder will be mounted into this job under
@@ -239,7 +245,8 @@ class Service(BaseService):
         log.debug(
             "post_job called with pipeline_name=%s, project_name=%s, params=%s, script=%s, revision=%s, "
             "build_source=%s, build_context=%s, profile=%s, description=%s, executor_memory_mb=%s, context=%s, "
-            "storage_type=%s, dedicated_storage_size=%s, mount_jobs=%s scheduler_name=%s",
+            "storage_type=%s, dedicated_storage_size=%s, enable_fast_local_storage=%s, fast_local_storage_size=%s, "
+            "mount_jobs=%s scheduler_name=%s",
             pipeline_name,
             project_name,
             params,
@@ -253,6 +260,8 @@ class Service(BaseService):
             context,
             storage_type,
             dedicated_storage_size,
+            enable_fast_local_storage,
+            fast_local_storage_size,
             mount_jobs,
             scheduler_name,
         )
@@ -273,6 +282,10 @@ class Service(BaseService):
             data["storage_type"] = storage_type
         if dedicated_storage_size:
             data["dedicated_storage_size"] = dedicated_storage_size
+        if enable_fast_local_storage:
+            data["enable_fast_local_storage"] = enable_fast_local_storage
+        if fast_local_storage_size:
+            data["fast_local_storage_size"] = fast_local_storage_size
         if build_source:
             data["build_source"] = build_source
         if executor_memory_mb:
