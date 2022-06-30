@@ -444,6 +444,8 @@ class Service(BaseService):
     def get_categories(self) -> List:
         """
         A list of all categories available in the system
+
+        :return: List of all avaliable categories
         """
         resp = self.session.get(
             urljoin(
@@ -484,13 +486,14 @@ class Service(BaseService):
 
         return payload
 
-    def create_playlist(self, name: str, description: Optional[str] = None) -> Playlist:
+    def create_playlist(self, name: str, description: Optional[str] = None, phenotypes: Optional[List[str]] = None) -> Playlist:
         """
         Create a new playlist in the current project
 
         :param name: Unique (lowercase) phenotype name in the project
         :param description: Free text description of the playlist (optional)
-        :param phenotypes: comma separated list of phenotypes to add (optional) e.g. ['tag1','tag2']
+        :param phenotypes: list of phenotypes to add (optional) e.g. ['phenotype1','phenotype2']
+        :return: A playlist object
         """
 
         url = urljoin(
@@ -504,7 +507,15 @@ class Service(BaseService):
         # if the project did not already exist, initialize the service
         if not self.project:
             self._init_project(self.project_name)
-        return Playlist(self.session, data["playlist"])
+
+        # Initialize playlist class instance
+        playlist = Playlist(self.session, data["playlist"])
+
+        # Add phenotypes to playlist if provided
+        if phenotypes:
+            playlist.add_phenotypes(phenotypes)
+        return playlist
+
 
     def get_playlists(self, limit: int = 100) -> List[Playlist]:
         """
@@ -536,7 +547,7 @@ class Service(BaseService):
 
         :param id: Specify the playlist to get by its id
         :param name: Retrieve a playlist by its unique name within project
-        :return: A single playlist
+        :return: A single playlist object
         :raises: `PhenotypeError` if the project does not exist
         :raises: ServerError
         """
@@ -576,6 +587,8 @@ class Service(BaseService):
     def get_covariates(self, limit=100):
         """
         Get all covariates in current project
+
+        :param limit: Maximum number of results (default: 100)
         """
         url = urljoin(self.links['self'], 'covariates')
 
@@ -592,6 +605,8 @@ class Service(BaseService):
     def get_covariate(self, id):
         """
         Get a single covariate by its id
+
+        :param id: Specify the playlist to get by its id
         """
         url = urljoin(self.links['self'], 'covariates', str(id))
         try:

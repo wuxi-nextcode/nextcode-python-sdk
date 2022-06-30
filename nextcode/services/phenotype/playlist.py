@@ -70,23 +70,63 @@ class Playlist:
         :raises: `ServerError` if the phenotype could not be deleted
         """
         _ = self.session.delete(self.links["self"])
+        self.refresh()
+
+    def refresh(self):
+        """
+        Refresh local playlist object from server
+        """
+        resp = self.session.get(self.links["self"])
+        data = resp.json()["playlist"]
+        self.data = data
+        self.links = data["links"]
 
     def add_phenotype(self, name: str):
         """
         Add a phenotype to a playlist
+
+        :param name: Unique (lowercase) phenotype name in the project
         """
         url = urljoin(self.links["self"], "phenotypes")
         content = {"name": name}
         _ = self.session.post(url, json=content)
+        self.refresh()
+        self.get_info()
 
+    def add_phenotypes(self, name: Union[str,List[str]]):
+        """
+        Add phenotypes to a playlist
+
+        :param name: A list of unique (lowercase) phenotype name in the project
+        """
+        name = [name] if isinstance(name, str) else name
+        for pheno in name:
+            self.add_phenotype(pheno)
+        self.get_info()
+
+    def delete_phenotype(self, name: str):
+        """
+        Delete a phenotype from a playlist
+
+        :raises: `ServerError` if the phenotype could not be deleted
+        """
+        url = urljoin(self.links["self"], "phenotypes", name)
+        _ = self.session.delete(url)
+        self.refresh()
         self.get_info()
 
     def get_info(self):
+        """
+        Get playlist info
+        """
         return self.data
 
     def list_phenotypes(self):
+        """
+        List phenotypes in playlist
+        """
         return [phenotype['name'] for phenotype in self.get_info()['phenotypes']]
-    
+
     def get_data(self, missing_value=None):
         """
         Retrieve phenotype data from the server.
