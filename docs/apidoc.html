@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -128,27 +129,27 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="server-api-documention">
-<h1>Server API Documention<a class="headerlink" href="#server-api-documention" title="Permalink to this headline"></a></h1>
+<h1>Server API Documention<a class="headerlink" href="#server-api-documention" title="Permalink to this heading"></a></h1>
 <p>Serverside services are exposed via REST and documented in OpenAPI Spec. You can view the specification for each service here.</p>
 <section id="authentication">
-<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline"></a></h2>
+<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading"></a></h2>
 <p>All services use JWT authentication through a shared Keycloak server. All requests require a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> Authorization header with a temporary access token retrieved from the authentication server.</p>
 <p>Typically the client will perform a username/password authentication once and store a <em>refresh token</em> locally. This is called an <em>API Key</em> in the SDK. For each request to a service the Bearer token will <strong>not</strong> be this refresh token but a temporary <em>access token</em> retrieved from the authentication server. This access token typically lasts for 10 minutes.</p>
 </section>
 <section id="gor-query-api">
-<h2>Gor Query API<a class="headerlink" href="#gor-query-api" title="Permalink to this headline"></a></h2>
+<h2>Gor Query API<a class="headerlink" href="#gor-query-api" title="Permalink to this heading"></a></h2>
 <p><a class="reference external" href="https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/gor-query-api.json">https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/gor-query-api.json</a></p>
 </section>
 <section id="workflow-service">
-<h2>Workflow Service<a class="headerlink" href="#workflow-service" title="Permalink to this headline"></a></h2>
+<h2>Workflow Service<a class="headerlink" href="#workflow-service" title="Permalink to this heading"></a></h2>
 <p><a class="reference external" href="https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/workflow-service.json">https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/workflow-service.json</a></p>
 </section>
 <section id="pipelines-service">
-<h2>Pipelines Service<a class="headerlink" href="#pipelines-service" title="Permalink to this headline"></a></h2>
+<h2>Pipelines Service<a class="headerlink" href="#pipelines-service" title="Permalink to this heading"></a></h2>
 <p><a class="reference external" href="https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/pipelines-service.json">https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/pipelines-service.json</a></p>
 </section>
 <section id="phenotype-archive">
-<h2>Phenotype Archive<a class="headerlink" href="#phenotype-archive" title="Permalink to this headline"></a></h2>
+<h2>Phenotype Archive<a class="headerlink" href="#phenotype-archive" title="Permalink to this heading"></a></h2>
 <p><a class="reference external" href="https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/phenotype-archive-api.json">https://redocly.github.io/redoc/?url=https://wuxi-nextcode.github.io/nextcode-python-sdk/openapi/phenotype-archive-api.json</a></p>
 </section>
 </section>
@@ -173,8 +174,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2022-03-10.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br/>
+      Last updated on 2022-06-30.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.<br/>
     </p>
   </div>
 </footer>

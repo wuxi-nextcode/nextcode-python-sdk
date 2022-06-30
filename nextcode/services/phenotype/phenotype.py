@@ -136,19 +136,25 @@ class Phenotype:
 
     def update_query(self, query: str):
         """
-        Update the phenotype with a new query that defines this phenotype 
+        Update the phenotype with a new query that defines this phenotype.
+
+        :param query: NOR query that defines this phenotype
         """
         self.update(query = query)
 
     def update_description(self, description: str):
         """
-        Update the phenotype with a new description
+        Update the phenotype with a new description.
+
+        :param description: phenotype description
         """
         self.update(description = description)
 
     def set_tags(self, tags: List[str]):
         """
         Set the tag list for this phenotype, overriding all previous tags
+
+        :param tags: list of tags eg. ["height","weight"]
         """
         self.update(tags = tags)
 
@@ -162,6 +168,7 @@ class Phenotype:
         """
         Add a new tag to this phenotype.
 
+        :param tag: name of tag to be added.
         :raises: `PhenotypeError` if the tag is already set on this phenotype
         """
         tags = set(self.tag_list)
@@ -175,6 +182,7 @@ class Phenotype:
         """
         Delete a tag from the phenotype.
 
+        :param tag: name of tag to be deleted.
         :raises: `PhenotypeError` if the tag does not exist
         """
         tags = set(self.tag_list)
@@ -184,7 +192,7 @@ class Phenotype:
             raise PhenotypeError(f"Tag {tag} does not exist on this phenotype")
 
         self.update(tags = list(tags))
-    
+
     def get_info(self):
         """
         Retrieve info for this phenotype
@@ -194,6 +202,8 @@ class Phenotype:
     def get_data(self, label: Optional[str] = None):
         """
         Retrieve a phenotype data from the server.
+
+        :param label: Optional name of value column
         """
         matrix = PhenotypeMatrix(self.session, project_name = self.data["project_key"])
         matrix.add_phenotype(name = self.data["name"], label = label)
@@ -211,7 +221,7 @@ class Phenotype:
 
         if self.df is None:
             self.get_data()
-        
+
         switcher = {
             "SET": self._plot_set,
             "QT": self._plot_qt,

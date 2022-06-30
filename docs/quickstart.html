@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -125,10 +126,10 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
 <p>Once the sdk is installed you should be ready to connect to services. Please see the sections below for details.</p>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
 <p>In order to use this SDK you will need to start by getting an <strong>API KEY</strong> from a Genuity Science server. These API Keys are JWT token that you must use to initialize the SDK.</p>
 <p>You can then get started with the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nextcode</span>
@@ -140,7 +141,7 @@
 <p>This example allows you to verify that the API Key is correct and that the <em>query</em> service is responding. Please refer to the included documents for actual use cases.</p>
 </section>
 <section id="api-key">
-<h2>API Key<a class="headerlink" href="#api-key" title="Permalink to this headline"></a></h2>
+<h2>API Key<a class="headerlink" href="#api-key" title="Permalink to this heading"></a></h2>
 <p>You will need an API Key for all actions in the nextcode sdk. If you have a local keycloak user (non-saml) you can get the key with the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nextcode.client</span> <span class="kn">import</span> <span class="n">get_api_key</span>
 <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_api_key</span><span class="p">(</span><span class="s2">&quot;www.myserver.com&quot;</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span>
@@ -200,8 +201,8 @@
     </p>
     <p>
         &copy; Copyright 2021,Genuity Science.<br/>
-      Last updated on 2022-03-10.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br/>
+      Last updated on 2022-06-30.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.<br/>
     </p>
   </div>
 </footer>
