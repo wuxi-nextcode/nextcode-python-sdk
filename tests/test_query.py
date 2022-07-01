@@ -5,6 +5,7 @@ import json
 import os
 from copy import deepcopy
 import tempfile
+from urllib3.exceptions import MaxRetryError
 
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.utils import decode_token, jupyter_available
@@ -374,7 +375,7 @@ class QueryTest(BaseTestCase):
         responses.add(
             responses.GET, ROOT_URL + "/query/888", json={"code": 500}, status=500
         )
-        with self.assertRaises(QueryError):
+        with self.assertRaises(MaxRetryError):
             query = self.svc.get_query(888)
 
     @responses.activate
