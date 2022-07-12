@@ -27,6 +27,7 @@ def login_keycloak_user(
     password: str,
     realm: str = DEFAULT_REALM,
     client_id: str = DEFAULT_CLIENT_ID,
+    verify_ssl: bool = True
 ) -> str:
     """
     :param root_url: The root url of the service. e.g. www.myhost.com
@@ -34,6 +35,7 @@ def login_keycloak_user(
     :param password: Password of the user
     :param realm: Realm to authenticate against. Default: wuxinextcode.com
     :param client_id: Client to log in as. Default: api-key-client
+    :param verify_ssl: Whether SSL should be verified in this session. Default: True
 
     :raises: `AuthServerError`
 
@@ -52,7 +54,7 @@ def login_keycloak_user(
     url = url.replace("admin/", "")
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     log.debug("Calling POST %s with headers %s and body %s", url, headers, body)
-    resp = requests.post(url, headers=headers, data=body)
+    resp = requests.post(url, headers=headers, data=body, verify=verify_ssl)
     try:
         resp.raise_for_status()
         return resp.json()["refresh_token"]
@@ -71,7 +73,7 @@ def auth_popup(root_url: str) -> None:
     webbrowser.open(url)
 
 
-def _get_admin_keycloak_session(auth_server, username, password):
+def _get_admin_keycloak_session(auth_server, username, password, verify_ssl=True):
     log.info("Managing users on keycloak server %s...", auth_server)
 
     # log the admin into the master realm
@@ -81,6 +83,7 @@ def _get_admin_keycloak_session(auth_server, username, password):
         url,
         data=f"username={username}&password={password}&grant_type=password&client_id=admin-cli",
         headers=headers_form,
+        verify=verify_ssl
     )
     if resp.status_code != 200:
         desc = resp.json()["error_description"]
@@ -94,6 +97,7 @@ def _get_admin_keycloak_session(auth_server, username, password):
     }
     session = requests.Session()
     session.headers = headers
+    session.verify = verify_ssl
     return session
 
 
@@ -106,9 +110,10 @@ class KeycloakSession:
 
     :param root_url: The URL of the instance where keycloak is running. e.g. www.myhost.com
     :param username: Username of the keycloak admin. Default: admin
-    :param passwrod: Admin password
+    :param password: Admin password
     :param realm: Keycloak realm to manage. Default: wuxinextcode.com
     :param client_id: Client to log admin into. Default: api-key-client
+    :param verify_ssl: Whether SSL should be verified in this session. Default: True
     """
 
     def __init__(
@@ -118,6 +123,7 @@ class KeycloakSession:
         password: Optional[str] = None,
         realm: str = DEFAULT_REALM,
         client_id: str = DEFAULT_CLIENT_ID,
+        verify_ssl: bool = True
     ):
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
@@ -125,7 +131,7 @@ class KeycloakSession:
         self.root_url = host_from_url(root_url)
         self.realm = realm
         self.auth_server = self._get_auth_server()
-        self.session = _get_admin_keycloak_session(self.auth_server, username, password)
+        self.session = _get_admin_keycloak_session(self.auth_server, username, password, verify_ssl=verify_ssl)
         self.realm_url = urljoin(self.auth_server, "admin/realms", realm)
         self.master_url = urljoin(self.auth_server, "admin/realms", "master")
         self.client_id = client_id
