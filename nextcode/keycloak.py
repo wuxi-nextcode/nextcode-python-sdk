@@ -130,6 +130,7 @@ class KeycloakSession:
             raise AuthServerError(f"User {username} needs an admin password")
         self.root_url = host_from_url(root_url)
         self.realm = realm
+        self.verify_ssl = verify_ssl
         self.auth_server = self._get_auth_server()
         self.session = _get_admin_keycloak_session(self.auth_server, username, password, verify_ssl=verify_ssl)
         self.realm_url = urljoin(self.auth_server, "admin/realms", realm)
@@ -138,12 +139,12 @@ class KeycloakSession:
 
     def _get_auth_server(self):
         auth_server = urljoin(self.root_url, "auth")
-        r = requests.get(auth_server)
+        r = requests.get(auth_server, verify=self.verify_ssl)
 
         # test if realm is available
         realm_url = urljoin(auth_server, "realms", self.realm)
         try:
-            resp = requests.get(realm_url)
+            resp = requests.get(realm_url, verify=self.verify_ssl)
         except requests.exceptions.ConnectionError:
             raise ServerError(f"Keycloak server {realm_url} is not reachable")
         if resp.status_code == requests.codes.not_found:
