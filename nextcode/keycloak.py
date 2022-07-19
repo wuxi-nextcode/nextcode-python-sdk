@@ -360,7 +360,7 @@ class KeycloakSession:
     def login_user(self, user_name: str, password: str) -> Optional[str]:
         try:
             return login_keycloak_user(
-                self.root_url, user_name, password, self.realm, self.client_id
+                self.root_url, user_name, password, self.realm, self.client_id, self.verify_ssl
             )
         except AuthServerError:
             log.exception("Unable to log in")
