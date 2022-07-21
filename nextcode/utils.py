@@ -63,7 +63,7 @@ def root_url_from_api_key(api_key):
     return root_url
 
 
-def get_access_token(api_key):
+def get_access_token(api_key, verify_ssl=True):
     """"""
     payload = decode_token(api_key)
     client_id = payload["azp"]
@@ -78,7 +78,7 @@ def get_access_token(api_key):
 
     # Call the auth server
     log.info("Authenticating with %s", token_endpoint)
-    response = requests.post(token_endpoint, data=body, headers=headers, timeout=5.0)
+    response = requests.post(token_endpoint, data=body, headers=headers, timeout=5.0, verify=verify_ssl)
     if (
         response.status_code == codes.bad_request
         and "Refresh token expired" in response.text
