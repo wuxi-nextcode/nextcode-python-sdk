@@ -21,7 +21,6 @@ class BaseService:
 
     def __init__(self, client, service_path, *args, **kwargs):
         self.client = client
-        self.verify_ssl = kwargs.get("verify_ssl", True)
 
         service_path = os.environ.get("NEXTCODE_SERVICE_PATH", service_path)
         root_url = client.profile.root_url
@@ -37,7 +36,7 @@ class BaseService:
         api_key = client.profile.api_key
         if client.profile.skip_auth:
             api_key = None
-        self.session = ServiceSession(self.base_url, api_key, verify_ssl=self.verify_ssl)
+        self.session = ServiceSession(self.base_url, api_key)
 
     def __repr__(self):
         return f"<Service {self.service_name} {self.version} | {self.base_url}>"

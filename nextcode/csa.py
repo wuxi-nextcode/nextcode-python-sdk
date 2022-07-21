@@ -32,10 +32,9 @@ def _check_csa_error(resp):
 
 
 class CSASession:
-    def __init__(self, root_url, user_name, password, verify_ssl=True):
+    def __init__(self, root_url, user_name, password):
         self.root_url = host_from_url(root_url)
         self.session = requests.Session()
-        self.session.verify = verify_ssl
         self.session.auth = (user_name, password)
         self.csa_url = urljoin(self.root_url, "csa/api/")
 

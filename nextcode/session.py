@@ -57,7 +57,6 @@ class ServiceSession(requests.Session):
         self.token = None
         self.url_base = url_base
         self.api_key = api_key
-        self.verify = kwargs.get("verify_ssl", True)
 
         if environ.get("GOR_API_KEY"):
             log.info("Overriding api key from environment")
@@ -88,7 +87,7 @@ class ServiceSession(requests.Session):
         if environ.get('NEXTCODE_ACCESS_TOKEN'):
             self.token = environ.get('NEXTCODE_ACCESS_TOKEN')
         elif self.api_key:
-            self.token = get_access_token(self.api_key, verify_ssl=self.verify)
+            self.token = get_access_token(self.api_key)
         self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
@@ -177,7 +176,7 @@ class ServiceSession(requests.Session):
             )
         )
         try:
-            r = requests.get(self.url_base, timeout=3.0, headers=self.headers, verify=self.verify_ssl)
+            r = requests.get(self.url_base, timeout=3.0, headers=self.headers)
         except requests.exceptions.ConnectionError as ex:
             raise ServerError(
                 f"Could not reach server {self.url_base} ({ex})"
