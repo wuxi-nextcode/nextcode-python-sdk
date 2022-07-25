@@ -30,7 +30,7 @@ cfg = Config()
 
 
 def get_api_key(
-    host: str, username: str, password: str, realm: str = "wuxinextcode.com", verify_ssl=True
+    host: str, username: str, password: str, realm: str = "wuxinextcode.com"
 ) -> str:
     """
     Authenticate with keycloak server and return an API key.
@@ -41,10 +41,10 @@ def get_api_key(
     :param username: Username of the keycloak user which is authenticating
     :param password: Password
     :param realm: The realm with which to authenticate (optional)
-    :param verify_ssl: Whether the SSL certificate should be verified or not. Default: True (optional)
     :returns: API Key which can be used in subsequent calls to Client()
     :raises: InvalidToken
     """
+    verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
     body = {
         "grant_type": "password",
         "client_id": DEFAULT_CLIENT_ID,
@@ -135,9 +135,9 @@ class Client:
         api_key: Optional[str] = None,
         profile: Optional[str] = None,
         root_url: Optional[str] = None,
-        verify_ssl: bool = True
     ) -> None:
-        self.verify_ssl = verify_ssl
+        self.verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
+
         # if no named profile or api key is passed in
         if not profile and not api_key:
             # find the default profile, if any
@@ -210,7 +210,7 @@ class Client:
         {"jti": "...", ...}
 
         """
-        token = os.environ.get('NEXTCODE_ACCESS_TOKEN') or get_access_token(self.profile.api_key, verify_ssl=self.verify_ssl)
+        token = os.environ.get('NEXTCODE_ACCESS_TOKEN') or get_access_token(self.profile.api_key)
         if decode:
             return decode_token(token)
         else:

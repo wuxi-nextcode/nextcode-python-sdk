@@ -3,7 +3,7 @@ csa
 ~~~~~~~~~~
 CSA management features
 """
-
+import os
 from posixpath import join as urljoin
 import requests
 from requests import codes
@@ -35,6 +35,7 @@ class CSASession:
     def __init__(self, root_url, user_name, password):
         self.root_url = host_from_url(root_url)
         self.session = requests.Session()
+        self.session.verify = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
         self.session.auth = (user_name, password)
         self.csa_url = urljoin(self.root_url, "csa/api/")
 
