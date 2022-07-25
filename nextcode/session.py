@@ -57,6 +57,7 @@ class ServiceSession(requests.Session):
         self.token = None
         self.url_base = url_base
         self.api_key = api_key
+        self.verify = not environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
 
         if environ.get("GOR_API_KEY"):
             log.info("Overriding api key from environment")
@@ -176,7 +177,7 @@ class ServiceSession(requests.Session):
             )
         )
         try:
-            r = requests.get(self.url_base, timeout=3.0, headers=self.headers)
+            r = requests.get(self.url_base, timeout=3.0, headers=self.headers, verify=self.verify)
         except requests.exceptions.ConnectionError as ex:
             raise ServerError(
                 f"Could not reach server {self.url_base} ({ex})"

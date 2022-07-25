@@ -63,8 +63,9 @@ def root_url_from_api_key(api_key):
     return root_url
 
 
-def get_access_token(api_key, verify_ssl=True):
+def get_access_token(api_key):
     """"""
+    verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
     payload = decode_token(api_key)
     client_id = payload["azp"]
     body = {

@@ -26,8 +26,7 @@ def login_keycloak_user(
     user_name: str,
     password: str,
     realm: str = DEFAULT_REALM,
-    client_id: str = DEFAULT_CLIENT_ID,
-    verify_ssl: bool = True
+    client_id: str = DEFAULT_CLIENT_ID
 ) -> str:
     """
     :param root_url: The root url of the service. e.g. www.myhost.com
@@ -35,12 +34,12 @@ def login_keycloak_user(
     :param password: Password of the user
     :param realm: Realm to authenticate against. Default: wuxinextcode.com
     :param client_id: Client to log in as. Default: api-key-client
-    :param verify_ssl: Whether SSL should be verified in this session. Default: True
 
     :raises: `AuthServerError`
 
     Logs into the keycloak server using a username and password. Returns the api key.
     """
+    verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
     # try logging in with the new user
     root_url = host_from_url(root_url)
     url = urljoin(root_url, "auth", "realms", realm, "protocol/openid-connect/token")
@@ -73,9 +72,10 @@ def auth_popup(root_url: str) -> None:
     webbrowser.open(url)
 
 
-def _get_admin_keycloak_session(auth_server, username, password, verify_ssl=True):
+def _get_admin_keycloak_session(auth_server, username, password):
     log.info("Managing users on keycloak server %s...", auth_server)
 
+    verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
     # log the admin into the master realm
     url = urljoin(auth_server, "realms/master/protocol/openid-connect/token")
     headers_form = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -113,7 +113,6 @@ class KeycloakSession:
     :param password: Admin password
     :param realm: Keycloak realm to manage. Default: wuxinextcode.com
     :param client_id: Client to log admin into. Default: api-key-client
-    :param verify_ssl: Whether SSL should be verified in this session. Default: True
     """
 
     def __init__(
@@ -123,16 +122,15 @@ class KeycloakSession:
         password: Optional[str] = None,
         realm: str = DEFAULT_REALM,
         client_id: str = DEFAULT_CLIENT_ID,
-        verify_ssl: bool = True
     ):
         password = password or os.environ.get("KEYCLOAK_PASSWORD")
         if not password:
             raise AuthServerError(f"User {username} needs an admin password")
         self.root_url = host_from_url(root_url)
         self.realm = realm
-        self.verify_ssl = verify_ssl
+        self.verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
         self.auth_server = self._get_auth_server()
-        self.session = _get_admin_keycloak_session(self.auth_server, username, password, verify_ssl=verify_ssl)
+        self.session = _get_admin_keycloak_session(self.auth_server, username, password)
         self.realm_url = urljoin(self.auth_server, "admin/realms", realm)
         self.master_url = urljoin(self.auth_server, "admin/realms", "master")
         self.client_id = client_id
@@ -360,7 +358,7 @@ class KeycloakSession:
     def login_user(self, user_name: str, password: str) -> Optional[str]:
         try:
             return login_keycloak_user(
-                self.root_url, user_name, password, self.realm, self.client_id, self.verify_ssl
+                self.root_url, user_name, password, self.realm, self.client_id
             )
         except AuthServerError:
             log.exception("Unable to log in")
