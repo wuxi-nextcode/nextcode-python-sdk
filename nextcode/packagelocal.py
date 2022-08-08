@@ -111,8 +111,11 @@ def _package_and_upload(
     s3_resource = boto3.resource("s3")
     b = s3_resource.Bucket(scratch_bucket)  # pylint: disable=no-member
     s3_path = "builds/" + zip_filename
+    zip_size = os.stat(full_zip_filename).st_size
+    if zip_size > 50e6:
+        log.warn(f"upload size is {int(zip_size/1e6)} MB")
     b.upload_file(full_zip_filename, s3_path)
-
+    os.remove(full_zip_filename)
     log.info("Uploaded %s to %s (%s files)", zip_filename, s3_path, len(files))
     s3_client = boto3.client("s3")
     url = s3_client.generate_presigned_url(
@@ -120,6 +123,4 @@ def _package_and_upload(
         Params={"Bucket": scratch_bucket, "Key": s3_path},
         ExpiresIn=EXPIRATION_SECONDS,
     )
-    # wait for a few seconds to give s3 time to catch up
-    sleep(2.0)
     return url
