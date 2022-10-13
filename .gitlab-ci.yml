@@ -26,8 +26,13 @@ test:
     - .py-with-cache
   stage: test
   script:
+    # install poetry
     - curl -sSL https://install.python-poetry.org | python3 -
+    # add poetry to path because it uses a weird installation path
     - export PATH=/root/.local/bin:$PATH
+    # do not create a project specific virtualenv
+    - poetry config virtualenvs.create false --local
+    # install all dependencies
     - poetry install --all-extras --with test
     - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
 
