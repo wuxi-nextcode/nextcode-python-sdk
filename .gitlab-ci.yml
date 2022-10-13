@@ -5,7 +5,7 @@ stages:
   - badge
 
 .py-with-cache:
-  image: python:3.7-stretch
+  image: python:3.8-slim
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
@@ -26,8 +26,9 @@ test:
     - .py-with-cache
   stage: test
   script:
-    - make dev-install
-    - make cover
+    - curl -sSL https://install.python-poetry.org | python3 -
+    - poetry install --all-extras
+    - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
 
 build:
   extends:
@@ -37,38 +38,38 @@ build:
     - make dev-install
     - make build
 
-generate-documents:
-  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
-  script:
-    - pip3 install -r doc/requirements.txt
-    - apt update && apt install -y pandoc
-    - sphinx-build -b html doc docs
-  artifacts:
-    paths:
-      - docs/
-    expire_in: 1 day
-  stage: test
-  only:
-    - merge_requests
+#generate-documents:
+#  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
+#  script:
+#    - pip3 install -r doc/requirements.txt
+#    - apt update && apt install -y pandoc
+#    - sphinx-build -b html doc docs
+#  artifacts:
+#    paths:
+#      - docs/
+#    expire_in: 1 day
+#  stage: test
+#  only:
+#    - merge_requests
 
-commit-documents:
-  script:
-    - VERSION=`head -n 1 nextcode/VERSION`
-    - git config user.name 'WXNC Gitlab CI'
-    - git config user.email 'wxnc-gitlab-ci@wuxinextcode.com'
-    - git fetch
-    - git checkout ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
-    - git add docs/
-    - git diff-index --cached --quiet HEAD || git commit -m "Documentation update for ${VERSION} [skip ci]" -- docs
-    - git remote set-url --push origin https://wxnc-platform-ci:${COMMON_WORKFLOW_GITLAB_API_TOKEN}@gitlab.com/wuxi-nextcode/research-platform/backend-services/platform/python-sdk.git
-    - git push origin ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} -o ci.skip
-  stage: build
-  dependencies:
-    - generate-documents
-  extends:
-    .push-changes-to-origin
-  only:
-    - merge_requests
+#commit-documents:
+#  script:
+#    - VERSION=`head -n 1 nextcode/VERSION`
+#    - git config user.name 'WXNC Gitlab CI'
+#    - git config user.email 'wxnc-gitlab-ci@wuxinextcode.com'
+#    - git fetch
+#    - git checkout ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
+#    - git add docs/
+#    - git diff-index --cached --quiet HEAD || git commit -m "Documentation update for ${VERSION} [skip ci]" -- docs
+#    - git remote set-url --push origin https://wxnc-platform-ci:${COMMON_WORKFLOW_GITLAB_API_TOKEN}@gitlab.com/wuxi-nextcode/research-platform/backend-services/platform/python-sdk.git
+#    - git push origin ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} -o ci.skip
+#  stage: build
+#  dependencies:
+#    - generate-documents
+#  extends:
+#    .push-changes-to-origin
+#  only:
+#    - merge_requests
 
 release:
   extends:
