@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "nextcode-sdk"
+version = "1.25.0"
+description = "Python SDK for Genuity Science Services"
+license = "MIT"
+authors = ["WUXI NextCODE <support@wuxinextcode.com>"]
+maintainers = ["Genuity Science Software Development <sdev@genuitysci.com>"]
+readme = "README.md"
+homepage = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
+repository = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
+documentation = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
+keywords = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+packages = [{include = "nextcode"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+python-dateutil = "^2.8.2"
+PyYAML = "^6.0"
+requests = "^2.28.1"
+hjson = "^3.1.0"
+PyJWT = "^1.7.1"
+boto3 = "^1.24.89"
+pandas = {version = "^1.5.0", optional = true}
+ipython = {version = "^8.5.0", optional = true}
+termcolor = {version = "^2.0.1", optional = true}
+tqdm = {version = "^4.64.1", optional = true}
+ipywidgets = {version = "^8.0.2", optional = true}
+plotly = {version = "^5.10.0", optional = true}
+
+[tool.poetry.extras]
+jupyter = ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

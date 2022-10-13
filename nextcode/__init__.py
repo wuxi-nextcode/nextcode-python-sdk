@@ -7,9 +7,9 @@ Wuxi Nextcode.
 """
 import os
 import logging
+import importlib.metadata
 
 from .config import Config
-
 # we want these available from the top-level package
 from .client import Client, get_service
 
@@ -18,14 +18,14 @@ log = logging.getLogger()
 cfg = Config()
 
 
-def read_version():
-    directory = os.path.dirname(__file__)
-    with open(os.path.join(directory, "VERSION"), "r") as version_file:
-        version = version_file.readline().strip()
-        return version
+#def read_version():
+#    directory = os.path.dirname(__file__)
+#    with open(os.path.join(directory, "VERSION"), "r") as version_file:
+#        version = version_file.readline().strip()
+#        return version
 
 
-__version__ = read_version()
+__version__ = importlib.metadata.version("nextcode-sdk")
 
 # loading this here allows easy extension setup in jupyterhub
 from .services.query.jupyter import load_ipython_extension
