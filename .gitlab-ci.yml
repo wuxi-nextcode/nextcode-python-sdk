@@ -20,7 +20,7 @@ stages:
     # do not create a project specific virtualenv
     - poetry config virtualenvs.create false --local
     # install all dependencies
-    - poetry install --all-extras --with test
+    - poetry install --all-extras --without docs
 
 .poetry-with-docs:
   image: python:3.9
