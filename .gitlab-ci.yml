@@ -5,7 +5,7 @@ stages:
   - badge
 
 .py-with-cache:
-  image: python:3.8
+  image: python:3.9
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
@@ -21,6 +21,24 @@ stages:
     - poetry config virtualenvs.create false --local
     # install all dependencies
     - poetry install --all-extras --with test
+
+.poetry-with-docs:
+  image: python:3.9
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .cache/pip
+  script:
+    # install poetry
+    - curl -sSL https://install.python-poetry.org | python3 -
+    # add poetry to path because it uses a weird installation path
+    - export PATH=/root/.local/bin:$PATH
+    # do not create a project specific virtualenv
+    - poetry config virtualenvs.create false --local
+    # install all dependencies
+    - poetry install --all-extras --with docs,test
 
 .push-changes-to-origin:
   image: registry.gitlab.com/wuxi-nextcode/sdev/gitlab-tools:6.0.1
@@ -112,6 +130,23 @@ badge:
    - tags
   except:
     - branches
+
+
+pages:
+  extends:
+    - .poetry-with-docs
+  script:
+    - !reference [.poetry-with-docs, script]
+    # generate html docs and place in public folder
+    - sphinx-build -b html doc public
+  artifacts:
+    paths:
+      # The folder that contains the files to be exposed at the Page URL
+      - public
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 
 include:
