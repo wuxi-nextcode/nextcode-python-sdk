@@ -5,6 +5,7 @@ stages:
   - badge
 
 .py-with-cache:
+  tags: [ gitlab-build-01 ]
   image: python:3.9
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -23,6 +24,7 @@ stages:
     - poetry install --all-extras --without docs
 
 .poetry-with-docs:
+  tags: [ gitlab-build-01 ]
   image: python:3.9
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
