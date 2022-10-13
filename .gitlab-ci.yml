@@ -43,8 +43,8 @@ build:
     - .py-with-cache
   stage: build
   script:
-    - make dev-install
-    - make build
+    - !reference [.py-with-cache, script]
+    - poetry build
 
 #generate-documents:
 #  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
@@ -85,9 +85,8 @@ release:
   stage: release
   when: on_success
   script:
-    - make dev-install
-    - make build
-    - make release
+    - !reference [.py-with-cache, script]
+    - poetry publish --build
   only:
     - tags
   except:
