@@ -27,6 +27,7 @@ test:
   stage: test
   script:
     - curl -sSL https://install.python-poetry.org | python3 -
+    - export PATH=/root/.local/bin:$PATH
     - poetry install --all-extras
     - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
 
