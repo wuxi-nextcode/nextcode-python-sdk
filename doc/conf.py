@@ -13,6 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+import nextcode
 
 # -- Project information -----------------------------------------------------
 
@@ -22,9 +23,7 @@ project = "nextcode-python-sdk"
 copyright = "2021,Genuity Science"
 author = "Genuity Science"
 
-with open(os.path.join(os.path.dirname(__file__), "..", "nextcode/VERSION")) as f:
-    version = f.read()
-release = version
+release = nextcode.__version__
 
 # -- General configuration ---------------------------------------------------
 
