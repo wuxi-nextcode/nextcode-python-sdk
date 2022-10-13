@@ -1,11 +1,12 @@
-import responses
-from pathlib import Path
-from unittest.mock import patch, MagicMock, PropertyMock
-import json
 import os
-from copy import deepcopy
+import json
 import tempfile
+import responses
+from copy import deepcopy
+from pathlib import Path
+from requests.exceptions import RetryError
 from urllib3.exceptions import MaxRetryError
+from unittest.mock import patch, MagicMock, PropertyMock
 
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.utils import decode_token, jupyter_available
@@ -375,7 +376,7 @@ class QueryTest(BaseTestCase):
         responses.add(
             responses.GET, ROOT_URL + "/query/888", json={"code": 500}, status=500
         )
-        with self.assertRaises(MaxRetryError):
+        with self.assertRaises(RetryError):
             query = self.svc.get_query(888)
 
     @responses.activate
