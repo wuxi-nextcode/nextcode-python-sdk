@@ -36,7 +36,12 @@ test:
   stage: test
   script:
     - !reference [.py-with-cache, script]
-    - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
+    - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml --cov-report=xml:cov.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: cov.xml
 
 build:
   extends:
