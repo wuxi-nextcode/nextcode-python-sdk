@@ -5,13 +5,42 @@ stages:
   - badge
 
 .py-with-cache:
-  image: python:3.7-stretch
+  tags: [ gitlab-build-01 ]
+  image: python:3.9
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
       - .cache/pip
+  script:
+    # install poetry
+    - curl -sSL https://install.python-poetry.org | python3 -
+    # add poetry to path because it uses a weird installation path
+    - export PATH=/root/.local/bin:$PATH
+    # do not create a project specific virtualenv
+    - poetry config virtualenvs.create false --local
+    # install all dependencies
+    - poetry install --all-extras --without docs
+
+.poetry-with-docs:
+  tags: [ gitlab-build-01 ]
+  image: python:3.9
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .cache/pip
+  script:
+    # install poetry
+    - curl -sSL https://install.python-poetry.org | python3 -
+    # add poetry to path because it uses a weird installation path
+    - export PATH=/root/.local/bin:$PATH
+    # do not create a project specific virtualenv
+    - poetry config virtualenvs.create false --local
+    # install all dependencies
+    - poetry install --all-extras --with docs,test
 
 .push-changes-to-origin:
   image: registry.gitlab.com/wuxi-nextcode/sdev/gitlab-tools:6.0.1
@@ -26,49 +55,54 @@ test:
     - .py-with-cache
   stage: test
   script:
-    - make dev-install
-    - make cover
+    - !reference [.py-with-cache, script]
+    - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml --cov-report=xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
 
 build:
   extends:
     - .py-with-cache
   stage: build
   script:
-    - make dev-install
-    - make build
+    - !reference [.py-with-cache, script]
+    - poetry build
 
-generate-documents:
-  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
-  script:
-    - pip3 install -r doc/requirements.txt
-    - apt update && apt install -y pandoc
-    - sphinx-build -b html doc docs
-  artifacts:
-    paths:
-      - docs/
-    expire_in: 1 day
-  stage: test
-  only:
-    - merge_requests
+#generate-documents:
+#  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
+#  script:
+#    - pip3 install -r doc/requirements.txt
+#    - apt update && apt install -y pandoc
+#    - sphinx-build -b html doc docs
+#  artifacts:
+#    paths:
+#      - docs/
+#    expire_in: 1 day
+#  stage: test
+#  only:
+#    - merge_requests
 
-commit-documents:
-  script:
-    - VERSION=`head -n 1 nextcode/VERSION`
-    - git config user.name 'WXNC Gitlab CI'
-    - git config user.email 'wxnc-gitlab-ci@wuxinextcode.com'
-    - git fetch
-    - git checkout ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
-    - git add docs/
-    - git diff-index --cached --quiet HEAD || git commit -m "Documentation update for ${VERSION} [skip ci]" -- docs
-    - git remote set-url --push origin https://wxnc-platform-ci:${COMMON_WORKFLOW_GITLAB_API_TOKEN}@gitlab.com/wuxi-nextcode/research-platform/backend-services/platform/python-sdk.git
-    - git push origin ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} -o ci.skip
-  stage: build
-  dependencies:
-    - generate-documents
-  extends:
-    .push-changes-to-origin
-  only:
-    - merge_requests
+#commit-documents:
+#  script:
+#    - VERSION=`head -n 1 nextcode/VERSION`
+#    - git config user.name 'WXNC Gitlab CI'
+#    - git config user.email 'wxnc-gitlab-ci@wuxinextcode.com'
+#    - git fetch
+#    - git checkout ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
+#    - git add docs/
+#    - git diff-index --cached --quiet HEAD || git commit -m "Documentation update for ${VERSION} [skip ci]" -- docs
+#    - git remote set-url --push origin https://wxnc-platform-ci:${COMMON_WORKFLOW_GITLAB_API_TOKEN}@gitlab.com/wuxi-nextcode/research-platform/backend-services/platform/python-sdk.git
+#    - git push origin ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} -o ci.skip
+#  stage: build
+#  dependencies:
+#    - generate-documents
+#  extends:
+#    .push-changes-to-origin
+#  only:
+#    - merge_requests
 
 release:
   extends:
@@ -76,9 +110,8 @@ release:
   stage: release
   when: on_success
   script:
-    - make dev-install
-    - make build
-    - make release
+    - !reference [.py-with-cache, script]
+    - poetry publish --build
   only:
     - tags
   except:
@@ -99,6 +132,23 @@ badge:
    - tags
   except:
     - branches
+
+
+pages:
+  extends:
+    - .poetry-with-docs
+  script:
+    - !reference [.poetry-with-docs, script]
+    # generate html docs and place in public folder
+    - sphinx-build -b html doc public
+  artifacts:
+    paths:
+      # The folder that contains the files to be exposed at the Page URL
+      - public
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 
 include:
