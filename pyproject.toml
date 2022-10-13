@@ -8,7 +8,7 @@ maintainers = ["Genuity Science Software Development <sdev@genuitysci.com>"]
 readme = "README.md"
 homepage = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
 repository = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
-documentation = "https://www.github.com/wuxi-nextcode/nextcode-python-sdk"
+documentation = "https://wuxi-nextcode.github.io/nextcode-python-sdk/"
 keywords = []
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -50,6 +50,13 @@ jupyter = ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
 pytest = "^7.1.3"
 responses = "^0.22.0"
 pytest-cov = "^4.0.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^5.2.3"
+sphinx-bootstrap-theme = "^0.8.1"
+sphinx-rtd-theme = "^1.0.0"
+sphinx-autodoc-typehints = "^1.19.4"
+nbsphinx = "^0.8.9"
 
 [build-system]
 requires = ["poetry-core"]
