@@ -1,115 +1,16 @@
-stages:
-  - test
-  - build
-  - release
-  - badge
-
-.py-with-cache:
-  image: python:3.8
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - .cache/pip
+# The Docker image that will be used to build your app
+image: python:3.9-slim
+# Functions that should be executed before the build script is run
+before_script:
+  - pip install
+pages:
   script:
-    # install poetry
-    - curl -sSL https://install.python-poetry.org | python3 -
-    # add poetry to path because it uses a weird installation path
-    - export PATH=/root/.local/bin:$PATH
-    # do not create a project specific virtualenv
-    - poetry config virtualenvs.create false --local
-    # install all dependencies
-    - poetry install --all-extras --with test
-
-.push-changes-to-origin:
-  image: registry.gitlab.com/wuxi-nextcode/sdev/gitlab-tools:6.0.1
-  stage: build
-  tags:
-  - gitlab-build-01
-  variables:
-    GITLAB_TOKEN: $COMMON_WORKFLOW_GITLAB_API_TOKEN
-
-test:
-  extends:
-    - .py-with-cache
-  stage: test
-  script:
-    - !reference [.py-with-cache, script]
-    - python3 -m pytest tests/ --cov=nextcode/ --disable-warnings --junitxml=test-results/pytest.xml
-
-build:
-  extends:
-    - .py-with-cache
-  stage: build
-  script:
-    - !reference [.py-with-cache, script]
-    - poetry build
-
-#generate-documents:
-#  image: python:3.9.9-slim # pinned to keep setuptools below 58.0
-#  script:
-#    - pip3 install -r doc/requirements.txt
-#    - apt update && apt install -y pandoc
-#    - sphinx-build -b html doc docs
-#  artifacts:
-#    paths:
-#      - docs/
-#    expire_in: 1 day
-#  stage: test
-#  only:
-#    - merge_requests
-
-#commit-documents:
-#  script:
-#    - VERSION=`head -n 1 nextcode/VERSION`
-#    - git config user.name 'WXNC Gitlab CI'
-#    - git config user.email 'wxnc-gitlab-ci@wuxinextcode.com'
-#    - git fetch
-#    - git checkout ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
-#    - git add docs/
-#    - git diff-index --cached --quiet HEAD || git commit -m "Documentation update for ${VERSION} [skip ci]" -- docs
-#    - git remote set-url --push origin https://wxnc-platform-ci:${COMMON_WORKFLOW_GITLAB_API_TOKEN}@gitlab.com/wuxi-nextcode/research-platform/backend-services/platform/python-sdk.git
-#    - git push origin ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} -o ci.skip
-#  stage: build
-#  dependencies:
-#    - generate-documents
-#  extends:
-#    .push-changes-to-origin
-#  only:
-#    - merge_requests
-
-release:
-  extends:
-    - .py-with-cache
-  stage: release
-  when: on_success
-  script:
-    - !reference [.py-with-cache, script]
-    - poetry publish --build
-  only:
-    - tags
-  except:
-    - branches
-
-badge:
-  image: python:3.7-stretch
-  stage: badge
-  when: on_success
-  script:
-    - pip install anybadge
-    - commits=$(git rev-list --all --count)
-    - anybadge -l "version" -v `git describe --abbrev=0 --tag` -f version.svg -c orange
+    - poetry install
   artifacts:
     paths:
-        - version.svg
-  only:
-   - tags
-  except:
-    - branches
-
-
-include:
-  - template: Jobs/Code-Quality.gitlab-ci.yml # https://gitlab.com/gitlab-org/gitlab-ce/blob/master/lib/gitlab/ci/templates/Jobs/Code-Quality.gitlab-ci.yml
-  - template: SAST.gitlab-ci.yml
-  - template: Dependency-Scanning.gitlab-ci.yml
+      # The folder that contains the files to be exposed at the Page URL
+      - public
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
