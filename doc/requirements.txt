@@ -1,9 +1,0 @@
-# setuptools==57.*
-sphinx
-sphinx-autodoc-typehints
-sphinx-rtd-theme
-nbsphinx
-jupyter-sphinx-theme
-ipython
-sphinx_bootstrap_theme
-sphinxcontrib-osexample==0.1.1
