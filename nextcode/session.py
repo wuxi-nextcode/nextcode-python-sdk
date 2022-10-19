@@ -4,19 +4,19 @@ session
 Service Session, low-level object for communicating with RESTFul services.
 """
 
-import requests
-import requests.utils
-from requests import codes
-from os import environ
 import copy
 import json
-import platform
 import time
 import logging
+import platform
+import requests
+import requests.utils
+from os import environ
+from typing import Dict
+from hashlib import sha1
+from requests import codes
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry  # pylint: disable=E0401
-from hashlib import sha1
-from typing import Dict
 
 from . import __version__
 from .exceptions import ServerError, ServiceNotFound
@@ -26,6 +26,14 @@ from .config import Config, load_cache, save_cache
 log = logging.getLogger(__name__)
 
 config = Config()
+
+
+def initialize_first(func):
+    def inner(self, *args, **kwargs):
+        if not self.initialized:
+            self._initialize()
+        return func(self, *args, **kwargs)
+    return inner
 
 
 class ServiceSession(requests.Session):
@@ -52,6 +60,7 @@ class ServiceSession(requests.Session):
             self.mount("http://", adapter)
             self.mount("https://", adapter)
 
+        self.initialized = False
         self.root_info = {}
         self.endpoints = {}
         self.token = None
@@ -79,10 +88,9 @@ class ServiceSession(requests.Session):
         if environ.get("NEXTCODE_ENABLE_GZIP"):
             self.headers["Accept-Encoding"] = "gzip"
 
-        if not self._load():
-            self._initialize()
+        if self._load():
+            self.initialized = True
 
-        self.endpoints = self.root_info.get("endpoints")
 
     def _initialize(self) -> None:
         if environ.get('NEXTCODE_ACCESS_TOKEN'):
@@ -92,6 +100,8 @@ class ServiceSession(requests.Session):
         self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
+            self.endpoints = self.root_info.get("endpoints")
+            self.initialized = True
         except ServerError as ex:
             if ex.response and ex.response.get("status") == codes.not_found:
                 status = ex.response.get("status")
@@ -116,6 +126,7 @@ class ServiceSession(requests.Session):
             return False
         self.token = contents["token"]
         self.root_info = contents["root_info"]
+        self.endpoints = self.root_info.get("endpoints")
         if self.token:
             self.headers["Authorization"] = "Bearer {}".format(self.token)
         # if the service does not have our user available make sure to refresh
@@ -123,8 +134,8 @@ class ServiceSession(requests.Session):
             return False
         return True
 
+    @initialize_first
     def _do_request(self, method, retry=True, *args, **kwargs):
-
         # method: GET
         old_content_type = self.headers["Content-Type"]
         
@@ -177,7 +188,12 @@ class ServiceSession(requests.Session):
             )
         )
         try:
-            r = requests.get(self.url_base, timeout=3.0, headers=self.headers, verify=self.verify)
+            r = requests.get(
+                self.url_base,
+                timeout=3.0,
+                headers=self.headers,
+                verify=self.verify
+            )
         except requests.exceptions.ConnectionError as ex:
             raise ServerError(
                 f"Could not reach server {self.url_base} ({ex})"
@@ -197,6 +213,7 @@ class ServiceSession(requests.Session):
         self.root_info = ret
         return ret
 
+    @initialize_first
     def url_from_endpoint(self, endpoint: str) -> str:
         try:
             return self.endpoints[endpoint]

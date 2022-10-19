@@ -138,9 +138,7 @@ class Client:
     ) -> None:
         self.verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
 
-        # if no named profile or api key is passed in
-        if not profile and not api_key:
-            # find the default profile, if any
+        if not profile:
             if os.environ.get("NEXTCODE_PROFILE"):
                 profile = os.environ["NEXTCODE_PROFILE"]
                 log.info("Using profile '%s' from environment", profile)
@@ -148,6 +146,17 @@ class Client:
                 profile = cfg.get("default_profile")
                 if profile:
                     log.info("Using default profile '%s' from config", profile)
+
+        # if no named profile or api key is passed in
+        #if not profile and not api_key:
+        #    # find the default profile, if any
+        #    if os.environ.get("NEXTCODE_PROFILE"):
+        #        profile = os.environ["NEXTCODE_PROFILE"]
+        #        log.info("Using profile '%s' from environment", profile)
+        #    else:
+        #        profile = cfg.get("default_profile")
+        #        if profile:
+        #            log.info("Using default profile '%s' from config", profile)
 
         self.profile_name = profile
 

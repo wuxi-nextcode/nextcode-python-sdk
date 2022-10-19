@@ -68,15 +68,21 @@ class BaseService:
 
     @property
     def service_name(self) -> str:
-        return self.session.root_info["service_name"]
+        try:
+            return self.session.root_info["service_name"]
+        except KeyError:
+            return self.service_path.split('/')[-1]
 
     @property
     def version(self) -> str:
-        return self.session.root_info["build_info"]["version"]
+        try:
+            return self.session.root_info["build_info"]["version"]
+        except KeyError:
+            return 'n/a'
 
     @property
     def build_info(self) -> str:
-        return self.session.root_info["build_info"]
+        return self.session.__dict__.get('root_info', {}).get("build_info", {})
 
     @property
     def app_info(self) -> Dict:
