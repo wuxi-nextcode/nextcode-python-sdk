@@ -92,7 +92,7 @@ class Phenotype:
         """
         _ = self.session.delete(self.links["self"])
 
-    def upload(self, data: Union[List,pd.DataFrame]):
+    def upload(self, data):
         """
         Upload phenotype data
 
@@ -104,9 +104,9 @@ class Phenotype:
         :raises: `ServerError` if there was a problem uploading
         """
         if not isinstance(data, list):
-            if isinstance(data, pd.DataFrame):
+            try:
                 data = data.values.tolist()
-            else:
+            except Exception:
                 raise TypeError("data must be a list or pandas DataFrame")
 
         url = self.links["upload"]
