@@ -6,7 +6,7 @@ stages:
 
 .py-with-cache:
   tags: [ gitlab-build-01 ]
-  image: python:3.9
+  image: python:3.10
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
@@ -25,7 +25,7 @@ stages:
 
 .poetry-with-docs:
   tags: [ gitlab-build-01 ]
-  image: python:3.9
+  image: python:3.10
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   cache:
