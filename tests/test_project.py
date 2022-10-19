@@ -1,12 +1,19 @@
-import responses
-from unittest import mock
 import datetime
+import responses
 from copy import deepcopy
+from unittest import mock
+from unittest import skipUnless
 
 from nextcode import Client
 from nextcode.exceptions import ServerError
 from nextcode.services.project.exceptions import ProjectError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
+
+try:
+    import pandas
+    PANDAS_INSTALLED = True
+except ModuleNotFoundError:
+    PANDAS_INSTALLED = False
 
 ROOT_URL = "https://test.wuxinextcode.com/api/project"
 PROJECTS_URL = ROOT_URL + "/projects"
@@ -239,6 +246,33 @@ class ProjectTest(BaseTestCase):
         )
         mock_bucket.meta.client.list_objects = mock_list_objects
         self.svc.get_project_bucket.return_value = mock_bucket
-        self.svc.list()
         self.svc.upload("filename", "test")
         self.svc.download("test")
+
+    @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
+    def test_list(self):
+        responses.add(
+            responses.GET,
+            PROJECT_USERS_URL,
+            json=[
+                {
+                    "user_name": "bla",
+                    "policies": [],
+                    "links": {"self": PROJECT_USERS_URL + "/1"},
+                }
+            ],
+        )
+        responses.add(responses.GET, USER_URL, json=USER_RESP)
+        responses.add(responses.GET, CREDENTIALS_URL, json=CREDENTIALS_RESP)
+        self.svc.get_project_bucket = mock.MagicMock()
+        mock_bucket = mock.MagicMock()
+        mock_list_objects = mock.MagicMock(
+            return_value={
+                "CommonPrefixes": [{"Prefix": "/bleeerg"}],
+                "Contents": [{"Size": 123456, "Key": "bleeerg/eoee"}],
+            }
+        )
+        mock_bucket.meta.client.list_objects = mock_list_objects
+        self.svc.get_project_bucket.return_value = mock_bucket
+        self.svc.list()

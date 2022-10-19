@@ -1,6 +1,7 @@
 import os
-from unittest import mock
 import responses
+from unittest import mock
+from unittest import skipUnless
 from unittest.mock import patch, MagicMock
 
 from nextcode import jupyter
@@ -8,7 +9,12 @@ from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.services.query.exceptions import MissingRelations, QueryError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
 from tests.test_query import ROOT_URL, ROOT_RESP
-import pandas as pd
+try:
+    import pandas as pd
+    from pandas import DataFrame
+    PANDAS_INSTALLED = True
+except ModuleNotFoundError:
+    PANDAS_INSTALLED = False
 
 
 def setup_responses():
@@ -56,6 +62,7 @@ class JupyterTest(BaseTestCase):
         self.assertEqual("hello $1;", string)
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_load_relations(self):
         with self.assertRaises(Exception) as ex:
             _ = self.magics.load_relations(["[not_found]"])
@@ -65,8 +72,6 @@ class JupyterTest(BaseTestCase):
         with self.assertRaises(Exception) as ex:
             string = self.magics.load_relations(["var:found", "var:alsofound"])
         self.assertIn("found must be a pandas DataFrame object", str(ex.exception))
-
-        from pandas import DataFrame
 
         self.magics.shell.user_ns = {"found": DataFrame(), "alsofound": DataFrame()}
         _ = self.magics.load_relations(["var:found", "var:alsofound"])
@@ -94,6 +99,7 @@ class JupyterTest(BaseTestCase):
 
 class GorCommandTest(JupyterTest):
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_singleline_queryservice(self):
         setup_responses()
         df = self.magics.gor("--queryservice True Hello")
@@ -114,6 +120,7 @@ class GorCommandTest(JupyterTest):
             self.assertTrue(isinstance(df, pd.DataFrame))
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_singleline_queryserver(self):
         setup_responses()
         df = self.magics.gor("Hello")
@@ -154,6 +161,7 @@ class GorCommandTest(JupyterTest):
             self.assertTrue(df is None)
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_multiline_queryservice(self):
         setup_responses()
 
@@ -172,6 +180,7 @@ class GorCommandTest(JupyterTest):
             self.assertTrue(isinstance(df, pd.DataFrame))
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_multiline_queryserver(self):
         setup_responses()
 
@@ -269,6 +278,7 @@ class GorCommandTest(JupyterTest):
             self.assertTrue(df is None)
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_gorls(self):
         setup_responses()
 
@@ -294,6 +304,7 @@ class GorCommandTest(JupyterTest):
             _ = self.magics.gorls(". test")
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_gorfind(self):
         setup_responses()
 

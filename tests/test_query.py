@@ -2,8 +2,9 @@ import os
 import json
 import tempfile
 import responses
-from copy import deepcopy
 from pathlib import Path
+from copy import deepcopy
+from unittest import skipUnless
 from requests.exceptions import RetryError
 from urllib3.exceptions import MaxRetryError
 from unittest.mock import patch, MagicMock, PropertyMock
@@ -19,6 +20,11 @@ from nextcode.services.query.exceptions import (
     MissingRelations,
     TemplateError,
 )
+try:
+    import pandas as pd
+    PANDAS_INSTALLED = True
+except ModuleNotFoundError:
+    PANDAS_INSTALLED = False
 
 ROOT_URL = "https://test.wuxinextcode.com/api/query"
 WAKEUP_URL = ROOT_URL + "/wakeup/"
@@ -306,6 +312,7 @@ class QueryTest(BaseTestCase):
                 query = self.svc.execute_template(template_name)
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_virtual_relations(self):
         ret = QUERY_RESPONSE
 
@@ -314,8 +321,6 @@ class QueryTest(BaseTestCase):
             "gor #dbsnp#;", relations=[{"name": "file", "data": "somedata"}]
         )
         self.svc.execute("gor #dbsnp#;", name="file")
-
-        import pandas as pd
 
         self.svc.execute(
             "gor #dbsnp#;", relations=[{"name": "file", "data": pd.DataFrame()}]
@@ -481,6 +486,7 @@ class QueryTest(BaseTestCase):
         query.cancel()
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_dataframe(self):
         responses.add(
             responses.GET, QUERY_RESPONSE["links"]["self"], json=QUERY_RESPONSE
