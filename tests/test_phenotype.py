@@ -1,12 +1,19 @@
-import responses
-from unittest import mock
 import datetime
+import responses
 from copy import deepcopy
+from unittest import mock
+from unittest import skipUnless
 
 from nextcode import Client
 from nextcode.exceptions import ServerError
 from nextcode.services.phenotype.exceptions import PhenotypeError
 from tests import BaseTestCase, REFRESH_TOKEN, AUTH_RESP, AUTH_URL
+
+try:
+    import pandas
+    PANDAS_INSTALLED = True
+except ModuleNotFoundError:
+    PANDAS_INSTALLED = False
 
 dt = datetime.datetime.utcnow().isoformat()
 
@@ -259,6 +266,7 @@ class PhenotypeTest(BaseTestCase):
             _ = phenotype.upload("invalid")
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_phenotype_get_data(self):
         result_type = "SET"
         ret = {"phenotype": PHENOTYPE_RESP}
@@ -326,6 +334,7 @@ class PhenotypeTest(BaseTestCase):
         phenotype.set_tags(["test", "test2"])
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_phenotype_matrix(self):
         matrix = self.svc.get_phenotype_matrix(base="test_base")
         matrix.add_phenotype("pheno1", missing_value="missing1", label="label")

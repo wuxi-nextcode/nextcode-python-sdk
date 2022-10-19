@@ -784,16 +784,17 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "PyJWT"
-version = "1.7.1"
+version = "2.5.0"
 description = "JSON Web Token implementation in Python"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.extras]
-crypto = ["cryptography (>=1.4)"]
-flake8 = ["flake8", "flake8-import-order", "pep8-naming"]
-test = ["pytest (>=4.0.1,<5.0.0)", "pytest-cov (>=2.6.0,<3.0.0)", "pytest-runner (>=4.2,<5.0.0)"]
+crypto = ["cryptography (>=3.3.1)", "types-cryptography (>=3.3.21)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.3.1)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "types-cryptography (>=3.3.21)", "zope.interface"]
+docs = ["sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
 
 [[package]]
 name = "pyparsing"
@@ -1279,7 +1280,7 @@ jupyter = ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d7ed792b807f16dbd005f25e9d03313b07e6d1d337986a69c410c00a6ae4601c"
+content-hash = "25c41971eff996eaebead6d4ec87ebe3d86ec321fac19efb36ccc9e97d08a0b6"
 
 [metadata.files]
 alabaster = [
@@ -1784,8 +1785,8 @@ Pygments = [
     {file = "Pygments-2.13.0.tar.gz", hash = "sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"},
 ]
 PyJWT = [
-    {file = "PyJWT-1.7.1-py2.py3-none-any.whl", hash = "sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e"},
-    {file = "PyJWT-1.7.1.tar.gz", hash = "sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96"},
+    {file = "PyJWT-2.5.0-py3-none-any.whl", hash = "sha256:8d82e7087868e94dd8d7d418e5088ce64f7daab4b36db654cbaedb46f9d1ca80"},
+    {file = "PyJWT-2.5.0.tar.gz", hash = "sha256:e77ab89480905d86998442ac5788f35333fa85f65047a534adc38edf3c88fc3b"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},

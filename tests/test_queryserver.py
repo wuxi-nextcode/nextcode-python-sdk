@@ -1,8 +1,9 @@
+import os
+import json
 import responses
 from pathlib import Path
+from unittest import skipUnless
 from unittest.mock import patch, MagicMock, PropertyMock
-import json
-import os
 
 from nextcode.exceptions import InvalidToken, InvalidProfile, ServerError
 from nextcode.services.queryserver.result import _log_download_progress
@@ -15,6 +16,11 @@ from nextcode.services.query.exceptions import (
     MissingRelations,
     TemplateError,
 )
+try:
+    import pandas as pd
+    PANDAS_INSTALLED = True
+except ModuleNotFoundError:
+    PANDAS_INSTALLED = False
 
 ROOT_URL = "https://test.wuxinextcode.com/queryserver"
 QUERIES_URL = ROOT_URL + "/query/"
@@ -101,6 +107,7 @@ class QueryServerTest(BaseTestCase):
         self.assertEqual(ret, result_text)
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_dataframe(self):
         ret = 'Chrom\tpos\treference\tallele\trsids\nchr1\t10020\tAA\tA\trs775809821'
         responses.add(responses.POST, QUERIES_URL, body=ret)
@@ -142,6 +149,7 @@ class QueryServerTest(BaseTestCase):
         result.cancel()
 
     @responses.activate
+    @skipUnless(PANDAS_INSTALLED, "pandas library is not installed")
     def test_virtual_relations(self):
         data = 'Chrom\tpos\treference\tallele\trsids\nchr1\t10020\tAA\tA\trs775809821'
 
@@ -150,7 +158,6 @@ class QueryServerTest(BaseTestCase):
         responses.add(responses.POST, QUERIES_URL, body=ret)
         self.svc.execute("gor [file]]", relations=[{"name": "file", "data": data}])
 
-        import pandas as pd
         self.svc.execute("gor [file]", relations=[{"name": "file", "data": pd.DataFrame()}])
 
         with self.assertRaises(QueryError):
