@@ -96,6 +96,7 @@ class WorkflowTest(BaseTestCase):
 
         client = Client(api_key=REFRESH_TOKEN)
         svc = client.service("workflow")
+        svc.session._initialize()
         return svc
 
     @responses.activate

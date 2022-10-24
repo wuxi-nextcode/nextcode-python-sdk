@@ -29,6 +29,7 @@ class PipelinesTest(BaseTestCase):
 
         client = Client(api_key=REFRESH_TOKEN)
         svc = client.service("pipelines")
+        svc.session._initialize()
         return svc
 
     @responses.activate

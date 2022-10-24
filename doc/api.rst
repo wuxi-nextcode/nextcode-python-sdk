@@ -8,20 +8,18 @@ When using the SDK you always start by getting a `Client` instance using an API 
 .. code-block:: python
    :linenos:
 
-   import nextcode
-   client = nextcode.Client(api_key="xxx")
-   svc = client.service("query")
-   svc.status()
-
-There is a helper method available to get a service directly without first invoking a client.
-
-.. code-block:: python
-   :linenos:
-
-   import nextcode
-   svc = nextcode.get_service("query")
-
-In this example we assume the `api_key` has already been set but it can also be passed in.
+   from nextcode import Nextcode
+   nc = Nextcode(api_key="xxx", project="myproject")
+   nc.phenoteke.map_cids_to_ipns(
+      site_id='siteid',
+      study_id='studyid',
+      cids=['cid1', 'cid2', 'cid3']
+   )
+   nc.phenotype.create_phenotype('mypheno', 'myresulttype')
+   nc.pipelines.get_jobs()
+   nc.query.get_template('mytemplate')
+   nc.queryserver.execute('gor ref/dbsnp.gorz | top 1')
+   nc.workflow.post_job('mypipeline', 'myproject', params={})
 
 
 Available Services

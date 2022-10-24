@@ -12,6 +12,7 @@ import importlib.metadata
 from .config import Config
 # we want these available from the top-level package
 from .client import Client, get_service
+from nextcode.nextcode import Nextcode
 
 log = logging.getLogger()
 

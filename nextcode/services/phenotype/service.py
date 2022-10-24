@@ -28,6 +28,16 @@ log = logging.getLogger(__file__)
 SUPPORTED_RESULT_TYPES = ["SET", "QT", "CATEGORY"]
 
 
+def ensure_project(func):
+    def inner(self, *args, **kwargs):
+        if not self.project_name:
+            raise PhenotypeError("Please specify a project")
+        if not self.initialized:
+            self._init_project()
+        return func(self, *args, **kwargs)
+    return inner
+
+
 def _get_paginated_results(method, limit):
     default_batch_size = 100  # Used for pagination
     offset = 0
@@ -67,21 +77,21 @@ class Service(BaseService):
 
     def __init__(self, client: Client, *args, **kwargs) -> None:
         super(Service, self).__init__(client, SERVICE_PATH, *args, **kwargs)
-        project_name = (
+        self.project_name = (
             kwargs.get("project")
             or os.environ.get("GOR_API_PROJECT")
             or client.profile.project
         )
-        if not project_name:
-            raise PhenotypeError("Please specify a project")
+        self.initialized = False
 
-        self._init_project(project_name)
+    def set_project(self, project_name):
+        self.project_name = project_name
+        self._init_project()
 
-    def _init_project(self, project_name):
+    def _init_project(self):
         """
         Initialize the project from the server
         """
-        self.project_name = project_name
         resp = self.session.get(self.session.url_from_endpoint("projects"))
         self.all_projects = {}
         for project in resp.json()["projects"]:
@@ -93,7 +103,9 @@ class Service(BaseService):
             log.info(f"Service initialized with project {self.project_name}")
         else:
             log.warning(f"Project {self.project_name} not found")
+        self.initialized = True
 
+    @ensure_project
     def create_phenotype(
             self,
             name: str,
@@ -145,6 +157,7 @@ class Service(BaseService):
             self._init_project(self.project_name)
         return Phenotype(self.session, data["phenotype"])
 
+    @ensure_project
     def get_tags(self) -> List:
         """
         A list of all tags available in the system
@@ -152,6 +165,7 @@ class Service(BaseService):
         resp = self.session.get(self.session.url_from_endpoint("tags"))
         return resp.json()["tags"]
 
+    @ensure_project
     def get_phenotypes(
             self,
             all_tags: List[str] = [],
@@ -206,6 +220,7 @@ class Service(BaseService):
             phenotypes.append(Phenotype(self.session, item))
         return phenotypes
 
+    @ensure_project
     def get_phenotypes_matrix(
             self,
             all_tags: List[str] = [],
@@ -260,6 +275,7 @@ class Service(BaseService):
             matrix.add_phenotypes([item['name'] for item in combined_data])
         return matrix
 
+    @ensure_project
     def get_phenotypes_dataframe(
             self,
             all_tags: List[str] = [],
@@ -319,6 +335,7 @@ class Service(BaseService):
             return dataframe[cols]
         return dataframe
 
+    @ensure_project
     def _get_phenotypes(
             self,
             all_tags: List[str] = [],
@@ -405,6 +422,7 @@ class Service(BaseService):
         combined_data = _get_paginated_results(do_get, limit)
         return combined_data
 
+    @ensure_project
     def get_phenotype(self, name: str) -> Phenotype:
         """
         Get a specific phenotype in the current project
@@ -430,6 +448,7 @@ class Service(BaseService):
         data = resp.json()["phenotype"]
         return Phenotype(self.session, data)
 
+    @ensure_project
     def get_phenotype_matrix(self, base: Optional[str] = None) -> PhenotypeMatrix:
         """
         Get a phenotype matrix object.
@@ -441,6 +460,7 @@ class Service(BaseService):
         """
         return PhenotypeMatrix(self.session, base=base, project_name=self.project_name)
 
+    @ensure_project
     def get_categories(self) -> List:
         """
         A list of all categories available in the system
@@ -462,6 +482,7 @@ class Service(BaseService):
 
         return categories
 
+    @ensure_project
     def create_category(self, name: str):
         """
         Add a new category to this project.
@@ -486,6 +507,7 @@ class Service(BaseService):
 
         return payload
 
+    @ensure_project
     def create_playlist(self, name: str, description: Optional[str] = None, phenotypes: Optional[List[str]] = None) -> Playlist:
         """
         Create a new playlist in the current project
@@ -517,6 +539,7 @@ class Service(BaseService):
         return playlist
 
 
+    @ensure_project
     def get_playlists(self, limit: int = 100) -> List[Playlist]:
         """
         A list of all the playlists in the current project.
@@ -541,6 +564,7 @@ class Service(BaseService):
             playlists.append(Playlist(self.session, item))
         return playlists
 
+    @ensure_project
     def get_playlist(self, id: int = None, name: str = None) -> Playlist:
         """
         A list a single playlist in the current project based on the id.
@@ -584,6 +608,7 @@ class Service(BaseService):
             data = resp.json()["playlist"]
         return Playlist(self.session, data)
 
+    @ensure_project
     def get_covariates(self, limit=100):
         """
         Get all covariates in current project
@@ -602,6 +627,7 @@ class Service(BaseService):
 
         return combined_data
 
+    @ensure_project
     def get_covariate(self, id):
         """
         Get a single covariate by its id
@@ -619,6 +645,7 @@ class Service(BaseService):
         data = resp.json()['covariate']
         return data
 
+    @ensure_project
     def get_analysis_catalogs(self, phenotype_name: Optional[str] = None, limit: int = 100) -> List[AnalysisCatalog]:
         """
         A list of all the analysis catalogs in the current project. Optionally scope results to a given phenotype name.
@@ -651,6 +678,7 @@ class Service(BaseService):
             analysis_catalogs.append(AnalysisCatalog(self.session, item))
         return analysis_catalogs
 
+    @ensure_project
     def get_analysis_catalog(self, analysis_catalog_name: str) -> AnalysisCatalog:
         """
         Get an analysis catalog in the current project by name
@@ -671,6 +699,7 @@ class Service(BaseService):
             self._init_project(self.project_name)
         return AnalysisCatalog(self.session, data["analysis_catalog"])
 
+    @ensure_project
     def create_analysis_catalog(
             self,
             playlist_id: str,
@@ -712,6 +741,7 @@ class Service(BaseService):
             self._init_project(self.project_name)
         return AnalysisCatalog(self.session, data["analysis_catalog"])
 
+    @ensure_project
     def get_analysis_catalog_run(self, analysis_catalog_name: str,
                                  analysis_catalog_run_name: str) -> AnalysisCatalogRun:
         """
@@ -735,6 +765,7 @@ class Service(BaseService):
             self._init_project(self.project_name)
         return AnalysisCatalogRun(self.session, data["analysis_catalog_run"])
 
+    @ensure_project
     def get_analysis_catalog_runs(self, phenotype_name: str, limit: int = 100) -> List[AnalysisCatalogRun]:
         """
         A list of all the analysis catalog runs in the current project for a given phenotype.

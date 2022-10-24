@@ -44,6 +44,7 @@ class JupyterTest(BaseTestCase):
         del os.environ["NEXTCODE_PROFILE"]
         os.environ["GOR_API_KEY"] = REFRESH_TOKEN
         jupyter.get_service()
+        del os.environ['GOR_API_KEY']
 
     @responses.activate
     def test_replace_vars(self):

@@ -4,19 +4,19 @@ session
 Service Session, low-level object for communicating with RESTFul services.
 """
 
-import requests
-import requests.utils
-from requests import codes
-from os import environ
 import copy
 import json
-import platform
 import time
 import logging
+import platform
+import requests
+import requests.utils
+from os import environ
+from typing import Dict
+from hashlib import sha1
+from requests import codes
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry  # pylint: disable=E0401
-from hashlib import sha1
-from typing import Dict
 
 from . import __version__
 from .exceptions import ServerError, ServiceNotFound
@@ -26,6 +26,14 @@ from .config import Config, load_cache, save_cache
 log = logging.getLogger(__name__)
 
 config = Config()
+
+
+def initialize_first(func):
+    def inner(self, *args, **kwargs):
+        if not self.initialized:
+            self._initialize()
+        return func(self, *args, **kwargs)
+    return inner
 
 
 class ServiceSession(requests.Session):
@@ -52,8 +60,9 @@ class ServiceSession(requests.Session):
             self.mount("http://", adapter)
             self.mount("https://", adapter)
 
-        self.root_info = {}
-        self.endpoints = {}
+        self.initialized = False
+        self._root_info = {}
+        self._endpoints = {}
         self.token = None
         self.url_base = url_base
         self.api_key = api_key
@@ -79,10 +88,9 @@ class ServiceSession(requests.Session):
         if environ.get("NEXTCODE_ENABLE_GZIP"):
             self.headers["Accept-Encoding"] = "gzip"
 
-        if not self._load():
-            self._initialize()
+        if self._load():
+            self.initialized = True
 
-        self.endpoints = self.root_info.get("endpoints")
 
     def _initialize(self) -> None:
         if environ.get('NEXTCODE_ACCESS_TOKEN'):
@@ -92,6 +100,7 @@ class ServiceSession(requests.Session):
         self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
+            self._endpoints = self._root_info.get("endpoints")
         except ServerError as ex:
             if ex.response and ex.response.get("status") == codes.not_found:
                 status = ex.response.get("status")
@@ -100,12 +109,13 @@ class ServiceSession(requests.Session):
                 )
             raise
         # persist the endpoints to disk to save on a roundtrip every call
+        self.initialized = True
         self._save()
 
     def _save(self) -> None:
         contents = {
             "token": self.token,
-            "root_info": self.root_info,
+            "root_info": self._root_info,
             "api_key": self.api_key,
         }
         save_cache(self.cache_name, contents)
@@ -115,16 +125,17 @@ class ServiceSession(requests.Session):
         if not contents:
             return False
         self.token = contents["token"]
-        self.root_info = contents["root_info"]
+        self._root_info = contents["root_info"]
+        self._endpoints = self._root_info.get("endpoints")
         if self.token:
             self.headers["Authorization"] = "Bearer {}".format(self.token)
         # if the service does not have our user available make sure to refresh
-        if not self.root_info.get("current_user"):
+        if not self._root_info.get("current_user"):
             return False
         return True
 
+    @initialize_first
     def _do_request(self, method, retry=True, *args, **kwargs):
-
         # method: GET
         old_content_type = self.headers["Content-Type"]
         
@@ -177,7 +188,12 @@ class ServiceSession(requests.Session):
             )
         )
         try:
-            r = requests.get(self.url_base, timeout=3.0, headers=self.headers, verify=self.verify)
+            r = requests.get(
+                self.url_base,
+                timeout=3.0,
+                headers=self.headers,
+                verify=self.verify
+            )
         except requests.exceptions.ConnectionError as ex:
             raise ServerError(
                 f"Could not reach server {self.url_base} ({ex})"
@@ -194,16 +210,17 @@ class ServiceSession(requests.Session):
                 "Unexpected response: %s" % r.text, url=self.url_base
             ) from None
         ret = r.json()
-        self.root_info = ret
+        self._root_info = ret
         return ret
 
+    @initialize_first
     def url_from_endpoint(self, endpoint: str) -> str:
         try:
-            return self.endpoints[endpoint]
+            return self._endpoints[endpoint]
         except KeyError:
             raise ServerError(
                 "Endpoint '%s' is not exported by '%s'.\nAvailable endpoints are %s"
-                % (endpoint, self.url_base, ", ".join(self.endpoints.keys()))
+                % (endpoint, self.url_base, ", ".join(self._endpoints.keys()))
             )
 
     def request(self, method, url, **kwargs):
@@ -217,3 +234,13 @@ class ServiceSession(requests.Session):
 
     def links(self, resp: Dict) -> Dict:
         return resp.get("links", {})
+
+    @property
+    @initialize_first
+    def endpoints(self):
+        return self._endpoints
+
+    @property
+    @initialize_first
+    def root_info(self):
+        return self._root_info

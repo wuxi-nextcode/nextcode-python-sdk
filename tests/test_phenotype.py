@@ -134,6 +134,8 @@ class PhenotypeTest(BaseTestCase):
 
         client = Client(api_key=REFRESH_TOKEN)
         svc = client.service("phenotype", project=PROJECT)
+        svc.session._initialize()
+        svc.set_project(PROJECT)
         return svc
 
     @responses.activate

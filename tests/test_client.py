@@ -127,6 +127,17 @@ class ClientTest(BaseTestCase):
 
     @responses.activate
     @patch("nextcode.session.load_cache", return_value=None)
+    def test_initialize(self, load_cache):
+        url_base = "https://test.wuxinextcode/api/query"
+        session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+        self.assertEqual(session.initialized, False)
+        responses.add(responses.GET, url_base, json=AUTH_RESP)
+        responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
+        session._initialize()
+        self.assertEqual(session.initialized, True)
+
+    @responses.activate
+    @patch("nextcode.session.load_cache", return_value=None)
     def test_fetch_root_info(self, load_cache):
         url_base = "https://test.wuxinextcode/api/query"
 
@@ -134,17 +145,20 @@ class ClientTest(BaseTestCase):
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             with self.assertRaises(ServerError):
                 session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+                session._initialize()
 
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, json=AUTH_RESP)
             session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+            session._initialize()
 
         with responses.RequestsMock() as rsps:
             rsps.add(responses.POST, AUTH_URL, json=AUTH_RESP)
             rsps.add(responses.GET, url_base, body="text body")
             with self.assertRaises(ServerError):
-                _ = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+                session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+                session._initialize()
 
     @responses.activate
     def test_url_from_endpoint(self):
@@ -152,8 +166,24 @@ class ClientTest(BaseTestCase):
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
         responses.add(responses.GET, url_base, json={"endpoints": {"one": "endpoint"}})
         session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+        self.assertEqual(session.initialized, False)
         with self.assertRaises(ServerError):
             session.url_from_endpoint("nonexistent")
+        self.assertEqual(session.initialized, True)
         session.url_from_endpoint("one")
         ret = session.links({"links": {"a": "b"}})
         self.assertEqual(ret, {"a": "b"})
+
+    @responses.activate
+    def test_initialize_before_request(self):
+        url_base = "https://test.wuxinextcode/api/query"
+        session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
+        self.assertEqual(session.initialized, False)
+        responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
+        responses.add(
+            responses.GET,
+            url_base,
+            json={"endpoints": {"one": "endpoint"}}
+        )
+        session.get(url_base)
+        self.assertEqual(session.initialized, True)
