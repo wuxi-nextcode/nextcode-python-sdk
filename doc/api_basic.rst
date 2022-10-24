@@ -1,6 +1,9 @@
 Basic facilities
 ================
 
+.. automodule:: nextcode.nextcode
+   :members:
+
 .. automodule:: nextcode.client
    :members:
 
