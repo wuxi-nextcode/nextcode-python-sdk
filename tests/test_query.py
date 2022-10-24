@@ -76,6 +76,7 @@ class QueryTest(BaseTestCase):
 
         client = Client(api_key=REFRESH_TOKEN)
         svc = client.service("query", project=project)
+        svc.session._initialize()
         return svc
 
     @responses.activate

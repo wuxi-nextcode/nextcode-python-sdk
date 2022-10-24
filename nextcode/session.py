@@ -61,8 +61,8 @@ class ServiceSession(requests.Session):
             self.mount("https://", adapter)
 
         self.initialized = False
-        self.root_info = {}
-        self.endpoints = {}
+        self._root_info = {}
+        self._endpoints = {}
         self.token = None
         self.url_base = url_base
         self.api_key = api_key
@@ -100,8 +100,7 @@ class ServiceSession(requests.Session):
         self.headers["Authorization"] = "Bearer {}".format(self.token)
         try:
             self.fetch_root_info()
-            self.endpoints = self.root_info.get("endpoints")
-            self.initialized = True
+            self._endpoints = self._root_info.get("endpoints")
         except ServerError as ex:
             if ex.response and ex.response.get("status") == codes.not_found:
                 status = ex.response.get("status")
@@ -110,12 +109,13 @@ class ServiceSession(requests.Session):
                 )
             raise
         # persist the endpoints to disk to save on a roundtrip every call
+        self.initialized = True
         self._save()
 
     def _save(self) -> None:
         contents = {
             "token": self.token,
-            "root_info": self.root_info,
+            "root_info": self._root_info,
             "api_key": self.api_key,
         }
         save_cache(self.cache_name, contents)
@@ -125,12 +125,12 @@ class ServiceSession(requests.Session):
         if not contents:
             return False
         self.token = contents["token"]
-        self.root_info = contents["root_info"]
-        self.endpoints = self.root_info.get("endpoints")
+        self._root_info = contents["root_info"]
+        self._endpoints = self._root_info.get("endpoints")
         if self.token:
             self.headers["Authorization"] = "Bearer {}".format(self.token)
         # if the service does not have our user available make sure to refresh
-        if not self.root_info.get("current_user"):
+        if not self._root_info.get("current_user"):
             return False
         return True
 
@@ -210,17 +210,17 @@ class ServiceSession(requests.Session):
                 "Unexpected response: %s" % r.text, url=self.url_base
             ) from None
         ret = r.json()
-        self.root_info = ret
+        self._root_info = ret
         return ret
 
     @initialize_first
     def url_from_endpoint(self, endpoint: str) -> str:
         try:
-            return self.endpoints[endpoint]
+            return self._endpoints[endpoint]
         except KeyError:
             raise ServerError(
                 "Endpoint '%s' is not exported by '%s'.\nAvailable endpoints are %s"
-                % (endpoint, self.url_base, ", ".join(self.endpoints.keys()))
+                % (endpoint, self.url_base, ", ".join(self._endpoints.keys()))
             )
 
     def request(self, method, url, **kwargs):
@@ -234,3 +234,13 @@ class ServiceSession(requests.Session):
 
     def links(self, resp: Dict) -> Dict:
         return resp.get("links", {})
+
+    @property
+    @initialize_first
+    def endpoints(self):
+        return self._endpoints
+
+    @property
+    @initialize_first
+    def root_info(self):
+        return self._root_info
