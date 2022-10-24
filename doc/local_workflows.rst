@@ -51,13 +51,13 @@ You can now run the following code in order to execute the workflow:
 
 .. code-block:: python
 
-  import nextcode
-  svc = nextcode.get_service("workflow")
-  job = svc.run_local("workflow-test")
+  from nextcode import Nextcode
+  nc = Nextcode()
+  job = nc.workflow.run_local("workflow-test")
   job.wait()
   print(f"Job {job.job_id} is {job.status}")
   print(job.logs())
 
 In this snippet we run the local workflow, wait for it to complete and then print out the logs, which should include your 'Hello world' message that is printed out by the nextflow process on the remote server.
 
-This is a very basic overview and you can view the documentation for the workflow service to see how the service can be used fully. You can also view docstrings for individual methods from within jupyter (e.g. `svc.run_local.__doc__`).
+This is a very basic overview and you can view the documentation for the workflow service to see how the service can be used fully. You can also view docstrings for individual methods from within jupyter (e.g. `nc.workflow.run_local.__doc__`).
