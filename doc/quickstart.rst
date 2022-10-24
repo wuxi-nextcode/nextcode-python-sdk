@@ -11,10 +11,9 @@ You can then get started with the following:
 
 .. code-block:: python
 
-  import nextcode
-  client = nextcode.Client(api_key="xxx")
-  qry = client.service("query")
-  qry.status()
+  from nextcode import Nextcode
+  nc = Nextcode(api_key="xxx")
+  nc.query.status()
 
 This example allows you to verify that the API Key is correct and that the *query* service is responding. Please refer to the included documents for actual use cases.
 
@@ -63,9 +62,9 @@ Now you can start a new python session and use:
 
 .. code-block:: python
 
-  import nextcode
-  svc = nextcode.get_service("query")
-  svc.status()
+  from nextcode import Nextcode
+  nc = Nextcode()
+  nc.query.status()
 
 This will use your saved API key from the previous session.
 

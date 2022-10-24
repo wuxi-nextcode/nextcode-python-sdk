@@ -22,7 +22,7 @@ To install this package you can can either install the raw sdk or include the ju
    pip install nextcode-sdk -U
    pip install nextcode-sdk[jupyter] -U
 
-Note that this package supports Python version **3.6** and higher only.
+Note that this package supports Python version **3.8** and higher only.
 
 Contents
 --------
