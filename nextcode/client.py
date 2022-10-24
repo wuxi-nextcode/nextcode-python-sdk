@@ -2,7 +2,7 @@
 client
 ~~~~~~~~~~
 
-This is the basic entrypoint to interact with services.
+This is the client used by the Service class to communicate with the API.
 """
 
 import os

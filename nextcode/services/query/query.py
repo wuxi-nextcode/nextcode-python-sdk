@@ -62,8 +62,9 @@ class Query:
 
     Example usage:
 
-    >>> svc = nextcode.Client(profile_name='test').service('query', project='myproject')
-    >>> query = svc.get_queries(limit=1)[0]
+    >>> from nextcode import Nextcode
+    >>> nc = Nextcode(profile_name='test', project='myproject')
+    >>> query = nc.query.get_queries(limit=1)[0]
     >>> query.status
     'DONE'
     """
