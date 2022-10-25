@@ -5,7 +5,7 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["pyjwt"],
+      "matchPackageNames": ["PyJWT"],
       "stabilityDays": 6
     }
   ]
