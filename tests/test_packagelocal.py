@@ -6,10 +6,6 @@ from nextcode.packagelocal import package_and_upload
 from nextcode.exceptions import UploadError
 from tests import BaseTestCase
 
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 cfg = config.Config()
 
 

@@ -17,10 +17,6 @@ from nextcode.exceptions import (
 from nextcode.utils import decode_token, check_resp_error
 from tests import BaseTestCase, REFRESH_TOKEN, ACCESS_TOKEN, AUTH_URL, AUTH_RESP
 
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 cfg = config.Config()
 
 
