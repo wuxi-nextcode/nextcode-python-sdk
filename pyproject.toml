@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nextcode-sdk"
-version = "2.0.2-dev"
+version = "2.0.0"
 description = "Python SDK for Genuity Science Services"
 license = "MIT"
 authors = ["WUXI NextCODE <support@wuxinextcode.com>"]

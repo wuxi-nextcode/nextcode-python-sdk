@@ -15,10 +15,6 @@ ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjJFRU42VUhzbEJLZHRG
 AUTH_URL = "https://test.wuxinextcode.com/auth/realms/wuxinextcode.com/protocol/openid-connect/token"
 AUTH_RESP = {"access_token": ACCESS_TOKEN}
 
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 cfg = config.Config()
 
 
