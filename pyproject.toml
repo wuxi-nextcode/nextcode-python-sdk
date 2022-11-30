@@ -54,7 +54,7 @@ Sphinx = "^5.3.0"
 sphinx-bootstrap-theme = "^0.8.1"
 sphinx-rtd-theme = "^1.1.1"
 sphinx-autodoc-typehints = "^1.19.5"
-nbsphinx = "^0.8.9"
+nbsphinx = "^0.8.10"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.6.0"
