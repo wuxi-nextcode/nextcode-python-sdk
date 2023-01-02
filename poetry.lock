@@ -637,14 +637,14 @@ test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.20)", "pa
 
 [[package]]
 name = "ipywidgets"
-version = "8.0.2"
+version = "8.0.4"
 description = "Jupyter interactive widgets"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "ipywidgets-8.0.2-py3-none-any.whl", hash = "sha256:1dc3dd4ee19ded045ea7c86eb273033d238d8e43f9e7872c52d092683f263891"},
-    {file = "ipywidgets-8.0.2.tar.gz", hash = "sha256:08cb75c6e0a96836147cbfdc55580ae04d13e05d26ffbc377b4e1c68baa28b1f"},
+    {file = "ipywidgets-8.0.4-py3-none-any.whl", hash = "sha256:ebb195e743b16c3947fe8827190fb87b4d00979c0fbf685afe4d2c4927059fa1"},
+    {file = "ipywidgets-8.0.4.tar.gz", hash = "sha256:c0005a77a47d77889cafed892b58e33b4a2a96712154404c6548ec22272811ea"},
 ]
 
 [package.dependencies]
@@ -2125,4 +2125,4 @@ jupyter = ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "3cad93a40e64b73461f6c0fc1e8fb3a212245bbb6ab8d7579e66a388d8b18db1"
+content-hash = "6bba15d823e74d3bd70c42af2c7440935de3ad38f20800ce30d7d05d2ed8e657"
