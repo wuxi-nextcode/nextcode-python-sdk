@@ -57,7 +57,7 @@ sphinx-autodoc-typehints = "^1.19.5"
 nbsphinx = "^0.8.12"
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.7.0"
+ipython = "^8.9.0"
 
 [tool.poetry.extras]
 jupyter = ["pandas", "ipython", "termcolor", "tqdm", "ipywidgets", "plotly"]
