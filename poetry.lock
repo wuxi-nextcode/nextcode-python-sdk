@@ -1718,24 +1718,24 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "responses"
-version = "0.22.0"
+version = "0.23.1"
 description = "A utility library for mocking out the `requests` Python library."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "responses-0.22.0-py3-none-any.whl", hash = "sha256:dcf294d204d14c436fddcc74caefdbc5764795a40ff4e6a7740ed8ddbf3294be"},
-    {file = "responses-0.22.0.tar.gz", hash = "sha256:396acb2a13d25297789a5866b4881cf4e46ffd49cc26c43ab1117f40b973102e"},
+    {file = "responses-0.23.1-py3-none-any.whl", hash = "sha256:8a3a5915713483bf353b6f4079ba8b2a29029d1d1090a503c70b0dc5d9d0c7bd"},
+    {file = "responses-0.23.1.tar.gz", hash = "sha256:c4d9aa9fc888188f0c673eff79a8dadbe2e75b7fe879dc80a221a06e0a68138f"},
 ]
 
 [package.dependencies]
+pyyaml = "*"
 requests = ">=2.22.0,<3.0"
-toml = "*"
-types-toml = "*"
+types-PyYAML = "*"
 urllib3 = ">=1.25.10"
 
 [package.extras]
-tests = ["coverage (>=6.0.0)", "flake8", "mypy", "pytest (>=7.0.0)", "pytest-asyncio", "pytest-cov", "pytest-httpserver", "types-requests"]
+tests = ["coverage (>=6.0.0)", "flake8", "mypy", "pytest (>=7.0.0)", "pytest-asyncio", "pytest-cov", "pytest-httpserver", "tomli", "tomli-w", "types-requests"]
 
 [[package]]
 name = "s3transfer"
@@ -2076,18 +2076,6 @@ doc = ["sphinx", "sphinx_rtd_theme"]
 test = ["flake8", "isort", "pytest"]
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
-category = "dev"
-optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-files = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
-]
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -2158,15 +2146,15 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
 test = ["argcomplete (>=2.0)", "pre-commit", "pytest", "pytest-mock"]
 
 [[package]]
-name = "types-toml"
-version = "0.10.8.3"
-description = "Typing stubs for toml"
+name = "types-pyyaml"
+version = "6.0.12.8"
+description = "Typing stubs for PyYAML"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-toml-0.10.8.3.tar.gz", hash = "sha256:f37244eff4cd7eace9cb70d0bac54d3eba77973aa4ef26c271ac3d1c6503a48e"},
-    {file = "types_toml-0.10.8.3-py3-none-any.whl", hash = "sha256:a2286a053aea6ab6ff814659272b1d4a05d86a1dd52b807a87b23511993b46c5"},
+    {file = "types-PyYAML-6.0.12.8.tar.gz", hash = "sha256:19304869a89d49af00be681e7b267414df213f4eb89634c4495fa62e8f942b9f"},
+    {file = "types_PyYAML-6.0.12.8-py3-none-any.whl", hash = "sha256:5314a4b2580999b2ea06b2e5f9a7763d860d6e09cdf21c0e9561daa9cbd60178"},
 ]
 
 [[package]]
@@ -2244,4 +2232,4 @@ jupyter = ["ipython", "ipywidgets", "pandas", "plotly", "termcolor", "tqdm"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "9babe3488dee83422c5eb9edfb15b7995dab062dc8bf73c2cd50bfdb1cbc9f8a"
+content-hash = "e6dd20c2f91cbcb888fb1486a6f459ff553ec970ec9a3a2df323fc7ef86e022f"

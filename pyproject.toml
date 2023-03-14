@@ -45,7 +45,7 @@ PyJWT = "^2.6.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.1"
-responses = "^0.22.0"
+responses = "^0.23.1"
 pytest-cov = "^4.0.0"
 asserts = "^0.12.0"
 
