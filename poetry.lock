@@ -1282,17 +1282,18 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest (>=7.2.1)", "pytes
 
 [[package]]
 name = "plotly"
-version = "5.13.1"
+version = "5.14.0"
 description = "An open-source, interactive data visualization library for Python"
 category = "main"
 optional = true
 python-versions = ">=3.6"
 files = [
-    {file = "plotly-5.13.1-py2.py3-none-any.whl", hash = "sha256:f776a5c664908450c6c1727f61e8e2e22798d9c6c69d37a9057735365084a2fa"},
-    {file = "plotly-5.13.1.tar.gz", hash = "sha256:90ee9a1fee0dda30e2830e129855081ea17bd1b06a553a62b62de15caff1a219"},
+    {file = "plotly-5.14.0-py2.py3-none-any.whl", hash = "sha256:2e3407d93a9700beebbef66d11f63992c58e058dd808442ee54af40f98fb4940"},
+    {file = "plotly-5.14.0.tar.gz", hash = "sha256:02e40264f145e524d9628fd516031976b60d74a33bbabce037ea28580bcd4e0c"},
 ]
 
 [package.dependencies]
+packaging = "*"
 tenacity = ">=6.2.0"
 
 [[package]]
@@ -2234,4 +2235,4 @@ jupyter = ["ipython", "ipywidgets", "pandas", "plotly", "termcolor", "tqdm"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "507c51ef403a9a38c27914e41c59b3391e51986871271f750631aa35a1095246"
+content-hash = "924daac365918547bdfc9d6f4fee3b1b9b3026271167432d756caae7aac7befd"
