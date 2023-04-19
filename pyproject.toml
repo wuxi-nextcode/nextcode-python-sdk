@@ -44,7 +44,7 @@ plotly = {version = "^5.14.1", optional = true}
 PyJWT = "^2.6.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.2.2"
+pytest = "^7.3.1"
 responses = "^0.23.1"
 pytest-cov = "^4.0.0"
 asserts = "^0.12.0"
