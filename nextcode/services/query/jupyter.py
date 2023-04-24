@@ -361,15 +361,11 @@ class GorMagics(Magics):
     def __call_query_server_execute_and_get_dataframe(self, gor_string, gzip, relations, st):
         svc = get_queryserver()
         result = svc.execute(gor_string, gzip=gzip, relations=relations)
-        query_time = time.time() - st
-        print("Query ran in {:.2f} sec".format(time.time() - st,))
+        end_time =  time.time()
+
+        print("Query fetched {:,} rows in {:.2f} sec".format(result.num_lines, end_time - st))
 
         ret = result.dataframe()
-
-        end_time =  time.time()
-        print("Query fetched {:,} rows in {:.2f} sec (total time {:.2f} sec)".format(
-            result.num_lines, end_time - st - query_time, end_time - st))
-
         return ret
 
     def __call_query_server(self, gor_string, gzip, return_var):
