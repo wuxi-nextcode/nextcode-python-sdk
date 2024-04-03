@@ -128,7 +128,8 @@ class Client:
     1) passed in 'profile'
     2) passed in 'api_key'
     3) NEXTCODE_PROFILE from environment
-    3) GOR_API_KEY from environment"""
+    4) default_profile from config
+    5) GOR_API_KEY from environment"""
 
     def __init__(
         self,
@@ -138,53 +139,37 @@ class Client:
     ) -> None:
         self.verify_ssl = not os.environ.get("DISABLE_SDK_CLIENT_SSL_VERIFY", False)
 
-        if not profile:
-            if os.environ.get("NEXTCODE_PROFILE"):
-                profile = os.environ["NEXTCODE_PROFILE"]
-                log.info("Using profile '%s' from environment", profile)
-            else:
-                profile = cfg.get("default_profile")
-                if profile:
-                    log.info("Using default profile '%s' from config", profile)
-
-        # if no named profile or api key is passed in
-        #if not profile and not api_key:
-        #    # find the default profile, if any
-        #    if os.environ.get("NEXTCODE_PROFILE"):
-        #        profile = os.environ["NEXTCODE_PROFILE"]
-        #        log.info("Using profile '%s' from environment", profile)
-        #    else:
-        #        profile = cfg.get("default_profile")
-        #        if profile:
-        #            log.info("Using default profile '%s' from config", profile)
-
-        self.profile_name = profile
-
-        # if we have a profile we will load it from the config
-        if self.profile_name:
-            log.info(
-                "Initializing client with profile '%s'. Available profiles: %s",
-                self.profile_name,
-                self.available_profiles(),
+        if profile:  # 1) passed in 'profile'
+            self.profile = self.get_named_profile(profile)
+        elif api_key:  # 2) passed in 'api_key'
+            root_url = (
+                root_url
+                or os.environ.get("NEXTCODE_ROOT_URL")
+                or root_url_from_api_key(api_key)
             )
-            if self.profile_name not in cfg.get("profiles"):
-                raise InvalidProfile(
-                    "The config profile (%s) could not be found" % profile
-                )
-            self.profile = Profile(self.profile_name)
-        else:
-            # if there is no profile there needs to be configuration set in the
-            # environment, in which case we create an ephemeral profile, not
-            # backed up by disk.
-            api_key = api_key or os.environ.get("GOR_API_KEY")
-            if not api_key and not os.environ.get('NEXTCODE_ACCESS_TOKEN'):
+            self.profile = Profile(content={"api_key": api_key, "root_url": root_url})
+        elif os.environ.get("NEXTCODE_PROFILE"):  # 3) NEXTCODE_PROFILE from environment
+            self.profile = self.get_named_profile(os.environ["NEXTCODE_PROFILE"])
+            log.info("Using profile '%s' from environment", self.profile.profile_name)
+        elif cfg.get("default_profile"):  # 4) default_profile from config
+            self.profile = self.get_named_profile(cfg.get("default_profile"))
+            log.info(
+                "Using default profile '%s' from config", self.profile.profile_name
+            )
+        else:  # 5) GOR_API_KEY from environment
+            api_key = os.environ.get("GOR_API_KEY")
+            if not api_key and not os.environ.get("NEXTCODE_ACCESS_TOKEN"):
                 raise InvalidProfile(
                     "No profile specified and GOR_API_KEY not set in environment"
                 )
-            root_url = root_url or os.environ.get("NEXTCODE_ROOT_URL")
-            if not root_url:
-                root_url = root_url_from_api_key(api_key)
+            root_url = (
+                root_url
+                or os.environ.get("NEXTCODE_ROOT_URL")
+                or root_url_from_api_key(api_key)
+            )
             self.profile = Profile(content={"api_key": api_key, "root_url": root_url})
+
+        self.profile_name = self.profile.profile_name
 
     def service(self, service_name: str, **kw):
         """
@@ -194,7 +179,7 @@ class Client:
 
         Available services can be listed by calling class method `available_services`.
         """
-        for (_, name, _) in pkgutil.iter_modules([str(SERVICES_PATH)]):
+        for _, name, _ in pkgutil.iter_modules([str(SERVICES_PATH)]):
             if name == service_name:
                 log.debug("Importing service %s", name)
                 module = import_module("..services.{}".format(name), __name__)
@@ -219,17 +204,32 @@ class Client:
         {"jti": "...", ...}
 
         """
-        token = os.environ.get('NEXTCODE_ACCESS_TOKEN') or get_access_token(self.profile.api_key)
+        token = os.environ.get("NEXTCODE_ACCESS_TOKEN") or get_access_token(
+            self.profile.api_key
+        )
         if decode:
             return decode_token(token)
         else:
             return token
 
     @classmethod
+    def get_named_profile(cls, profile_name) -> Profile:
+        log.info(
+            "Initializing client with profile '%s'. Available profiles: %s",
+            profile_name,
+            cls.available_profiles(),
+        )
+        if profile_name not in cfg.get("profiles"):
+            raise InvalidProfile(
+                "The config profile (%s) could not be found" % profile_name
+            )
+        return Profile(profile_name)
+
+    @classmethod
     def available_services(cls) -> List[str]:
         """List services that can be intantiated via an client object client.service(`service`)"""
         ret = []
-        for (_, name, _) in pkgutil.iter_modules([str(SERVICES_PATH)]):
+        for _, name, _ in pkgutil.iter_modules([str(SERVICES_PATH)]):
             ret.append(name)
         return ret
 
