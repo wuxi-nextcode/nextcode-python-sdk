@@ -49,6 +49,14 @@ class ClientTest(BaseTestCase):
         with self.assertRaises(InvalidProfile):
             client = Client()
 
+    def test_api_key_overrides_default_profile(self):
+        cfg.get("profiles")["dummy"] = {"api_key": "the_token"}
+        cfg.set({"default_profile": "dummy"})
+
+        with patch("nextcode.client.root_url_from_api_key"):
+            client = Client(api_key="another_token")
+            self.assertEqual(client.profile.api_key, "another_token")
+
     @responses.activate
     def test_get_api_key(self):
         auth_url = (
@@ -176,10 +184,6 @@ class ClientTest(BaseTestCase):
         session = ServiceSession(url_base=url_base, api_key=REFRESH_TOKEN)
         self.assertEqual(session.initialized, False)
         responses.add(responses.POST, AUTH_URL, json=AUTH_RESP)
-        responses.add(
-            responses.GET,
-            url_base,
-            json={"endpoints": {"one": "endpoint"}}
-        )
+        responses.add(responses.GET, url_base, json={"endpoints": {"one": "endpoint"}})
         session.get(url_base)
         self.assertEqual(session.initialized, True)
