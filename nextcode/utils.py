@@ -79,7 +79,7 @@ def get_access_token(api_key):
         "username": "dummy_user",
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    token_endpoint = "{}/protocol/openid-connect/token".format(payload["iss"])
+    token_endpoint = os.environ.get("TOKEN_ENDPOINT", "{}/protocol/openid-connect/token".format(payload["iss"]))
 
     # Call the auth server
     log.info("Authenticating with %s", token_endpoint)
